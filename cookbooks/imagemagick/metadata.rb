@@ -1,0 +1,5 @@
+maintainer       "ZangZing, LLC"
+maintainer_email "dev@zangzing.com"
+license          "Apache 2.0"
+description      "ImageMagick installer"
+version          "0.0.1"
