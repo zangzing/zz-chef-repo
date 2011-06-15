@@ -12,6 +12,9 @@ class Chef::Recipe::ZZDeployEnvironment
     instance = node[:zz][:instances][instance_id]
     raise "Could not find our instance in config - our instance id is #{instance_id}" if instance.nil?
     node[:zz][:deploy_role] = instance[:role]
+
+    node[:zz][:platform] = node[:platform_version]
+    node[:zz][:ec2] = node[:ec2]
   end
 
   def zz
