@@ -1,0 +1,15 @@
+{
+    "zz" : {
+        "dev_machine" : true,
+        "deploy_app" :false,
+        "deploy_config" :true,
+        "instances": {
+            "local": {
+              "role": "solo",
+              "testing": 7
+            }
+        }
+    },
+
+    "run_list": "recipe[deploy-manager]"
+}

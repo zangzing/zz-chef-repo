@@ -9,11 +9,11 @@ def expand_path rel_path
   return full_path
 end
 
-$CHEF_DEV_RUN = true
 cookbook_path    expand_path('../cookbooks')
 log_level         :info
-file_store_path  expand_path('..')
-file_cache_path  expand_path('..')
+file_store_path  expand_path('../.chefpaths')
+file_cache_path  expand_path('../.chefpaths')
+role_path        expand_path('../roles')
 Chef::Log::Formatter.show_time = false
 
 

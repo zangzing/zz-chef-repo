@@ -9,4 +9,4 @@
 # Remote Root Folder: .
 # Local Root Folder: .
 #
-sudo rdebug-ide -p 7000 -- `which chef-solo` -l debug -c chef-local/solo.rb -j chef-local/dna.json
+sudo rdebug-ide -p 7000 -- `which chef-solo` -l debug -c chef-local/local-solo.rb -j chef-local/local-deploy.json

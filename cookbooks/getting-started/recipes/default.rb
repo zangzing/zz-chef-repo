@@ -21,3 +21,10 @@ template "/tmp/chef-getting-started.txt" do
   source "chef-getting-started.txt.erb"
   mode "0644"
 end
+
+is_local = node[:local_config]
+if is_local
+  Chef::Log.info("YYYYYYYYY is_local = #{is_local}")
+else
+  Chef::Log.info("ZZZZZZZZZ is_local = #{is_local}")
+end
