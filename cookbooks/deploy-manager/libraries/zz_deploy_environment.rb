@@ -3,28 +3,41 @@ require "json"
 class Chef::Recipe::ZZDeployEnvironment
   def initialize(node)
     @node = node
+    zz = node[:zz]
+
+    # move ec2 data under zz
+    ec2 = node[:ec2]
+    ec2 = ec2.to_hash unless ec2.nil?
+    zz[:ec2] = ec2
 
     # determine our role
     if is_local_dev?
       instance_id = "local"
+      local_hostname = "localhost"
+      public_hostname = "localhost"
     else
       # find our instance id and set it
+      ec2 = zz[:ec2]
+      instance_id = ec2[:instance_id]
+      local_hostname = ec2[:local_hostname]
+      public_hostname = ec2[:public_hostname]
     end
-    node[:zz][:this] = instance_id
+
+    zz[:instance_id] = instance_id
+    zz[:local_hostname] = local_hostname
+    zz[:public_hostname] = public_hostname
+
     instance = node[:zz][:instances][instance_id]
     raise "Could not find our instance in config - our instance id is #{instance_id}" if instance.nil?
-    node[:zz][:deploy_role] = instance[:role]
-
-    node[:zz][:platform] = node[:platform_version]
-    ec2 = node[:ec2]
-    if ec2.nil? == false
-      ec2 = ec2.to_hash
-    end
-    node[:zz][:ec2] = ec2
+    zz[:deploy_role] = instance[:role]
   end
 
   def zz
     @zz ||= @node[:zz]
+  end
+
+  def ec2
+    @ec2 ||= zz[:ec2]
   end
 
   def node
@@ -107,52 +120,45 @@ class Chef::Recipe::ZZDeployEnvironment
   end
 
   def this_instance_id
-    @this_instance_id ||= zz['this']
+    return zz[:instance_id]
   end
 
-  # get our own host address
-  def this_host_name
-#    return @this_host_name if @this_host_name != nil
-#
-#    instances = ey['environment']['instances']
-#    # assume localhost if can't find
-#    @this_host_name = 'localhost'
-#
-#    this_id = this_instance_id
-#    instances.each do |instance|
-#      if instance['id'] == this_id
-#        @this_host_name = instance['private_hostname']
-#        break
-#      end
-#    end
-#    @this_host_name
+  # get our own private host name
+  def this_local_hostname
+    return zz[:local_hostname]
+  end
+
+  # get our own private host name
+  def this_public_hostname
+    return zz[:public_hostname]
   end
 
   def is_local_dev?
-    return node[:zz][:dev_machine]
+    return zz[:dev_machine]
   end
 
   def deploy_app?
-    return node[:zz][:deploy_app]
+    return zz[:deploy_app]
   end
 
   def deploy_config?
-    return node[:zz][:deploy_config]
+    return zz[:deploy_config]
   end
 
   def deploy_role
-    return node[:zz][:deploy_role]
+    return zz[:deploy_role]
   end
 
   def current_user
-    return @current_user if @current_user != nil
-
-    # we use who instead of whoami because whoami will
-    # return root if you are running as sudo whereas who -m
-    # returns the actual user that started the run
-    me = `who -m`
-    parts = me.split(' ')
-    @current_user = parts[0]
+    node[:current_user]
+#    return @current_user if @current_user != nil
+#
+#    # we use who instead of whoami because whoami will
+#    # return root if you are running as sudo whereas who -m
+#    # returns the actual user that started the run
+#    me = `who -m`
+#    parts = me.split(' ')
+#    @current_user = parts[0]
   end
 
   def deploy_user
@@ -259,6 +265,10 @@ class Chef
 
     def deploy_group
       Chef::Recipe::ZZDeploy.env.deploy_group
+    end
+
+    def current_user
+      Chef::Recipe::ZZDeploy.env.current_user
     end
 
   end
