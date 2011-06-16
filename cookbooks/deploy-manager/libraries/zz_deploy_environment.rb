@@ -1,3 +1,5 @@
+require "json"
+
 class Chef::Recipe::ZZDeployEnvironment
   def initialize(node)
     @node = node
@@ -14,7 +16,11 @@ class Chef::Recipe::ZZDeployEnvironment
     node[:zz][:deploy_role] = instance[:role]
 
     node[:zz][:platform] = node[:platform_version]
-    node[:zz][:ec2] = node[:ec2]
+    ec2 = node[:ec2]
+    if ec2.nil? == false
+      ec2 = ec2.to_hash
+    end
+    node[:zz][:ec2] = ec2
   end
 
   def zz
