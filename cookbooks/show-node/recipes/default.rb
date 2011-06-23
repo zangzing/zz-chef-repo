@@ -1,4 +1,4 @@
-j = JSON.pretty_generate(node)
+j = JSON.pretty_generate(node[:zz].to_hash)
 
 template "/tmp/node.json" do
   source "pretty.json.erb"

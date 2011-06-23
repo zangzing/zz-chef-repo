@@ -1,14 +1,9 @@
 {
     "zz" : {
         "dev_machine" : true,
-        "deploy_app" :false,
-        "deploy_config" :true,
-        "instances": {
-            "local": {
-              "role": "solo",
-              "testing": 7
-            }
-        }
+        "deploy_group" : "localdeploy",
+        "deploy_what" : "config",
+        "app_name" : "photos"
     },
 
     "run_list": "recipe[deploy-manager]"

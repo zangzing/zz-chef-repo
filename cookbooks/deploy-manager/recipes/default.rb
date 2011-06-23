@@ -1,5 +1,35 @@
+require "rubygems"
+require "bundler/setup"
+require 'right_aws'
+require 'zzsharedlib'
+
+# the amazon keys are expected to be in /var/chef/amazon.json
+json = File.open("/var/chef/amazon.json", 'r') {|f| f.read }
+ak = JSON.parse(json)
+opts = ZZSharedLib::Options.global_options
+opts[:access_key] = ak["aws_access_key_id"]
+opts[:secret_key] = ak["aws_secret_access_key"]
+
+key = ZZSharedLib::Amazon.secret_key
+puts key
+key = ZZSharedLib::Amazon.access_key
+puts key
+
+amazon = ZZSharedLib::Amazon.new
+
 # inject our custom code into recipes
-ZZDeploy.init(node)
+ZZDeploy.init(node, amazon)
+
+# now the custom data based on the app type
+app_name = node[:zz][:app_name]
+case app_name
+  when "photos"
+    PhotosConfig.init(node)
+
+  when "rollup"
+    PhotosConfig.init(node)
+#    RollupConfig.init(node)
+end
 
 # see if we have the deploy group we need for local and create it if needed
 # this can be done cleanly with a recipe - so change later
@@ -11,6 +41,7 @@ if is_local_dev?
   end
   `sudo dseditgroup -o edit -t user -a #{current_user} ec2-user`
 end
+
 
 
 if deploy_config?
@@ -25,8 +56,10 @@ if deploy_config?
         require_recipe "show-node"
 
       when "db"
+        require_recipe "show-node"
 
       when "util"
+        require_recipe "show-node"
 
     end
 

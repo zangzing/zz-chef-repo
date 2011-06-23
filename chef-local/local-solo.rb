@@ -1,3 +1,7 @@
+#require "rubygems"
+#require "bundler/setup"
+#require 'zzutil'
+
 # take the current directory of this file and return a fully
 # qualified path based on the relative path passed in
 def expand_path rel_path

@@ -1,5 +1,6 @@
 {
     "zz" : {
+        "act_as" : "i-3d356d53",
         "dev_machine" : false,
         "deploy_what" : "config"
     },

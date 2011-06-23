@@ -1,35 +1,59 @@
-require "json"
 
 class Chef::Recipe::ZZDeployEnvironment
-  def initialize(node)
+  def initialize(node, amazon)
     @node = node
+    @amazon = amazon
     zz = node[:zz]
 
     # move ec2 data under zz
     ec2 = node[:ec2]
-    ec2 = ec2.to_hash unless ec2.nil?
-    zz[:ec2] = ec2
+    if !ec2.nil?
+      ec2 = ec2.to_hash unless ec2.nil?
+      zz[:ec2] = ec2
+    end
 
     # determine our role
     if is_local_dev?
       instance_id = "local"
       local_hostname = "localhost"
       public_hostname = "localhost"
+      instances = make_local_instances
     else
       # find our instance id and set it
-      ec2 = zz[:ec2]
-      instance_id = ec2[:instance_id]
-      local_hostname = ec2[:local_hostname]
-      public_hostname = ec2[:public_hostname]
+      act_as = zz[:act_as]  # for testing, pretend to be this id
+      if act_as.nil?
+        ec2 = zz[:ec2]
+        instance_id = ec2[:instance_id]
+        local_hostname = ec2[:local_hostname]
+        public_hostname = ec2[:public_hostname]
+      else
+        instance_id = act_as
+        # look up info about this instance
+        instances = amazon.find_named_instances(nil,nil)
+        instance = instances[instance_id.to_sym]
+        local_hostname = instance[:local_hostname]
+        public_hostname = instance[:public_hostname]
+        node[:zz][:dev_machine] = true
+      end
+      instance_id = act_as.nil? ? ec2[:instance_id] : act_as
+      group_name = find_deploy_group_name(instance_id)
+      node[:zz][:deploy_group_name] = group_name.to_s
+      grp = find_deploy_group(group_name)
+      node[:zz][:recipes_deploy_tag] = grp.recipes_deploy_tag
+      node[:zz][:app_deploy_tag] = grp.app_deploy_tag
+      node[:zz][:deploy_group] = grp.config
+      node[:zz][:app_name] = node[:zz][:deploy_group][:app_name]
+      instances = make_ec2_instances(group_name)
     end
 
-    zz[:instance_id] = instance_id
-    zz[:local_hostname] = local_hostname
-    zz[:public_hostname] = public_hostname
+    node[:zz][:instance_id] = instance_id
+    node[:zz][:local_hostname] = local_hostname
+    node[:zz][:public_hostname] = public_hostname
+    node[:zz][:instances] = instances
 
-    instance = node[:zz][:instances][instance_id]
+    instance = zz[:instances][instance_id]
     raise "Could not find our instance in config - our instance id is #{instance_id}" if instance.nil?
-    zz[:deploy_role] = instance[:role]
+    node[:zz][:deploy_role] = instance[:role]
   end
 
   def zz
@@ -44,80 +68,39 @@ class Chef::Recipe::ZZDeployEnvironment
     @node
   end
 
-  # determine if this instance should host
-  # the redis server
-  # true - yes we should install redis here
-  #
-  def should_host_redis?
-#    return @should_host_redis if @should_host_redis != nil
-#    if redis_host_name == this_host_name
-#      @should_host_redis = true
-#    else
-#      @should_host_redis = false
-#    end
+  def amazon
+    @amazon
   end
 
-  # get the address of the host where
-  # our redis isntance is - on single
-  # deploy it will be us, on multi
-  # it currently will live on the soon
-  # to be useless db_master since we will
-  # use Amazon RDS for db
-  def redis_host_name
-#    return @redis_host_name if @redis_host_name != nil
-#
-#    instances = ey['environment']['instances']
-#    # assume solo machine
-#    @redis_host_name = this_host_name
-#
-#    # not solo so see if we are db_master which
-#    # is where we host redis
-#    instances.each do |instance|
-#      if instance['role'] == 'db_master'
-#        @redis_host_name = instance['private_hostname']
-#        break
-#      end
-#    end
-#    @redis_host_name
+  def make_local_instances
+    {
+        'local' =>  {
+            :public_hostname => "localhost",
+            :local_hostname => "localhost",
+            :role => 'solo'
+        }
+    }
   end
 
-  # determine if this instance should host
-  # the resque cpu job instance
-  #
-  def should_host_resque_cpu?
-#    return @should_host_resque_cpu if @should_host_resque_cpu != nil
-#    if resque_cpu_host_names.include?(this_host_name)
-#      @should_host_resque_cpu = true
-#    else
-#      @should_host_resque_cpu = false
-#    end
+  # fetch and make the instances
+  # also discovers the deploy group
+  def make_ec2_instances(group_name)
+    instances = amazon.find_named_instances(group_name,nil)
   end
 
-  # get the resque cpu bound jobs hosts
-  def resque_cpu_host_names
-#    return @resque_cpu_host_names if @resque_cpu_host_names != nil
-#
-#    instances = ey['environment']['instances']
-#    # assume solo machine
-#    @resque_cpu_host_names = []
-#
-#    # not solo so see if we are util which
-#    # is where we host resquecpujobs
-#    instances.each do |instance|
-#      if instance['role'] == 'util' && instance['name'] =~ /^resquecpujobs/
-#        @resque_cpu_host_names << instance['private_hostname']
-#      end
-#    end
-#    if (@node['instance_role'] != 'solo')
-#      if @resque_cpu_host_names.length == 0
-#        # no resque cpu hosts found
-#      end
-#    else
-#      # solo machine so run here
-#      @resque_cpu_host_names << this_host_name
-#    end
-#    @resque_cpu_host_names
+  # discover our deploy group name based on our id
+  def find_deploy_group_name(instance_id)
+    tags = amazon.flat_tags_for_resource(instance_id)
+    group_name = tags[:group]
+    raise "Could not find deploy group for this instance #{instance_id}" if group_name.nil?
+    group_name
   end
+
+  # get our deploy group
+  def find_deploy_group(deploy_group_name)
+    deploy_group = amazon.find_deploy_group(deploy_group_name)
+  end
+
 
   def this_instance_id
     return zz[:instance_id]
@@ -138,11 +121,11 @@ class Chef::Recipe::ZZDeployEnvironment
   end
 
   def deploy_app?
-    return zz[:deploy_app]
+    return zz[:deploy_what] == 'app'
   end
 
   def deploy_config?
-    return zz[:deploy_config]
+    return zz[:deploy_what] == 'config'
   end
 
   def deploy_role
@@ -201,8 +184,8 @@ class Chef::Recipe::ZZDeployEnvironment
 end
 
 class Chef::Recipe::ZZDeploy
-  def self.init(node)
-    @@zz_environ ||= Chef::Recipe::ZZDeployEnvironment.new(node)
+  def self.init(node, amazon)
+    @@zz_environ ||= Chef::Recipe::ZZDeployEnvironment.new(node, amazon)
   end
 
   def self.env
