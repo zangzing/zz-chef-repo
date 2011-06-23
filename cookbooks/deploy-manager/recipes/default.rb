@@ -10,11 +10,6 @@ opts = ZZSharedLib::Options.global_options
 opts[:access_key] = ak["aws_access_key_id"]
 opts[:secret_key] = ak["aws_secret_access_key"]
 
-key = ZZSharedLib::Amazon.secret_key
-puts key
-key = ZZSharedLib::Amazon.access_key
-puts key
-
 amazon = ZZSharedLib::Amazon.new
 
 # inject our custom code into recipes
@@ -27,8 +22,7 @@ case app_name
     PhotosConfig.init(node)
 
   when "rollup"
-    PhotosConfig.init(node)
-#    RollupConfig.init(node)
+    RollupConfig.init(node)
 end
 
 # see if we have the deploy group we need for local and create it if needed
