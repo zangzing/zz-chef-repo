@@ -1,5 +1,6 @@
-PATH
-  remote: ../zzsharedlib
+GIT
+  remote: git@github.com:zangzing/zzsharedlib.git
+  revision: e009324f13a7db74422b096e1dd0e7e714e44002
   specs:
     zzsharedlib (0.0.2)
       json (>= 1.5.1)

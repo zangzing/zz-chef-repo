@@ -1,7 +1,7 @@
 
 source :gemcutter
 
-if File.dirname(__FILE__) == "/var/chef-solo/cookbooks/zz-chef-repo"
+if true || File.dirname(__FILE__) == "/var/chef-solo/cookbooks/zz-chef-repo"
   # amazon machine
   gem "zzsharedlib", :git => 'git@github.com:zangzing/zzsharedlib.git'
 else
