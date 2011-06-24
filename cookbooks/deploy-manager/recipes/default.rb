@@ -44,16 +44,19 @@ if deploy_config?
     require_recipe "show-node"
 
   else
+    # common config
+    require_recipe "show-node"
+    require_recipe "env-setup"
 
     case deploy_role
       when "app", "app_master", "solo"
-        require_recipe "show-node"
+        #require_recipe "show-node"
 
       when "db"
-        require_recipe "show-node"
+        #require_recipe "show-node"
 
       when "util"
-        require_recipe "show-node"
+        #require_recipe "show-node"
 
     end
 

@@ -1,7 +1,7 @@
 {
     "zz" : {
-        "act_as" : "i-3d356d53",
-        "dev_machine" : false,
+        "act_as" : "i-01d3f36f",
+        "dev_machine" : true,
         "deploy_what" : "config"
     },
 

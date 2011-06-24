@@ -12,37 +12,42 @@ class Chef::Recipe::ZZDeployEnvironment
       zz[:ec2] = ec2
     end
 
+    act_as = zz[:act_as]  # for testing, pretend to be this id
+    if act_as.nil? == false
+      instance_id = act_as
+      # look up info about this instance
+      instances = amazon.find_named_instances(nil,nil)
+      instance = instances[instance_id.to_sym]
+      local_hostname = instance[:local_hostname]
+      public_hostname = instance[:public_hostname]
+      set_local_accounts  # since we are only acting as remote, use local account names
+    end
+
     # determine our role
     if is_local_dev?
-      instance_id = "local"
-      local_hostname = "localhost"
-      public_hostname = "localhost"
-      instances = make_local_instances
+      if act_as.nil?
+        instance_id = "local"
+        local_hostname = "localhost"
+        public_hostname = "localhost"
+        instances = make_local_instances
+        set_local_accounts
+      end
     else
       # find our instance id and set it
-      act_as = zz[:act_as]  # for testing, pretend to be this id
       if act_as.nil?
+        set_remote_accounts
         ec2 = zz[:ec2]
         instance_id = ec2[:instance_id]
         local_hostname = ec2[:local_hostname]
         public_hostname = ec2[:public_hostname]
-      else
-        instance_id = act_as
-        # look up info about this instance
-        instances = amazon.find_named_instances(nil,nil)
-        instance = instances[instance_id.to_sym]
-        local_hostname = instance[:local_hostname]
-        public_hostname = instance[:public_hostname]
-        node[:zz][:dev_machine] = true
       end
-      instance_id = act_as.nil? ? ec2[:instance_id] : act_as
       group_name = find_deploy_group_name(instance_id)
       node[:zz][:deploy_group_name] = group_name.to_s
       grp = find_deploy_group(group_name)
       node[:zz][:recipes_deploy_tag] = grp.recipes_deploy_tag
       node[:zz][:app_deploy_tag] = grp.app_deploy_tag
-      node[:zz][:deploy_group] = grp.config
-      node[:zz][:app_name] = node[:zz][:deploy_group][:app_name]
+      node[:zz][:group_config] = grp.config
+      node[:zz][:app_name] = node[:zz][:group_config][:app_name]
       instances = make_ec2_instances(group_name)
     end
 
@@ -70,6 +75,20 @@ class Chef::Recipe::ZZDeployEnvironment
 
   def amazon
     @amazon
+  end
+
+  def set_local_accounts
+    node[:zz][:deploy_user] = current_user
+    node[:zz][:deploy_group] = "ec2-user" # yes, this is our local group
+    node[:zz][:root_user] = "root"
+    node[:zz][:root_group] = "admin"
+  end
+
+  def set_remote_accounts
+    node[:zz][:deploy_user] = "ec2-user"
+    node[:zz][:deploy_group] = "ec2-user"
+    node[:zz][:root_user] = "root"
+    node[:zz][:root_group] = "root"
   end
 
   def make_local_instances
@@ -145,31 +164,19 @@ class Chef::Recipe::ZZDeployEnvironment
   end
 
   def deploy_user
-    if is_local_dev?
-      return current_user
-    else
-      return "ec2-user"
-    end
+    zz[:deploy_user]
   end
 
   def deploy_group
-    if is_local_dev?
-      return "ec2-user"
-    else
-      return "ec2-user"
-    end
+    zz[:deploy_group]
   end
 
   def root_group
-    if is_local_dev?
-      "admin"
-    else
-      "root"
-    end
+    zz[:root_group]
   end
 
   def root_user
-    return "root"
+    zz[:root_user]
   end
 
 
