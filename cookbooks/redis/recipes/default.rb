@@ -98,7 +98,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:local]) do |app_name, 
           source "redis.erb"
           owner root_user
           group root_group
-          mode 0644
+          mode 0755
           notifies :restart, "service[redis]"
         end
       end
