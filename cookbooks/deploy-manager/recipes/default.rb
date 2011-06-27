@@ -48,6 +48,8 @@ if deploy_config?
     require_recipe "show-node"
     require_recipe "env-setup"
     require_recipe "rsyslog"
+    require_recipe "imagemagick"
+    require_recipe "ssmtp"
 
     case deploy_role
       when "app", "app_master", "solo"
