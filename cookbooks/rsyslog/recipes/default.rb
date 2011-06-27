@@ -60,7 +60,7 @@ end
 
 
 execute "register_loggly" do
-  command "curl -d input_id=#{loggly_id} -d ip=#{zz[:ec2][:local_ipv4]} http://zangzing:share1001photos@zangzing.loggly.com/api/devices/"
+  command "curl -d input_id=#{loggly_id} -d ip=#{ec2[:local_ipv4]} http://zangzing:share1001photos@zangzing.loggly.com/api/devices/"
   action :nothing
 end
 

@@ -225,6 +225,14 @@ class Chef
       return full_path
     end
 
+    def zz
+      Chef::Recipe::ZZDeploy.env.zz
+    end
+
+    def ec2
+      Chef::Recipe::ZZDeploy.env.ec2
+    end
+
     def is_local_dev?
       Chef::Recipe::ZZDeploy.env.is_local_dev?
     end
@@ -266,6 +274,14 @@ end
 
 class Chef
   class Resource
+    def zz
+      Chef::Recipe::ZZDeploy.env.zz
+    end
+
+    def ec2
+      Chef::Recipe::ZZDeploy.env.ec2
+    end
+
     def is_local_dev?
       Chef::Recipe::ZZDeploy.env.is_local_dev?
     end
