@@ -57,7 +57,8 @@ template "/etc/rsyslog.conf" do
       :loggly_id => loggly_id
   })
   notifies :restart, "service[rsyslog]", :immediately
-  notifies :run, "execute[register_loggly]", :immediately
+  notifies :run, "execute[loggly_register]", :immediately
+  notifies :run, "execute[loggly_ready_msg]", :immediately
 end
 
 service "rsyslog" do
@@ -66,8 +67,13 @@ service "rsyslog" do
 end
 
 
-execute "register_loggly" do
+execute "loggly_register" do
   command "curl -d input_id=#{loggly_id} -d ip=#{ec2[:local_ipv4]} http://zangzing:share1001photos@zangzing.loggly.com/api/devices/"
+  action :nothing
+end
+
+execute "loggly_ready_msg" do
+  command "logger -t chef.deploy rsyslog configured to use loggly"
   action :nothing
 end
 
