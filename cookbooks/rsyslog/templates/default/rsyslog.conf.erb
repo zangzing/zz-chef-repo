@@ -72,7 +72,7 @@ $ActionQueueSaveOnShutdown on # save messages to disk on shutdown
 $ActionQueueType LinkedList   # run asynchronously
 $ActionResumeRetryCount -1    # infinite retries if host is down
 # remote host is: name/ip:port, e.g. 192.168.0.1:514, port optional
-:programname, startswith, "rails"			@@ec2.logs.loggly.com:<%=@loggly_port%>
+:programname, startswith, "rails"			@@logs.loggly.com:<%=@loggly_port%>
 # ### end of the forwarding rule ###
 
 # ### begin forwarding rule ###
@@ -90,5 +90,5 @@ $ActionQueueSaveOnShutdown on # save messages to disk on shutdown
 $ActionQueueType LinkedList   # run asynchronously
 $ActionResumeRetryCount -1    # infinite retries if host is down
 # remote host is: name/ip:port, e.g. 192.168.0.1:514, port optional
-:programname, startswith, "chef"			@@ec2.logs.loggly.com:<%=@loggly_port%>
+:programname, startswith, "chef"			@@logs.loggly.com:<%=@loggly_port%>
 # ### end of the forwarding rule ###
