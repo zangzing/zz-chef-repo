@@ -96,7 +96,7 @@ class Chef::Recipe::ZZDeployEnvironment
         'local' =>  {
             :public_hostname => "localhost",
             :local_hostname => "localhost",
-            :role => 'solo'
+            :role => 'local'
         }
     }
   end

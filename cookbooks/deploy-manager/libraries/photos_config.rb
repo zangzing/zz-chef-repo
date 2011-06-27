@@ -52,7 +52,7 @@ class Chef::Recipe::PhotosConfig
   def self.calc_redis_host
     host = ""
     instances.each_value do |instance|
-      if ['db','solo'].include?(instance[:role])
+      if ['db','solo', 'local'].include?(instance[:role])
         host = instance[:local_hostname]
         break
       end
@@ -67,7 +67,7 @@ class Chef::Recipe::PhotosConfig
   def self.calc_resque_cpus
     hosts = []
     instances.each_value do |instance|
-      if ['util','solo'].include?(instance[:role])
+      if ['util','solo', 'local'].include?(instance[:role])
         host = instance[:local_hostname]
         hosts << host
       end
@@ -82,7 +82,7 @@ class Chef::Recipe::PhotosConfig
   def self.calc_app_servers
     hosts = []
     instances.each_value do |instance|
-      if ['app','app_master','solo'].include?(instance[:role])
+      if ['app','app_master','solo', 'local'].include?(instance[:role])
         host = instance[:local_hostname]
         hosts << host
       end
@@ -97,7 +97,7 @@ class Chef::Recipe::PhotosConfig
   def self.calc_resque_workers
     hosts = []
     instances.each_value do |instance|
-      if ['app','app_master','solo'].include?(instance[:role])
+      if ['app','app_master','solo', 'local'].include?(instance[:role])
         host = instance[:local_hostname]
         hosts << host
       end
@@ -112,7 +112,7 @@ class Chef::Recipe::PhotosConfig
   def self.calc_resque_scheduler
     host = ""
     instances.each_value do |instance|
-      if ['app_master','solo'].include?(instance[:role])
+      if ['app_master','solo', 'local'].include?(instance[:role])
         host = instance[:local_hostname]
         break
       end
@@ -127,7 +127,7 @@ class Chef::Recipe::PhotosConfig
   def self.calc_db
     host = ""
     instances.each_value do |instance|
-      if ['db','solo'].include?(instance[:role])
+      if ['db','solo', 'local'].include?(instance[:role])
         host = instance[:local_hostname]
         break
       end

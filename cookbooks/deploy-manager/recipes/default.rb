@@ -39,31 +39,12 @@ end
 
 
 if deploy_config?
-  if is_local_dev?
-
-    require_recipe "show-node"
-
-  else
-    # common config
-    require_recipe "show-node"
-    require_recipe "env-setup"
-    require_recipe "rsyslog"
-    require_recipe "imagemagick"
-    require_recipe "ssmtp"
-
-    case deploy_role
-      when "app", "app_master", "solo"
-        #require_recipe "rsyslog"
-
-      when "db"
-        #require_recipe "show-node"
-
-      when "util"
-        #require_recipe "show-node"
-
-    end
-
-  end
+  require_recipe "show-node"
+  require_recipe "env-setup"
+  require_recipe "rsyslog"
+  require_recipe "imagemagick"
+  require_recipe "ssmtp"
+  require_recipe "redis"
 end
 
 # see if we should go ahead and deploy the app

@@ -3,7 +3,11 @@
         "dev_machine" : true,
         "deploy_group" : "localdeploy",
         "deploy_what" : "config",
-        "app_name" : "photos"
+        "app_name" : "photos",
+        "group_config" : {
+            "rails_env" : "development",
+            "app_name" : "photos"
+        }
     },
 
     "run_list": "recipe[deploy-manager]"
