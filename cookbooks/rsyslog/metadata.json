@@ -1,0 +1,29 @@
+{
+  "dependencies": {
+  },
+  "name": "ssmtp",
+  "maintainer_email": "dev@zangzing.com",
+  "attributes": {
+  },
+  "license": "Apache 2.0",
+  "suggestions": {
+  },
+  "platforms": {
+  },
+  "maintainer": "ZangZing, LLC",
+  "long_description": "",
+  "version": "0.0.1",
+  "recommendations": {
+  },
+  "recipes": {
+  },
+  "groupings": {
+  },
+  "conflicting": {
+  },
+  "replacing": {
+  },
+  "description": "SSMTP installer",
+  "providing": {
+  }
+}

@@ -47,10 +47,11 @@ if deploy_config?
     # common config
     require_recipe "show-node"
     require_recipe "env-setup"
+    require_recipe "rsyslog"
 
     case deploy_role
       when "app", "app_master", "solo"
-        #require_recipe "show-node"
+        #require_recipe "rsyslog"
 
       when "db"
         #require_recipe "show-node"
