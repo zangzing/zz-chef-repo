@@ -63,6 +63,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:local]) do |app_name, 
           cd #{name}-#{version}
           sudo make
           sudo rm -rf #{install_prefix}/bin/redis-*
+          sudo rm -rf #{install_prefix}/sbin/redis-*
           sudo make install PREFIX=#{install_prefix}
         EOH
         not_if {already_installed}
