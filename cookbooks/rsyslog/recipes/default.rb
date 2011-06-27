@@ -40,6 +40,13 @@ case app_name
     end
 end
 
+directory "/var/spool/rsyslog" do
+  owner root_user
+  group root_group
+  mode "0755"
+  action :create
+end
+
 template "/etc/rsyslog.conf" do
   source "rsyslog.conf.erb"
   owner root_user
