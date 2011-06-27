@@ -93,35 +93,43 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:local]) do |app_name, 
         recursive true
       end
 
+      if is_local_dev == false
+        template "/etc/init.d/redis" do
+          source "redis.erb"
+          owner root_user
+          group root_group
+          mode 0644
+          notifies :restart, "service[redis]"
+        end
+      end
+
       # install the configuration
       template "/etc/redis.conf" do
         source "redis.conf.erb"
         owner root_user
         group root_group
         mode 0644
-        notifies :restart, "service[redis]", :immediately unless is_local_dev
-        notifies :run, "bash[redis_local_restart]", :immediately if is_local_dev
+        notifies :restart, "service[redis]" unless is_local_dev
+        notifies :run, "bash[redis_local_restart]" if is_local_dev
       end
 
-      if is_local_dev
-        bash "redis_local_restart" do
-          Chef::Log.info( "ZangZing=> restarting dev redis")
-          code <<-EOH
-            #{install_prefix}/bin/redis-cli shutdown
-            sudo #{install_prefix}/bin/redis-server /etc/redis.conf
-          EOH
-          action :nothing
-        end
-      else
+      bash "redis_local_restart" do
+        Chef::Log.info( "ZangZing=> restarting dev redis")
+        code <<-EOH
+          #{install_prefix}/bin/redis-cli shutdown
+          sudo #{install_prefix}/bin/redis-server /etc/redis.conf
+        EOH
+        action :nothing
+      end
+
 #        execute "Restart redis" do
 #          command "sudo monit restart redis"
 #          Chef::Log.info("ZangZing=> redis restarting...")
 #          not_if {already_installed}
 #        end
-        service "redis" do
-          supports :restart => true, :status => true
-          action :nothing
-        end
+      service "redis" do
+        supports :restart => true, :status => true
+        action :nothing
       end
 
     end
