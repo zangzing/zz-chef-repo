@@ -42,6 +42,7 @@ if deploy_config?
   require_recipe "show-node"
   require_recipe "env-setup"
   require_recipe "rsyslog"
+  require_recipe "monit"
   require_recipe "imagemagick"
   require_recipe "ssmtp"
   require_recipe "redis"
