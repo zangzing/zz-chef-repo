@@ -43,6 +43,8 @@ if deploy_config?
   require_recipe "env-setup"
   require_recipe "rsyslog"
   require_recipe "monit"
+  require_recipe "nginx"
+  require_recipe "v3homepage-prep"
   require_recipe "imagemagick"
   require_recipe "ssmtp"
   require_recipe "redis"

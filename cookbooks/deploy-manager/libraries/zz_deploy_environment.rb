@@ -218,11 +218,7 @@ class Chef
     # relative paths removed since Chef doesn't
     # seem to like relative paths in some cases
     def full_path path
-      cur_dir = Dir.pwd
-      Dir.chdir path
-      full_path = Dir.pwd
-      Dir.chdir cur_dir
-      return full_path
+      File.expand_path('.', path)
     end
 
     def zz
@@ -305,3 +301,19 @@ class Chef
   end
 end
 
+class Chef::Recipe::NotifyHelper
+  # remote_only should be set to false
+  # if you want local to be notified
+  def initialize(remote_only = true)
+    @notify_count = 0
+    @remote_only = remote_only
+  end
+
+  # indicates if you should do the notify
+  # will return false if we've already done it
+  # once or the local filter is set
+  def should_notify?
+    @notify_count += 1
+    return ((@remote_only && Chef::Recipe::ZZDeploy.env.is_local_dev?) || @notify_count > 1) == false
+  end
+end

@@ -5,6 +5,7 @@
         "deploy_what" : "config",
         "app_name" : "photos",
         "group_config" : {
+            "vhost" : "localhost",
             "rails_env" : "development",
             "app_name" : "photos"
         }

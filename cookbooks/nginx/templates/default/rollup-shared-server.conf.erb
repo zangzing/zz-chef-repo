@@ -1,0 +1,66 @@
+##
+# nginx app specific configuration
+#
+##
+
+        client_max_body_size 10M;
+
+
+        index index.html index.htm;
+
+        # proxy set up
+        # set reasonable proxy memory limits
+        proxy_max_temp_file_size 64M;
+        proxy_buffering on;
+        proxy_buffer_size 8k;
+        proxy_buffers 32 8k;
+        # Note: in some version 7.xx of nginx they do not pass Set-Cookie unless explicitly told to do so
+        proxy_pass_header       Set-Cookie;
+
+
+
+#####
+        # maintenance page support
+        # This allows people to use images and css in their maintenance.html file
+        if ($request_filename ~* \.(css|jpg|gif|png)$) {
+            break;
+        }
+
+        # Rewrite all the requests to the maintenance.html page if it exists.
+        if (-f $document_root/system/maintenance.html) {
+            return 503;
+        }
+
+<% if @remap_error_pages %>
+        proxy_intercept_errors on;
+<% end %>
+        error_page 401 /401.html;
+        error_page 403 /403.html;
+        error_page 404 /404.html;
+        error_page 500 502 504 /500.html;
+
+        error_page 503 @503;
+
+        location @503 {
+            rewrite  ^(.*)$  /maintenance.html break;
+        }
+#####
+
+
+#####
+        # pass it on to app server
+        location / {
+            # Everything proxied in this location is subject to caching
+            # so if you have any custom proxy handlers that shouldn't
+            # be cached define them outside this location
+            proxy_cache_valid  200 302  60m;
+            proxy_cache zz_cache;
+
+            try_files  $uri $uri/index.html $uri.html @zangzing_upstream;
+        }
+
+        location @zangzing_upstream {
+            proxy_pass http://zangzing_upstream
+        }
+#####
+

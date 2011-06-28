@@ -1,0 +1,11 @@
+openssl genrsa -des3 -out localhost.key 1024
+openssl req -new -key localhost.key -out localhost.csr
+cp localhost.key localhost.key.org
+openssl rsa -in localhost.key.org -out localhost.key
+openssl x509 -req -days 365 -in localhost.csr -signkey localhost.key -out localhost.crt
+mv localhost.key localhost.key.erb
+mv localhost.crt localhost.crt.erb
+
+
+
+
