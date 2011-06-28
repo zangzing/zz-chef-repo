@@ -40,6 +40,10 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:local]) do |app_name, 
       `redis-server -v | grep 'version 2\.2\.11'`
       already_installed = $?.exitstatus == 0
 
+      name = "redis"
+      work_dir = "/tmp"
+      install_prefix = is_local_dev ? "/usr/local" : "/usr"
+
       if role != :local
         # put the base level package on the machine, we will upgrade via the compile below
         package "redis" do
@@ -51,10 +55,6 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:local]) do |app_name, 
       else
         destination_cmd = "echo"
       end
-
-      name = "redis"
-      work_dir = "/tmp"
-      install_prefix = is_local_dev ? "/usr/local" : "/usr"
 
       #Download remote source into /tmp directory
       cookbook_file "#{work_dir}/#{name}-#{version}.tar.gz" do
