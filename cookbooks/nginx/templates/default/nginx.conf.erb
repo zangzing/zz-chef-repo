@@ -14,7 +14,7 @@
 
 <% if @is_local_dev %>
 daemon off;
-user root deploy;
+user root ec2-user;
 worker_processes 4;
 pid /var/run/nginx.pid;
 
@@ -23,7 +23,7 @@ events {
   #use epoll;
 }
 <% else %>
-user deploy deploy;
+user ec2-user ec2-user;
 worker_processes 4;
 worker_rlimit_nofile 10240;
 pid /var/run/nginx.pid;
