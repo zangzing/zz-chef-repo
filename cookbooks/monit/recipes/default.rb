@@ -5,11 +5,17 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
     action :install
   end
 
-#  template "/etc/ssmtp/ssmtp.conf" do
-#    source "ssmtp.conf.erb"
-#    owner deploy_user
-#    group deploy_group
-#    mode "0644"
-#  end
+  template "/etc/monit.conf" do
+    source "monit.conf.erb"
+    owner root_user
+    group root_group
+    mode "0600"
+    notifies :restart, "service[monit]", :immediately
+  end
+
+  service "monit" do
+    supports :restart => true, :status => true
+    action :nothing
+  end
 
 end
