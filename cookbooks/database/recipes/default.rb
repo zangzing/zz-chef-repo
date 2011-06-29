@@ -45,7 +45,6 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
 
   if app_name == :rollup
     # rollup has definitions for read only production and zza
-    # photos has a cache database, it is defined in the custom_config section of the node
     username = zz[:custom_config][:photosdb_username]
     password = zz[:custom_config][:photosdb_password]
     host = zz[:custom_config][:photosdb_host]
@@ -64,7 +63,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
         })
     end
 
-    # photos has a cache database, it is defined in the custom_config section of the node
+    # read only zza
     username = zz[:custom_config][:zzadb_username]
     password = zz[:custom_config][:zzadb_password]
     host = zz[:custom_config][:zzadb_host]

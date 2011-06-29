@@ -62,15 +62,17 @@ class Chef::Recipe::ZZDeployEnvironment
 
     # now see if we have any custom json data to associate with the node
     cust_file_path = "#{project_root_dir}/cookbooks/deploy-manager/custom/#{node[:zz][:app_name]}_#{node[:zz][:group_config][:rails_env]}.json"
-    puts cust_file_path
+    json = nil
     begin
       json = File.open(cust_file_path, 'r') {|f| f.read }
+    rescue Exception => ex
+      # just ignore if file not found
+    end
+    if !json.nil?
+      # if we got json data back then parse, in this case we want to know if it fails
       custom = JSON.parse(json)
       node[:zz][:custom_config] = custom
-    rescue Exception => ex
-      # just ignore if no custom data
     end
-
   end
 
   def zz

@@ -46,6 +46,7 @@ if deploy_config?
   require_recipe "nginx"
   require_recipe "v3homepage-prep"
   require_recipe "database"
+  require_recipe "exiftool"
   require_recipe "imagemagick"
   require_recipe "ssmtp"
   require_recipe "redis"
