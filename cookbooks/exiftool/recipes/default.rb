@@ -26,7 +26,6 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:local]) do |app_name, role
       tar zxf #{name}-#{version}.tar.gz
       cd #{name}-#{version}
       perl Makefile.PL
-      make test
       sudo make install
     EOH
     not_if {already_installed}

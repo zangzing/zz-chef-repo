@@ -53,7 +53,7 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
 
   # Clean Up Tmp File
   execute "Clean Up #{work_dir}/#{name} files" do
-    command "rm -rf #{files_at}*"
+    command "rm -rf #{work_dir}/#{files_at}*"
     not_if {already_installed}
   end
 
