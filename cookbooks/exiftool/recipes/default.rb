@@ -37,4 +37,10 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:local]) do |app_name, role
     not_if {already_installed}
   end
 
+  # not sure why it doesn't install in /usr/bin by default but
+  # we need it there for the server to call it
+  link "/usr/bin/exiftool" do
+    to "/usr/local/bin/exiftool"
+  end
+
 end
