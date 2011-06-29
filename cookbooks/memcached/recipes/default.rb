@@ -30,4 +30,13 @@ run_for_app(:photos => [:solo,:app,:app_master],
     action :nothing
   end
 
+  # add ourselves to monit
+  template "/etc/monit.d/memcached.monitrc" do
+    owner 'root'
+    group 'root'
+    mode 0644
+    source "memcached.monitrc.erb"
+    notifies :run, "execute[monit-reload-config]"
+  end
+
 end

@@ -18,4 +18,9 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
     action :nothing
   end
 
+  execute "monit-reload-config" do
+      command "monit reload"
+      action :nothing
+  end
+
 end
