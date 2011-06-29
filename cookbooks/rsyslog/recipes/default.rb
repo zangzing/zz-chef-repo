@@ -5,24 +5,24 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
   loggly_port = 0
   loggly_id = 0
   case app_name
-    when 'photos'
+    when :photos
       case rails_env
-        when 'photos_production'
+        when :photos_production
           loggly_port = 37253
           loggly_id = 4307
 
-        when 'photos_staging'
+        when :photos_staging
           loggly_port = 19189
           loggly_id = 4308
       end
 
-    when 'rollup'
+    when :rollup
       case rails_env
-        when 'production'
+        when :production
           loggly_port = 25284
           loggly_id = 4309
 
-        when 'staging'
+        when :staging
           loggly_port = 40130
           loggly_id = 4310
 

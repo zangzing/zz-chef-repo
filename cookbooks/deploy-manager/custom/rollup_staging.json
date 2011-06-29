@@ -1,0 +1,11 @@
+{
+    "photosdb_username": "zzuser",
+    "photosdb_password": "funwithphotos",
+    "photosdb_host": "zz-prod-rds.ckikxby0s3p8.us-east-1.rds.amazonaws.com",
+    "photosdb_schema": "photos_prod",
+
+    "zzadb_username": "zzuser",
+    "zzadb_password": "funwithphotos",
+    "zzadb_host": "zza-db.ckikxby0s3p8.us-east-1.rds.amazonaws.com",
+    "zzadb_schema": "zzaproduction"
+}

@@ -1,0 +1,11 @@
+# This file MUST track the amazon RDS instances
+# if you make a change to the database make sure you
+# update the group in simpledb or custom data
+<%=@rails_env%>:
+ adapter: mysql2
+ database: <%=@schema%>
+ encoding: utf8
+ username: <%=@username%>
+ password: <%=@password%>
+ host: <%=@host%>
+

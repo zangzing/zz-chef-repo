@@ -59,6 +59,18 @@ class Chef::Recipe::ZZDeployEnvironment
     instance = zz[:instances][instance_id]
     raise "Could not find our instance in config - our instance id is #{instance_id}" if instance.nil?
     node[:zz][:deploy_role] = instance[:role]
+
+    # now see if we have any custom json data to associate with the node
+    cust_file_path = "#{project_root_dir}/cookbooks/deploy-manager/custom/#{node[:zz][:app_name]}_#{node[:zz][:group_config][:rails_env]}.json"
+    puts cust_file_path
+    begin
+      json = File.open(cust_file_path, 'r') {|f| f.read }
+      custom = JSON.parse(json)
+      node[:zz][:custom_config] = custom
+    rescue Exception => ex
+      # just ignore if no custom data
+    end
+
   end
 
   def zz
@@ -179,6 +191,24 @@ class Chef::Recipe::ZZDeployEnvironment
     zz[:root_user]
   end
 
+  # take the current directory of this file and return a fully
+  # qualified path based on the relative path passed in
+  def relative_path rel_path
+    full_path(File.dirname(__FILE__) + "/" + rel_path)
+  end
+
+  # give the root of this project
+  def project_root_dir
+    dir = relative_path('../../..')
+  end
+
+  # generate a fully qualified path with
+  # relative paths removed since Chef doesn't
+  # seem to like relative paths in some cases
+  def full_path path
+    File.expand_path('.', path)
+  end
+
 
   def log_info
 #    Chef::Log.info("ZangZing=> should_host_redis? is " + should_host_redis?.to_s)
@@ -206,19 +236,19 @@ class Chef
     # take the current directory of this file and return a fully
     # qualified path based on the relative path passed in
     def relative_path rel_path
-      full_path(File.dirname(__FILE__) + "/" + rel_path)
+      Chef::Recipe::ZZDeploy.env.relative_path(rel_path)
     end
 
     # give the root of this project
     def project_root_dir
-      dir = relative_path('../../..')
+      Chef::Recipe::ZZDeploy.env.project_root_dir
     end
 
     # generate a fully qualified path with
     # relative paths removed since Chef doesn't
     # seem to like relative paths in some cases
     def full_path path
-      File.expand_path('.', path)
+      Chef::Recipe::ZZDeploy.env.full_path(path)
     end
 
     def zz
