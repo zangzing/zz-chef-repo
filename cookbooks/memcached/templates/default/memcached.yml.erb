@@ -1,0 +1,24 @@
+defaults:
+  ttl: 1800
+  readonly: false
+  urlencode: false
+  c_threshold: 10000
+  compression: true
+  debug: false
+  namespace: ""
+  sessions: true
+  fragments: true
+  memory: 128
+  servers:
+  <% if @server_names.nil? %>
+    - localhost:11211
+  <% else %>
+    - <%= @server_names.join(":11211\n    - ") %>:11211
+  <% end %>
+  benchmarking: true
+  raise_errors: true
+  fast_hash: false
+  fastest_hash: false
+
+<%= @rails_env %>:
+  benchmarking: false
