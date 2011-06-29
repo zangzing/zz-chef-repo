@@ -24,9 +24,8 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:local]) do |app_name, role
     cwd "#{work_dir}"
     code <<-EOH
       tar zxf #{name}-#{version}.tar.gz
-      cd #{name}-#{version}
-      perl Makefile.PL
-      sudo make install
+      cd #{name}-#{version} && perl Makefile.PL
+      sudo make && sudo make install
     EOH
     not_if {already_installed}
   end
@@ -41,6 +40,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:local]) do |app_name, role
   # we need it there for the server to call it
   link "/usr/bin/exiftool" do
     to "/usr/local/bin/exiftool"
+    not_if {already_installed}
   end
 
 end
