@@ -1,0 +1,262 @@
+#!/bin/sh
+#
+# This script starts and stops the Resque daemon
+# This script belongs in /engineyard/bin/resque
+#
+
+PATH=/bin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
+CURDIR=`pwd`
+
+usage() {
+  echo "Usage: $0 <appname> {start|stop|term|quit|pause|cont|abort} <environment> <conf_file>"
+  echo "\nstop)     is a synonym for quit"
+  echo "quit)     issues -QUIT to request the worker to stop"
+  echo "term)     issues -TERM to request the worker to stop"
+  echo "pause)    issues -USR2 when the current job finishes, worker remains running, but doesn't start any new jobs"
+  echo "cont)     issues -CONT to continue after pausing"
+  echo "abort)    issues -USR1 kills current job, or shuts down if there is no job"
+  echo "see http://github.com/defunkt/resque for more details"
+  echo "\nSet the GRACE_TIME env variable to configure how long we should wait for after issuing quit, before asumming a problem and killing the worker and job"
+  exit 1
+}
+
+rm_lockfile(){
+  if [ -e $LOCK_FILE ]; then
+   logger -t "mont-resque[$$]" "removing $LOCK_FILE for `cat $LOCK_FILE`"
+   rm $LOCK_FILE
+  fi
+}
+
+exit_cleanly() {
+  cd $CURDIR
+  logger -t "mont-resque[$$]" "exiting wrapper cleanly with $RESULT"
+  exit $RESULT
+}
+
+unlock_and_exit_cleanly(){
+  rm_lockfile
+  exit_cleanly
+}
+
+set_pid_from_file(){
+  export PID=`cat $PID_FILE`
+}
+
+signal_worker() {
+  RESULT=0
+  if [ -f $PID_FILE ]; then
+    set_pid_from_file
+    logger -t "monit-resque[$$]" "Issuing kill with -$SIG $PID"
+    SLEEP_COUNT=0
+    kill -$SIG $PID
+  fi
+}
+
+signal_worker_fatally(){
+  signal_worker()
+  if [ -f $PID_FILE ]; then
+    if [ -n "$ALLOW_TIMEOUT" ]; then
+      while [ -e /proc/$PID ]; do
+        sleep .25
+        let "SLEEP_COUNT+=1"
+        let "REPORT_TIME = $SLEEP_COUNT%4"
+        if(( "$SLEEP_COUNT" > $GRACE_TIME )); then
+          logger -t "monit-resque[$$]" "Resque worker with pid $PID for $WORKER_REF still running, issuing -TERM"
+          kill -15 $PID 2>/dev/null; true
+        elif(( $REPORT_TIME == 0 )); then
+          let "RUNTIME = $SLEEP_COUNT/4"
+          logger -t "monit-resque[$$]" "waiting for $PID to die ( for $RUNTIME seconds now)"
+        fi
+      done
+    fi
+    sleep 1
+    if [ -d /proc/$PID ];then
+      for child in $(ps axo pid,ppid | awk "{ if ( \$2 == $PID ) { print \$1 }}");
+      do
+        kill -9 $child 2>/dev/null; true
+        logger -t "monit-resque[$$]" "Murdering Resque workers child with $child for $WORKER_REF"
+        break
+      done
+      while [ -d /proc/$PID ]; do
+        logger -t "monit-resque[$$]" "Murdering Resque worker with $PID for $WORKER_REF"
+        kill -9 $PID
+        sleep 1
+      done
+    fi
+    logger -t "monit-resque[$$]" "Removing pid file for $PID - $WORKER_REF"
+    [ -e "$PID_FILE" -a ! -d /proc/$PID ] && rm -f $PID_FILE
+  fi
+}
+
+lock(){
+  RESULT=0
+  if [ -e $LOCK_FILE ]; then
+    LAST_LOCK_PID=`cat $LOCK_FILE`
+    if [ -n $LAST_LOCK_PID -a -z "`ps axo pid|grep $LAST_LOCK_PID`" -a -f $LOCK_FILE ];then
+      sleep 1
+      logger -t "monit-resque[$$]" "Removing stale lock file for $WORKER_REF ($LAST_LOCK_PID)"
+      rm $LOCK_FILE 2>&1
+    else
+      logger -t "monit-resque[$$]" "Monit already messing with $WORKER_REF ($LAST_LOCK_PID)"
+      RESULT=1
+      exit_cleanly
+    fi
+  fi
+  echo $$ > $LOCK_FILE
+}
+
+legacy_fix() {
+ #In the transition from 0.18.2 to 0.18.3 of ey monit scripts the way
+ #the pid file is used to find the process to kill has changed.
+ #To avert problems being left behind after an upgrade of this package,
+  if [ -f $PID_FILE ]; then
+    set_pid_from_file
+    if [ -n "`ps axo pid,command|grep $PID|grep 'su -c'`" ];then
+      logger -t "monit-resque[$$]" "Monit Scripts have just been upgraded, killing old style workers"
+      for child in $(ps axo pid,ppid| awk "{ if ( \$2 == $PID ) { print \$1 }}");
+      do
+        kill -TERM $child 2> /dev/null
+        while [ -e /proc/$child ]; do
+          logger -t "monit-resque[$$]" "killing legacy worker: $child"
+          [ -e /proc/$child ] && kill -9 $child 2> /dev/null
+	  sleep 1
+        done
+      done
+      [ -e /proc/$PID   ] && kill -9 $PID   2> /dev/null
+      rm $PID_FILE
+      unlock_exit_cleanly
+    fi
+  fi
+}
+
+if [ $# -lt 4 ]; then usage; fi
+
+if [ "`whoami`" != "root" ]; then
+  logger -t `basename $0` -s "Must be run as root"
+  exit 1
+fi
+
+#Baisc Setup of default values
+APP=$1 ; ACTION=$2; RACK_ENV=$3; CONF_FILE=$4;
+
+APP_DIR="/data/${APP}"
+APP_ROOT="${APP_DIR}/current"
+APP_SHARED="${APP_DIR}/shared"
+APP_CONFIG="${APP_SHARED}/config"
+
+if [ -e "${APP_CONFIG}/${CONF_FILE}" ]; then
+  source "${APP_CONFIG}/${CONF_FILE}"
+  if [ -z "$QUEUE" ]; then
+    logger -t "resque_${APP}" -s "QUEUE not defined in ${CONF_FILE} not found for app: ${APP}"
+    exit 1
+  fi
+else
+  logger -t "resque_${APP}" -s "/data/${APP}/shared/config/${CONF_FILE} not found for app: ${APP}"
+  exit 1
+fi
+
+WORKER_REF=`echo $CONF_FILE | sed s/.conf//`
+LOG_FILE="$APP_ROOT/log/$WORKER_REF.log"
+LOCK_FILE="/tmp/$WORKER_REF.monit-lock"
+PID_FILE="/var/run/zz/resque/$APP/$WORKER_REF.pid"
+GEMFILE="$APP_ROOT/Gemfile"
+BUNDLER=""
+if [ -f $GEMFILE ];then
+  BUNDLER="bundle exec"
+fi
+
+if [ -d $APP_ROOT ]; then
+  USER=$(stat -L -c"%U" $APP_ROOT)
+  #export QUEUE="$QUEUE"
+  #export RACK_ENV="$RACK_ENV"
+  #export RAILS_ENV="$RACK_ENV"
+  #export MERB_ENV="$RACK_ENV"
+  export HOME="/home/$USER"
+  #[  -n "$VERBOSE"  ] && export V="VERBOSE=$VERBOSE"
+  #[  -n "$VVERBOSE" ] && export VV="VVERBOSE=$VVERBOSE"
+
+  export V="VERBOSE=$VERBOSE"
+  export VV="VVERBOSE=$VVERBOSE"
+
+  COMMAND="$V $VV APP_ROOT=${APP_ROOT} RACK_ENV=${RACK_ENV} RAILS_ENV=${RACK_ENV} MERB_ENV=${RACK_ENV} QUEUE=${QUEUE} $BUNDLER rake -f ${APP_ROOT}/Rakefile resque:work"
+  #COMMAND="sudo -u $USER -H $BUNDLER rake resque:work"
+  #COMMAND="QUEUE=$QUEUE $BUNDLER rake resque:work"
+
+  if [ ! -d /var/run/zz/resque/$APP ]; then
+    mkdir -p /var/run/zz/resque/$APP
+  fi
+
+  # handle the second param, don't start if already existing
+
+  logger -t "monit-resque[$$]" "${ACTION}ing Resque worker $WORKER_REF"
+  case "$ACTION" in
+    start)
+      lock
+      cd $APP_ROOT
+      if [ -f $PID_FILE ]; then
+        set_pid_from_file
+        if [ -d /proc/$PID ]; then
+          logger -t "monit-resque[$$]" "Resque worker $WORKER_REF is already running with $PID."
+          RESULT=1
+        else
+          rm -f $PID_FILE
+          logger -t "monit-resque[$$]" "Removing stale pid file ($PID_FILE) for pid $PID"
+        fi
+      fi
+      if [ ! -f $PID_FILE ]; then
+        sudo -u $USER -H $COMMAND  >> $LOG_FILE 2>&1 &
+        RESULT=$?
+        logger -t "monit-resque[$$]" "Started with pid $! and exit $RESULT"
+        echo $! > $PID_FILE
+        sleep .1
+      fi
+      unlock_and_exit_cleanly
+      ;;
+    stop|quit)
+      legacy_fix
+      lock
+      SIG="QUIT"
+      [ -z "$GRACE_TIME" ] && GRACE_TIME=60
+      ALLOW_TIMEOUT=1
+      signal_worker
+      [ -e "$LOCK_FILE" ] && rm $LOCK_FILE
+      unlock_and_exit_cleanly
+      ;;
+    kill|term)
+      lock
+      legacy_fix
+      ALLOW_TIMEOUT=
+      SIG="TERM"
+      signal_worker_fatally
+      unlock_and_exit_cleanly
+      ;;
+    pause)
+      lock
+      ALLOW_TIMEOUT=
+      SIG="USR2"
+      signal_worker
+      unlock_and_exit_cleanly
+      ;;
+    cont)
+      lock
+      ALLOW_TIMEOUT=
+      SIG="CONT"
+      signal_worker
+      unlock_and_exit_cleanly
+      ;;
+    abort)
+      lock
+      ALLOW_TIMEOUT=
+      SIG="USR1"
+      signal_worker
+      unlock_and_exit_cleanly
+      ;;
+    *)
+      usage
+      exit_cleanly
+      ;;
+  esac
+else
+  echo "/data/$APP/current doesn't exist."
+  usage
+fi

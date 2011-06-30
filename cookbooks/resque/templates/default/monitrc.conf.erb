@@ -1,0 +1,17 @@
+# change once we have our own scripts to start/stop, do scripts in ruby for simplicity...
+<% (@num_workers || 1).times do |num| %>
+check process resque_<%= @app_name %>_<%= num %>
+  with pidfile /var/run/zz/resque/<%= @app_name %>/resque_<%= num %>.pid
+  start program = "/usr/bin/zz <%= @app_name %> start <%= @rails_env %> resque_<%= num %>.conf"
+  stop program = "/usr/bin/zz <%= @app_name %> stop <%= @rails_env %> resque_<%= num %>.conf"
+  if totalmem is greater than 300 MB for 3 cycles then restart # eating up memory?
+  group resque_<%= @app_name %>
+<% end %>
+<%if @include_scheduler%>
+check process resque_<%= @app_name %>_scheduler
+  with pidfile /var/run/zz/resque/<%= @app_name %>/resque_scheduler.pid
+  start program = "/usr/bin/zz/resque_scheduler <%= @app_name %> start <%= @rails_env %>"
+  stop program = "/usr/bin/zz/resque_scheduler <%= @app_name %> stop <%= @rails_env %>"
+  if totalmem is greater than 300 MB for 3 cycles then restart # eating up memory?
+  group resque_<%= @app_name %>
+<%end%>

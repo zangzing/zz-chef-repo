@@ -48,9 +48,11 @@ if deploy_config?
   require_recipe "database"
   require_recipe "ssmtp"
   require_recipe "redis"
+  require_recipe "resque"
   require_recipe "v3homepage-prep"
   require_recipe "exiftool"
   require_recipe "imagemagick"
+  require_recipe "unicorn"
 end
 
 # see if we should go ahead and deploy the app

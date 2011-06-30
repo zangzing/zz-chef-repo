@@ -177,6 +177,10 @@ class Chef::Recipe::ZZDeployEnvironment
 #    @current_user = parts[0]
   end
 
+  def this_host_name
+    zz[:local_hostname]
+  end
+
   def deploy_user
     zz[:deploy_user]
   end

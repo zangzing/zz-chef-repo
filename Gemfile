@@ -12,3 +12,5 @@ gem "right_aws"
 gem "chef"
 gem "ruby-debug-ide"
 gem "ruby-debug-base"
+gem "resque"
+

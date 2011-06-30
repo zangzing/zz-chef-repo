@@ -9,6 +9,14 @@
 run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:local],
             :rollup => [:solo,:util,:app,:app_master,:db,:local]) do |app_name, role, rails_env|
 
+  # utility commands go here
+  directory "/usr/bin/zz" do
+    owner root_user
+    group root_group
+    mode "0755"
+    action :create
+  end
+
   # we do each part to get the right permissions at each node
   directory "/data" do
     owner deploy_user
