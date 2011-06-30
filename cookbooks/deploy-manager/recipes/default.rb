@@ -59,5 +59,6 @@ end
 
 # see if we should go ahead and deploy the app
 if deploy_app?
-
+  require_recipe "show-node"
+  require_recipe "app-deploy"
 end
