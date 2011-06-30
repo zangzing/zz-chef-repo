@@ -35,7 +35,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master]) do |app_name, role, rails
     queues = "remote_job_#{ZZDeploy.env.this_host_name},mailer,io_local_#{ZZDeploy.env.this_host_name},io_bound,share,facebook,twitter,like,test_queue"
   end
   worker_count.times do |count|
-      template "/data/#{app}/shared/config/resque_#{count}.conf" do
+      template "/data/#{app_name}/shared/config/resque_#{count}.conf" do
         owner deploy_user
         group deploy_group
         mode 0644
@@ -47,7 +47,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master]) do |app_name, role, rails
   end
 
   # create a config file in shared that is used to override default resque.yml
-  template "/data/#{app}/shared/config/resque.yml" do
+  template "/data/#{app_name}/shared/config/resque.yml" do
     owner deploy_user
     group deploy_group
     mode 0644
