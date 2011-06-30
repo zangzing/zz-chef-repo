@@ -60,7 +60,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master]) do |app_name, role, rails
 
   include_scheduler = zz[:app_config][:we_host_resque_scheduler]
 
-  template "/etc/monit.d/resque_#{app}.monitrc" do
+  template "/etc/monit.d/resque_#{app_name}.monitrc" do
     owner root_user
     group root_group
     mode 0644
