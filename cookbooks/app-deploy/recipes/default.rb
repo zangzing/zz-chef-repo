@@ -11,7 +11,10 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
     action :deploy # or :rollback
     before_migrate do
       zz = node[:zz]
-      require "/var/chef/cookbooks/zz-chef-repo/cookbooks/app-deploy/testing/before_migrate.rb"
+      # read the file to reference
+      ruby_code = File.open("/var/chef/cookbooks/zz-chef-repo/cookbooks/app-deploy/testing/before_migrate.rb", 'r') {|f| f.read }
+      puts "******************* EVAL RUBY CODE *****************"
+      instance_eval(ruby_code)
     end
     before_symlink {}
     before_restart {}
