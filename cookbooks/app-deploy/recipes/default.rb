@@ -11,6 +11,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
       :current_dir => current_dir,
       :zz => node[:zz]
   }
+  chef_base = ZZDeploy.env.project_root_dir
 
   deploy base_dir do
     repo zz[:group_config][:app_git_url]
@@ -25,21 +26,25 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
       hv[:release_dir] = release_path
 
       # prep vars we want to pass
+      puts chef_base
       ruby_code = File.open("/var/chef/cookbooks/zz-chef-repo/cookbooks/app-deploy/helpers/prep_hook_vars.rb", 'r') {|f| f.read }
       instance_eval(ruby_code)
 
       # now our own hook code
-      ruby_code = File.open("/var/chef/cookbooks/zz-chef-repo/cookbooks/app-deploy/testing/before_migrate.rb", 'r') {|f| f.read }
+      ruby_code = File.open("/var/chef/cookbooks/zz-chef-repo/cookbooks/app-deploy/helpers/before_migrate.rb", 'r') {|f| f.read }
+      puts "******************* EVAL RUBY CODE *****************"
+      instance_eval(ruby_code)
+
+      # now our own hook code
+      ruby_code = File.open("/var/chef/cookbooks/zz-chef-repo/cookbooks/app-deploy/helpers/before_migrate.rb", 'r') {|f| f.read }
       puts "******************* EVAL RUBY CODE *****************"
       instance_eval(ruby_code)
 
 
-      # and finally the apps code if it has a hook in the deploy dir
-      puts "#{release_path}/deploy/before_migrate.rb"
+      # and finally the app code if it has a hook in the deploy dir
       ruby_code = File.open("#{release_path}/deploy/before_migrate.rb", 'r') {|f| f.read } rescue nil
-      puts "******************* EVAL RUBY CODE *****************"
-      puts ruby_code
-      #instance_eval(ruby_code)
+      #puts "******************* EVAL RUBY CODE *****************"
+      #instance_eval(ruby_code) if !ruby_code.nil?
 
     end
     before_symlink {}
