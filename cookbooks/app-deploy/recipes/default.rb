@@ -35,8 +35,8 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
 
 
       # and finally the apps code if it has a hook in the deploy dir
-      puts Dir.pwd
-      ruby_code = File.open("deploy/before_migrate.rb", 'r') {|f| f.read } rescue nil
+      puts "#{release_path}/deploy/before_migrate.rb"
+      ruby_code = File.open("#{release_path}/deploy/before_migrate.rb", 'r') {|f| f.read } rescue nil
       puts "******************* EVAL RUBY CODE *****************"
       puts ruby_code
       #instance_eval(ruby_code)
