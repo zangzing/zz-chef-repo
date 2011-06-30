@@ -23,7 +23,8 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
       hv = for_hook
       hv[:release_dir] = release_path
 
-      require "/var/chef/cookbooks/zz-chef-repo/cookbooks/app-deploy/helpers/prep_hook_vars.rb"
+      ruby_code = File.open("/var/chef/cookbooks/zz-chef-repo/cookbooks/app-deploy/helpers/prep_hook_vars.rb", 'r') {|f| f.read }
+      instance_eval(ruby_code)
 
       # read the file to reference
       ruby_code = File.open("/var/chef/cookbooks/zz-chef-repo/cookbooks/app-deploy/testing/before_migrate.rb", 'r') {|f| f.read }
