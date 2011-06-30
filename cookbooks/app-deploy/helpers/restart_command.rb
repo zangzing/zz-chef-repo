@@ -1,6 +1,6 @@
 puts "Restart Now........."
 
-cmd = "echo `date` > tmp/restart-2.txt"
+cmd = "echo `date` > #{zz_release_dir}/tmp/restart-2.txt"
 `#{cmd}`
 
 # look recipe code within a hook
