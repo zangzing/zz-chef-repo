@@ -9,6 +9,10 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
     migrate false
     migration_command "rake db:migrate"
     action :deploy # or :rollback
+    before_migrate "/var/chef/cookbooks/zz-chef-repo/cookbooks/app-deploy/testing/before_migrate.rb"
+    before_symlink {}
+    before_restart {}
+    after_restart {}
     restart_command "touch tmp/restart.txt"
   end
 
