@@ -1,7 +1,11 @@
 run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
             :rollup => [:solo,:util,:app,:app_master,:db]) do |app_name, role, rails_env|
 
-  deploy "/data/#{app_name}" do
+  base_dir = "/data/#{app_name}"
+  shared_dir = "#{base_dir}/shared"
+  current_dir = "#{base_dir}/current"
+
+  deploy base_dir do
     repo zz[:group_config][:app_git_url]
     revision zz[:app_deploy_tag]
     user deploy_user
@@ -11,6 +15,11 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
     action :deploy # or :rollback
     before_migrate do
       zz = node[:zz]
+      zz_base_dir = base_dir
+      zz_shared_dir = shared_dir
+      zz_current_dir = current_dir
+      zz_release_dir = release_path
+
       # read the file to reference
       ruby_code = File.open("/var/chef/cookbooks/zz-chef-repo/cookbooks/app-deploy/testing/before_migrate.rb", 'r') {|f| f.read }
       puts "******************* EVAL RUBY CODE *****************"
@@ -25,7 +34,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
     before_symlink {}
     before_restart {}
     after_restart {}
-    restart_command "touch tmp/restart.txt"
+    restart_command "echo `date` > tmp/restart.txt"
   end
 
 end
