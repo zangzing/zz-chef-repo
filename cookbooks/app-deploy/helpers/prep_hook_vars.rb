@@ -1,4 +1,4 @@
-
+# this is helper code just to expose some handy zz_ vars to the custom deploy hooks
 zz = hv[:zz]
 zz_base_dir = hv[:base_dir]
 zz_shared_dir = hv[:shared_dir]

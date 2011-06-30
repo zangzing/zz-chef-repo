@@ -31,25 +31,72 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
 
       # now our own hook code
       ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/before_migrate.rb", 'r') {|f| f.read }
-      puts "******************* EVAL RUBY CODE *****************"
       instance_eval(ruby_code)
-
-      # now our own hook code
-      ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/before_migrate_sub.rb", 'r') {|f| f.read }
-      puts "******************* EVAL RUBY CODE *****************"
-      instance_eval(ruby_code)
-
 
       # and finally the app code if it has a hook in the deploy dir
       ruby_code = File.open("#{release_path}/deploy/before_migrate.rb", 'r') {|f| f.read } rescue nil
-      #puts "******************* EVAL RUBY CODE *****************"
       #instance_eval(ruby_code) if !ruby_code.nil?
-
     end
-    before_symlink {}
-    before_restart {}
-    after_restart {}
-    restart_command "echo `date` > tmp/restart.txt"
+    before_symlink do
+      hv = for_hook
+      hv[:release_dir] = release_path
+
+      # prep vars we want to pass
+      ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/prep_hook_vars.rb", 'r') {|f| f.read }
+      instance_eval(ruby_code)
+
+      # now our own hook code
+      ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/before_symlink.rb", 'r') {|f| f.read }
+      instance_eval(ruby_code)
+
+      # and finally the app code if it has a hook in the deploy dir
+      ruby_code = File.open("#{release_path}/deploy/before_symlink.rb", 'r') {|f| f.read } rescue nil
+      #instance_eval(ruby_code) if !ruby_code.nil?
+    end
+    before_restart do
+      hv = for_hook
+      hv[:release_dir] = release_path
+
+      # prep vars we want to pass
+      ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/prep_hook_vars.rb", 'r') {|f| f.read }
+      instance_eval(ruby_code)
+
+      # now our own hook code
+      ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/before_restart.rb", 'r') {|f| f.read }
+      instance_eval(ruby_code)
+
+      # and finally the app code if it has a hook in the deploy dir
+      ruby_code = File.open("#{release_path}/deploy/before_restart.rb", 'r') {|f| f.read } rescue nil
+      #instance_eval(ruby_code) if !ruby_code.nil?
+    end
+    after_restart do
+      hv = for_hook
+      hv[:release_dir] = release_path
+
+      # prep vars we want to pass
+      ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/prep_hook_vars.rb", 'r') {|f| f.read }
+      instance_eval(ruby_code)
+
+      # now our own hook code
+      ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/after_restart.rb", 'r') {|f| f.read }
+      instance_eval(ruby_code)
+
+      # and finally the app code if it has a hook in the deploy dir
+      ruby_code = File.open("#{release_path}/deploy/after_restart.rb", 'r') {|f| f.read } rescue nil
+      #instance_eval(ruby_code) if !ruby_code.nil?
+    end
+    restart_command do
+      hv = for_hook
+      hv[:release_dir] = release_path
+
+      # prep vars we want to pass
+      ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/prep_hook_vars.rb", 'r') {|f| f.read }
+      instance_eval(ruby_code)
+
+      # now our own hook code
+      ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/restart_command.rb", 'r') {|f| f.read }
+      instance_eval(ruby_code)
+    end
   end
 
 end

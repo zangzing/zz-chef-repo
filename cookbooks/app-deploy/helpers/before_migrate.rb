@@ -7,6 +7,7 @@ puts zz_release_dir
 puts "-----TEST_BEFORE_MIGRATE------"
 
 
+# look recipe code within a hook
 execute "recipe_from_hook" do
     command "ls -al #{zz_release_dir}"
     action :run
