@@ -14,7 +14,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
     migration_command "rake db:migrate"
     action :deploy # or :rollback
     before_migrate do
-      require "/var/chef/cookbooks/zz-chef-repo/cookbooks/app-deploy/prep_hook_vars.rb"
+      require "/var/chef/cookbooks/zz-chef-repo/cookbooks/app-deploy/helpers/prep_hook_vars.rb"
 
       # read the file to reference
       ruby_code = File.open("/var/chef/cookbooks/zz-chef-repo/cookbooks/app-deploy/testing/before_migrate.rb", 'r') {|f| f.read }
