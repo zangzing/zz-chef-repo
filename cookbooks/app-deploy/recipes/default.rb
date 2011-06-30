@@ -1,6 +1,7 @@
 run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
             :rollup => [:solo,:util,:app,:app_master,:db]) do |app_name, role, rails_env|
 
+  # set up any items we want to pass into the hooks via the for_hook hash
   base_dir = "/data/#{app_name}"
   shared_dir = "#{base_dir}/shared"
   current_dir = "#{base_dir}/current"
@@ -23,18 +24,22 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
       hv = for_hook
       hv[:release_dir] = release_path
 
+      # prep vars we want to pass
       ruby_code = File.open("/var/chef/cookbooks/zz-chef-repo/cookbooks/app-deploy/helpers/prep_hook_vars.rb", 'r') {|f| f.read }
       instance_eval(ruby_code)
 
-      # read the file to reference
+      # now our own hook code
       ruby_code = File.open("/var/chef/cookbooks/zz-chef-repo/cookbooks/app-deploy/testing/before_migrate.rb", 'r') {|f| f.read }
       puts "******************* EVAL RUBY CODE *****************"
       instance_eval(ruby_code)
 
 
-      ruby_code = File.open("/var/chef/cookbooks/zz-chef-repo/cookbooks/app-deploy/testing/before_migrate_sub.rb", 'r') {|f| f.read }
+      # and finally the apps code if it has a hook in the deploy dir
+      ruby_code = ""
+      ruby_code = File.open("deploy/before_migrate.rb", 'r') {|f| f.read } rescue nil
       puts "******************* EVAL RUBY CODE *****************"
-      instance_eval(ruby_code)
+      puts ruby_code
+      #instance_eval(ruby_code)
 
     end
     before_symlink {}
