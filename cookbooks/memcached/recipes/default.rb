@@ -9,7 +9,7 @@ run_for_app(:photos => [:solo,:app,:app_master],
     source "memcached.yml.erb"
     owner deploy_user
     group deploy_group
-    mode 0744
+    mode 0644
     variables({
       :app_name => app_name,
       :server_names => zz[:app_config][:app_servers],
