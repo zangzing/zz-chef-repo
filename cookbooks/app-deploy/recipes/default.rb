@@ -27,16 +27,16 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
 
       # prep vars we want to pass
       puts chef_base
-      ruby_code = File.open("/var/chef/cookbooks/zz-chef-repo/cookbooks/app-deploy/helpers/prep_hook_vars.rb", 'r') {|f| f.read }
+      ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/prep_hook_vars.rb", 'r') {|f| f.read }
       instance_eval(ruby_code)
 
       # now our own hook code
-      ruby_code = File.open("/var/chef/cookbooks/zz-chef-repo/cookbooks/app-deploy/helpers/before_migrate.rb", 'r') {|f| f.read }
+      ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/before_migrate.rb", 'r') {|f| f.read }
       puts "******************* EVAL RUBY CODE *****************"
       instance_eval(ruby_code)
 
       # now our own hook code
-      ruby_code = File.open("/var/chef/cookbooks/zz-chef-repo/cookbooks/app-deploy/helpers/before_migrate.rb", 'r') {|f| f.read }
+      ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/before_migrate_sub.rb", 'r') {|f| f.read }
       puts "******************* EVAL RUBY CODE *****************"
       instance_eval(ruby_code)
 
