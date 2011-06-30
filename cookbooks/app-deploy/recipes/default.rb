@@ -15,6 +15,12 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
       ruby_code = File.open("/var/chef/cookbooks/zz-chef-repo/cookbooks/app-deploy/testing/before_migrate.rb", 'r') {|f| f.read }
       puts "******************* EVAL RUBY CODE *****************"
       instance_eval(ruby_code)
+
+
+      ruby_code = File.open("/var/chef/cookbooks/zz-chef-repo/cookbooks/app-deploy/testing/before_migrate_sub.rb", 'r') {|f| f.read }
+      puts "******************* EVAL RUBY CODE *****************"
+      instance_eval(ruby_code)
+
     end
     before_symlink {}
     before_restart {}
