@@ -2,6 +2,7 @@ require "rubygems"
 require "bundler/setup"
 require 'right_aws'
 require 'zzsharedlib'
+require 'logger'
 
 # the amazon keys are expected to be in /var/chef/amazon.json
 json = File.open("/var/chef/amazon.json", 'r') {|f| f.read }
@@ -9,6 +10,7 @@ ak = JSON.parse(json)
 opts = ZZSharedLib::Options.global_options
 opts[:access_key] = ak["aws_access_key_id"]
 opts[:secret_key] = ak["aws_secret_access_key"]
+opts[:log_level] = Logger::Severity::DEBUG
 
 amazon = ZZSharedLib::Amazon.new
 
