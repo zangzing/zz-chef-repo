@@ -4,6 +4,12 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
   base_dir = "/data/#{app_name}"
   shared_dir = "#{base_dir}/shared"
   current_dir = "#{base_dir}/current"
+  for_hook = {
+      :base_dir => base_dir,
+      :shared_dir => shared_dir,
+      :current_dir => current_dir,
+      :zz => node[:zz]
+  }
 
   deploy base_dir do
     repo zz[:group_config][:app_git_url]
@@ -14,6 +20,9 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
     migration_command "rake db:migrate"
     action :deploy # or :rollback
     before_migrate do
+      hv = for_hook
+      hv[:release_dir] = release_path
+
       require "/var/chef/cookbooks/zz-chef-repo/cookbooks/app-deploy/helpers/prep_hook_vars.rb"
 
       # read the file to reference
