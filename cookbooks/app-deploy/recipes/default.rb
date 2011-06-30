@@ -26,7 +26,6 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
       hv[:release_dir] = release_path
 
       # prep vars we want to pass
-      puts chef_base
       ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/prep_hook_vars.rb", 'r') {|f| f.read }
       instance_eval(ruby_code)
 
