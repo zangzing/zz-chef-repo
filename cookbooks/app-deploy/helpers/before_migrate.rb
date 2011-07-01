@@ -9,7 +9,7 @@ puts "-----TEST_BEFORE_MIGRATE------"
 cmd = "ls -al #{zz_release_dir}"
 puts cmd
 `#{cmd}`
-cmd = "su #{zz_deploy_user} -c 'cd #{zz_release_dir} && bundle install --gemfile=#{zz_release_dir}/Gemfile'"
+cmd = "su -l #{zz_deploy_user} -c 'cd #{zz_release_dir} && bundle install'"
 puts cmd
 puts `#{cmd}`
 
