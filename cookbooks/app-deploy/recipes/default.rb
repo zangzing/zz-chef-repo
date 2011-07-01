@@ -95,8 +95,8 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
       ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/prep_hook_vars.rb", 'r') {|f| f.read }
       instance_eval(ruby_code)
 
-      user_id = Etc.getpwnam(zz_deploy_user)
-      group_id = Etc.getgrnam(zz_deploy_group)
+      user_id = Etc.getpwnam(node[:zz][:deploy_user])
+      group_id = Etc.getgrnam(node[:zz][:deploy_group])
       Process.egid = group_id
       Process.euid = user_id
 
