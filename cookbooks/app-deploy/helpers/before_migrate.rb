@@ -9,6 +9,7 @@ puts "-----TEST_BEFORE_MIGRATE------"
 
 # install the bundle
 execute "bundle_install" do
+  cwd zz_release_dir
   user deploy_user
   group deploy_group
   command "bundle install"
