@@ -22,7 +22,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
     group deploy_group
     migrate false
     migration_command "rake db:migrate"
-    action :rollback # or :rollback
+    action :deploy
     before_migrate do
       hv = for_hook
       hv[:release_dir] = release_path
