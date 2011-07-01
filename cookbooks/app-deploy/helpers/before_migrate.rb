@@ -7,8 +7,10 @@ puts zz_release_dir
 puts "-----TEST_BEFORE_MIGRATE------"
 
 
-# look recipe code within a hook
-execute "recipe_from_hook" do
-    command "ls -al #{zz_release_dir}"
-    action :run
+# install the bundle
+execute "bundle_install" do
+  user deploy_user
+  group deploy_group
+  command "bundle install"
+  action :run
 end
