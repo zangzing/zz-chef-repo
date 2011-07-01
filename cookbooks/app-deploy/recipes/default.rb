@@ -93,6 +93,11 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
       ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/prep_hook_vars.rb", 'r') {|f| f.read }
       instance_eval(ruby_code)
 
+      user_id = Etc.getpwnam(deploy_user)
+      group_id = Etc.getgrnam(deploy_group)
+      Process.egid = group_id
+      Process.euid = user_id
+
       # now our own hook code
       ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/restart_command.rb", 'r') {|f| f.read }
       instance_eval(ruby_code)
