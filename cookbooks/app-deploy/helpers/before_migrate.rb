@@ -12,6 +12,6 @@ execute "bundle_install" do
   cwd zz_release_dir
   user deploy_user
   group deploy_group
-  command "bundle install"
+  command "cd #{zz_release_dir} && bundle install && pwd"
   action :run
 end
