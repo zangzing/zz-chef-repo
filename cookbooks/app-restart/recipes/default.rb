@@ -1,8 +1,10 @@
 run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
             :rollup => [:solo,:util,:app,:app_master,:db]) do |app_name, role, rails_env|
 
-  # set up any items we want to pass into the hooks via the for_hook hash
+
   base_dir = "/data/#{app_name}"
+  # pick up the current release dir
+  release_dir = File.readlink("#{base_dir}/current")
   shared_dir = "#{base_dir}/shared"
   current_dir = "#{base_dir}/current"
   hv = {
@@ -11,7 +13,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
       :current_dir => current_dir,
       :deploy_user => deploy_user,
       :deploy_group => deploy_group,
-      :release_dir => '', #todo get this from fs
+      :release_dir => release_dir,
       :zz => node[:zz]
   }
   chef_base = ZZDeploy.env.project_root_dir

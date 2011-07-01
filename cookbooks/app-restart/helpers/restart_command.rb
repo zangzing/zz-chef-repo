@@ -5,6 +5,7 @@ puts "Restart Now........."
 # in case we have to revert
 
 cmd = "echo `date` > #{zz_release_dir}/tmp/restart-2.txt"
+puts cmd
 `#{cmd}`
 
 # look recipe code within a hook
