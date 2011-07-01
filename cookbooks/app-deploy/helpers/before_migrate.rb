@@ -22,6 +22,6 @@ execute "bundle_install" do
   cwd zz_release_dir
   user deploy_user
   group deploy_group
-  command "su -l #{zz_deploy_user} -c 'cd #{zz_release_dir} && bundle install'"
+  command "sudo su -l #{zz_deploy_user} -c 'cd #{zz_release_dir} && bundle install'"
   action :run
 end
