@@ -9,6 +9,8 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
       :base_dir => base_dir,
       :shared_dir => shared_dir,
       :current_dir => current_dir,
+      :deploy_user => deploy_user,
+      :deploy_group => deploy_group,
       :zz => node[:zz]
   }
   chef_base = ZZDeploy.env.project_root_dir
@@ -93,8 +95,8 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
       ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/prep_hook_vars.rb", 'r') {|f| f.read }
       instance_eval(ruby_code)
 
-      user_id = Etc.getpwnam(deploy_user)
-      group_id = Etc.getgrnam(deploy_group)
+      user_id = Etc.getpwnam(zz_deploy_user)
+      group_id = Etc.getgrnam(zz_deploy_group)
       Process.egid = group_id
       Process.euid = user_id
 
