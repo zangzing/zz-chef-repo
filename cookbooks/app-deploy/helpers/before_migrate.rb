@@ -11,7 +11,7 @@ puts cmd
 `#{cmd}`
 cmd = "bash -l -c 'cd #{zz_release_dir} && bundle install'"
 puts cmd
-`#{cmd}`
+puts `#{cmd}`
 
 #
 ## install the bundle
