@@ -6,7 +6,8 @@ puts zz_current_dir
 puts zz_release_dir
 puts "-----TEST_BEFORE_MIGRATE------"
 
-`"cd #{zz_release_dir} && bundle install && pwd"`
+`ls -al #{zz_release_dir}`
+`cd #{zz_release_dir} && bundle install && pwd`
 #
 ## install the bundle
 #execute "bundle_install" do
