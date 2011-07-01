@@ -62,3 +62,8 @@ if deploy_app?
   require_recipe "show-node"
   require_recipe "app-deploy"
 end
+
+# see if we should go ahead and restart the app
+if deploy_app_restart?
+  require_recipe "app-restart"
+end

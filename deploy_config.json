@@ -1,0 +1,14 @@
+{
+    "test": 5,
+    "instances": [
+      {
+        "third": {
+          "data": "nested data",
+          "nested": 7
+        },
+        "second": "second one",
+        "first": "first one"
+      }
+    ],
+    "run_list": "role[localtest]"
+}

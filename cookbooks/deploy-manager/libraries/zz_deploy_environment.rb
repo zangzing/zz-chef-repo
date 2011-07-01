@@ -157,6 +157,10 @@ class Chef::Recipe::ZZDeployEnvironment
     return zz[:deploy_what] == 'app'
   end
 
+  def deploy_app_restart?
+    return zz[:deploy_what] == 'app_restart'
+  end
+
   def deploy_config?
     return zz[:deploy_what] == 'config'
   end
@@ -224,6 +228,12 @@ class Chef::Recipe::ZZDeployEnvironment
 #    Chef::Log.info("ZangZing=> should_host_resque_cpu? is " + should_host_resque_cpu?.to_s)
 #    Chef::Log.info("ZangZing=> resque_cpu_host_names is " + resque_cpu_host_names.to_s)
   end
+
+  # record the sym link that current uses
+  # in case we fail during the deploy
+  def deploy_started app_base_dir
+
+  end
 end
 
 class Chef::Recipe::ZZDeploy
@@ -271,6 +281,10 @@ class Chef
 
     def deploy_app?
       Chef::Recipe::ZZDeploy.env.deploy_app?
+    end
+
+    def deploy_app_restart?
+      Chef::Recipe::ZZDeploy.env.deploy_app_restart?
     end
 
     def deploy_config?

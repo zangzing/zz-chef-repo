@@ -1,8 +1,0 @@
-{
-    "zz" : {
-        "dev_machine" : false,
-        "deploy_what" : "app"
-    },
-
-    "run_list": "recipe[deploy-manager]"
-}

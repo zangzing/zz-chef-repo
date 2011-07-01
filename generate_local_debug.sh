@@ -9,4 +9,4 @@
 # Remote Root Folder: .
 # Local Root Folder: .
 #
-sudo bundle exec rdebug-ide -p 7000 -- `which chef-solo` -l debug -c chef-local/local-solo.rb -j chef-local/local-deploy.json
+sudo bundle exec rdebug-ide -p 7000 -- `which chef-solo` -l debug -c chef-local/local_solo.rb -j chef-local/local_deploy.json

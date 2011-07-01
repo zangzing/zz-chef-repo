@@ -1,9 +1,0 @@
-{
-    "zz" : {
-        "act_as" : "i-01d3f36f",
-        "dev_machine" : true,
-        "deploy_what" : "config"
-    },
-
-    "run_list": "recipe[deploy-manager]"
-}
