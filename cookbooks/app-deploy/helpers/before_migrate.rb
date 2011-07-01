@@ -6,10 +6,10 @@ puts zz_current_dir
 puts zz_release_dir
 puts "-----TEST_BEFORE_MIGRATE------"
 
-cmd = "ls -al #{zz_release_dir} > /tmp/t1"
+cmd = "ls -al #{zz_release_dir}"
 puts cmd
 `#{cmd}`
-cmd = "cd #{zz_release_dir} && bundle install > /tmp/t2"
+cmd = "bash -l -c 'cd #{zz_release_dir} && bundle install'"
 puts cmd
 `#{cmd}`
 
