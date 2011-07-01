@@ -98,7 +98,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
       user_id = Etc.getpwnam(node[:zz][:deploy_user]).uid
       group_id = Etc.getgrnam(node[:zz][:deploy_group]).gid
       Process::UID.grant_privilege(user_id)
-      Process::GUID.grant_privilege(group_id)
+      Process::GID.grant_privilege(group_id)
 
       # now our own hook code
       ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/restart_command.rb", 'r') {|f| f.read }
