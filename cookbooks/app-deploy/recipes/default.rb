@@ -67,12 +67,6 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
       ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/before_restart.rb", 'r') {|f| f.read }
       instance_eval(ruby_code)
 
-      user_id = Etc.getpwnam(node[:zz][:deploy_user]).uid
-      group_id = Etc.getgrnam(node[:zz][:deploy_group]).gid
-      Process::UID.change_privilege(user_id)
-      Process::GID.change_privilege(group_id)
-
-
       # and finally the app code if it has a hook in the deploy dir
       ruby_code = File.open("#{release_path}/deploy/before_restart.rb", 'r') {|f| f.read } rescue nil
       #instance_eval(ruby_code) if !ruby_code.nil?
