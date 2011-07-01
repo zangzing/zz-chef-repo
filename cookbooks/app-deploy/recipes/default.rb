@@ -20,7 +20,6 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
     revision zz[:app_deploy_tag]
     user deploy_user
     group deploy_group
-    deploy_starting
     migrate false
     migration_command "rake db:migrate"
     action :deploy
