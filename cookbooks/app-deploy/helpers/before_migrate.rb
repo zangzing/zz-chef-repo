@@ -9,7 +9,7 @@ puts "-----TEST_BEFORE_MIGRATE------"
 cmd = "ls -al #{zz_release_dir}"
 puts cmd
 `#{cmd}`
-cmd = "bash -l -c 'cd #{zz_release_dir} && bundle install'"
+cmd = "bash -l -c 'cd #{zz_release_dir} && bundle install --gemfile=#{zz_release_dir}/Gemfile'"
 puts cmd
 puts `#{cmd}`
 
