@@ -9,12 +9,12 @@ run_for_app(:photos => [:solo,:app,:app_master],
   if maint
     # put maint link in system to tell nginx we are in maint mode
     log "Maint mode on" do
-      notifies :run, "execute[maint_mode_on]"
+      notifies :run, "execute[maint_mode_on]", :immediately
     end
   else
     # remove the link to take us out of maint mode
     log "Maint mode off" do
-      notifies :run, "execute[maint_mode_off]"
+      notifies :run, "execute[maint_mode_off]", :immediately
     end
   end
 
