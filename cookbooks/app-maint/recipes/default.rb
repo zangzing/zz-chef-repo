@@ -12,6 +12,7 @@ run_for_app(:photos => [:solo,:app,:app_master],
   # so need to move the file into the shared dir to turn on maint and remove to turn off
   if maint
     # put maint link in system to tell nginx we are in maint mode
+    puts "copy from: #{system_dir}/maintenance.html to #{public_dir}/maintenance.html"
     file "#{system_dir}/maintenance.html" do
       path "#{public_dir}/maintenance.html"
       backup false
