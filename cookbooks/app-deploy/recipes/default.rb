@@ -3,7 +3,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
 
   # set up any items we want to pass into the hooks via the for_hook hash
   base_dir = "/data/#{app_name}"
-  hv = ZZDeploy.env.prep_hook_data(app_name, nil)
+  for_hook = ZZDeploy.env.prep_hook_data(app_name, nil)
   chef_base = ZZDeploy.env.project_root_dir
 
   deploy base_dir do
