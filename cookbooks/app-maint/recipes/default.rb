@@ -12,12 +12,8 @@ run_for_app(:photos => [:solo,:app,:app_master],
   if maint
     # put maint link in system to tell nginx we are in maint mode
     puts "copy to: #{system_dir}/maintenance.html from #{public_dir}/maintenance.html"
-    remote_file "#{system_dir}/maintenance.html" do
-      source "#{public_dir}/maintenance.html"
-      backup false
-      owner deploy_user
-      group deploy_group
-      mode "0644"
+    execute "copy_maint" do
+      command "cp #{public_dir}/maintenance.html #{system_dir}/maintenance.html"
     end
   else
     # remove the link to take us out of maint mode
