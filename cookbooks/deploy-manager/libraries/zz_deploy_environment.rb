@@ -161,6 +161,10 @@ class Chef::Recipe::ZZDeployEnvironment
     return zz[:deploy_what] == 'app_restart'
   end
 
+  def deploy_maint?
+    return zz[:deploy_what] == 'maint'
+  end
+
   def deploy_config?
     return zz[:deploy_what] == 'config'
   end
@@ -285,6 +289,10 @@ class Chef
 
     def deploy_app_restart?
       Chef::Recipe::ZZDeploy.env.deploy_app_restart?
+    end
+
+    def deploy_maint?
+      Chef::Recipe::ZZDeploy.env.deploy_maint?
     end
 
     def deploy_config?

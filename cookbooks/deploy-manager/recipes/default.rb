@@ -67,3 +67,7 @@ end
 if deploy_app_restart?
   require_recipe "app-restart"
 end
+
+if deploy_maint?
+  require_recipe "app-maint"
+end
