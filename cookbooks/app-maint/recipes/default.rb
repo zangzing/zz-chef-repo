@@ -3,7 +3,6 @@ run_for_app(:photos => [:solo,:app,:app_master],
 
 
   maint = zz[:deploy_maint]
-  puts "APP MAINT: #{maint}"
   base_dir = "/data/#{app_name}"
   public_dir = "#{base_dir}/current/public"
   system_dir = "#{base_dir}/shared/system"
@@ -12,9 +11,9 @@ run_for_app(:photos => [:solo,:app,:app_master],
   # so need to move the file into the shared dir to turn on maint and remove to turn off
   if maint
     # put maint link in system to tell nginx we are in maint mode
-    puts "copy from: #{system_dir}/maintenance.html to #{public_dir}/maintenance.html"
-    file "#{system_dir}/maintenance.html" do
-      path "#{public_dir}/maintenance.html"
+    puts "copy to: #{system_dir}/maintenance.html from #{public_dir}/maintenance.html"
+    remote_file "#{system_dir}/maintenance.html" do
+      source "#{public_dir}/maintenance.html"
       backup false
       owner deploy_user
       group deploy_group
