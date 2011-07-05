@@ -47,6 +47,14 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:local],
     action :create
   end
 
+  directory "/data/#{app_name}/shared/system" do
+    owner deploy_user
+    group deploy_group
+    mode "0755"
+    recursive true
+    action :create
+  end
+
   if role != :local
     template "/etc/profile.d/rubyenv.sh" do
       source "rubyenv.sh.erb"
