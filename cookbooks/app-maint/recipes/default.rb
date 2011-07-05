@@ -13,7 +13,7 @@ run_for_app(:photos => [:solo,:app,:app_master],
     # put maint link in system to tell nginx we are in maint mode
     puts "copy to: #{system_dir}/maintenance.html from #{public_dir}/maintenance.html"
     execute "copy_maint" do
-      command "cp #{public_dir}/maintenance.html #{system_dir}/maintenance.html"
+      command "cp #{public_dir}/maintenance.html #{system_dir}/maintenance.html && chown #{deploy_user}:#{deploy_group} #{system_dir}/maintenance.html"
     end
   else
     # remove the link to take us out of maint mode
