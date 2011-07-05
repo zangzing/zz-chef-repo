@@ -39,6 +39,9 @@ if is_local_dev?
 end
 
 
+# common recipes for all, all have
+# deferred execution states
+require_recipe "util-recipes"
 
 if deploy_config?
   require_recipe "show-node"
