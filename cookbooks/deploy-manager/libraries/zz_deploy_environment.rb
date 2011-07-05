@@ -91,6 +91,22 @@ class Chef::Recipe::ZZDeployEnvironment
     @amazon
   end
 
+  def prep_hook_data(app_name, release_dir)
+    base_dir = "/data/#{app_name}"
+    # pick up the current release dir
+    shared_dir = "#{base_dir}/shared"
+    current_dir = "#{base_dir}/current"
+    hv = {
+        :base_dir => base_dir,
+        :shared_dir => shared_dir,
+        :current_dir => current_dir,
+        :deploy_user => deploy_user,
+        :deploy_group => deploy_group,
+        :release_dir => release_dir,
+        :zz => node[:zz]
+    }
+  end
+
   def set_local_accounts
     node[:zz][:deploy_user] = current_user
     node[:zz][:deploy_group] = "ec2-user" # yes, this is our local group
