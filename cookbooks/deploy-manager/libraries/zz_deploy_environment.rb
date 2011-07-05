@@ -162,7 +162,7 @@ class Chef::Recipe::ZZDeployEnvironment
   end
 
   def deploy_maint?
-    return zz[:deploy_what] == 'maint'
+    return zz[:deploy_what] == 'app_maint'
   end
 
   def deploy_config?
