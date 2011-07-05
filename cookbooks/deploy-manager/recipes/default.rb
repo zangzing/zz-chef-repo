@@ -68,6 +68,7 @@ if deploy_app_restart?
   require_recipe "app-restart"
 end
 
+puts "CHECKING for deploy maint? #{deploy_maint?}"
 if deploy_maint?
   require_recipe "app-maint"
 end

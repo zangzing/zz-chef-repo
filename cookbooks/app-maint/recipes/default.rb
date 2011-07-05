@@ -3,6 +3,7 @@ run_for_app(:photos => [:solo,:app,:app_master],
 
 
   maint = zz[:deploy_maint]
+  puts "APP MAINT: #{maint}"
   base_dir = "/data/#{app_name}"
   public_dir = "#{base_dir}/current/public"
   system_dir = "#{base_dir}/shared/system"
