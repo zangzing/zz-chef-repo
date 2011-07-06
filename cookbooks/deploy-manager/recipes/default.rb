@@ -17,12 +17,6 @@ amazon = ZZSharedLib::Amazon.new
 # inject our custom code into recipes
 ZZDeploy.init(node, amazon)
 
-if is_local_dev? == false
-#  require_recipe "chef_handler"
-
-end
-
-
 # now the custom data based on the app type
 app_name = node[:zz][:app_name]
 case app_name
