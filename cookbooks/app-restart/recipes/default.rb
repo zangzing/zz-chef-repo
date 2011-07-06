@@ -2,6 +2,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
             :rollup => [:solo,:util,:app,:app_master,:db]) do |app_name, role, rails_env|
 
 
+  base_dir = "/data/#{app_name}"
   release_dir = File.readlink("#{base_dir}/current")
   hv = ZZDeploy.env.prep_hook_data(app_name, release_dir)
   chef_base = ZZDeploy.env.project_root_dir
