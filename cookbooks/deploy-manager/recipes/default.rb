@@ -25,13 +25,16 @@ if is_local_dev? == false
   require source_path
 
   t = ZZ::ReportHandler.new(4,5)
+  t2 = ZZ::ReportHandler.new(6,7)
+  report_handlers << t
+  exception_handlers << t2
 
 
-chef_handler "ZZ::ReportHandler" do
-  source source
-  arguments [1,2]
-  action :enable
-end
+#chef_handler "ZZ::ReportHandler" do
+#  source source
+#  arguments [1,2]
+#  action :enable
+#end
 #
 #  chef_handler "ZZ::ReportHandler" do
 #    source source_path
