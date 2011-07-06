@@ -20,18 +20,6 @@ ZZDeploy.init(node, amazon)
 if is_local_dev? == false
   require_recipe "chef_handler"
 
-
-
-#chef_handler "ZZ::ReportHandler" do
-#  source source
-#  arguments [1,2]
-#  action :enable
-#end
-#
-#  chef_handler "ZZ::ReportHandler" do
-#    source source_path
-#    action :nothing
-#  end.run_action(:enable)
 end
 
 
