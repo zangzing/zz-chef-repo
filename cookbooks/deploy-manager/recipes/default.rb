@@ -27,7 +27,7 @@ if is_local_dev? == false
 
 chef_handler "ZZ::ReportHandler" do
   source source
-  arguments 1,2
+  arguments [1,2]
   action :enable
 end
 #
