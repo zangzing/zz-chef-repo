@@ -22,7 +22,9 @@ if is_local_dev? == false
 
   source_path = "#{project_root_dir}/handlers/report_handler"
 
-#  require source_path
+  require source_path
+
+  t = ZZ::ReportHandler.new(4,5)
 
 
 chef_handler "ZZ::ReportHandler" do
