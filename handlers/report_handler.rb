@@ -1,3 +1,4 @@
+require 'chef/handler'
 
 module ZZ
   class ReportHandler < Chef::Handler
