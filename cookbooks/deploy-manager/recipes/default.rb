@@ -24,10 +24,17 @@ if is_local_dev? == false
 
   require source_path
 
-  chef_handler "ZZ::ReportHandler" do
-    source source_path
-    action :nothing
-  end.run_action(:enable)
+
+chef_handler "ZZ::ReportHandler" do
+  source source
+  arguments 1,2
+  action :enable
+end
+#
+#  chef_handler "ZZ::ReportHandler" do
+#    source source_path
+#    action :nothing
+#  end.run_action(:enable)
 end
 
 

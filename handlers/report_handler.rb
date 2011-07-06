@@ -1,8 +1,8 @@
 module ZZ
   class ReportHandler < Chef::Handler
 
-    def initialize
-      puts "MAKING ReportHandler"
+    def initialize(a,b)
+      puts "MAKING ReportHandler - #{a} - #{b}"
     end
 
     def report
