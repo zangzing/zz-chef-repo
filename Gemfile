@@ -9,7 +9,7 @@ else
   gem "zzsharedlib", :path => "../zzsharedlib"
 end
 gem "right_aws"
-gem "chef"
+gem "chef", '>= 0.10.2'
 gem "ruby-debug-ide"
 gem "ruby-debug-base"
 gem "resque"
