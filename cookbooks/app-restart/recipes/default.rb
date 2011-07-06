@@ -25,7 +25,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
     # run in a ruby block so this happens in recipe convergence
     ruby_block "reload_client_config" do
       block do
-        elb = Chef::Recipe::ZZDeploy.env.elb
+        elb = Chef::Recipe::ZZDeploy.env.amazon.elb
         elb.register_instances_with_load_balancer(amazon_elb, zz[:instance_id])
       end
     end
