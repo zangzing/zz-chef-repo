@@ -26,11 +26,9 @@ class Chef
       the_role = node[:zz][:deploy_role]
       rails_env = node[:zz][:group_config][:rails_env]
       apps.each do |app|
-        app.each do |name, roles|
-          app_name = name.to_s
-          if app_name == the_app
-            block.call(the_app.to_sym, the_role.to_sym, rails_env.to_sym)
-          end
+        app_name = app.to_s
+        if app_name == the_app
+          block.call(the_app.to_sym, the_role.to_sym, rails_env.to_sym)
         end
       end
     end
