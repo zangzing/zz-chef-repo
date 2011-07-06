@@ -18,7 +18,7 @@ amazon = ZZSharedLib::Amazon.new
 ZZDeploy.init(node, amazon)
 
 if is_local_dev? == false
-  require_recipe "chef_handler"
+#  require_recipe "chef_handler"
 
 end
 
