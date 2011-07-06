@@ -3,7 +3,8 @@ role_path "/var/chef/cookbooks/zz-chef-repo/roles"
 
 handler_path = "/var/chef/cookbooks/zz-chef-repo/handlers/report_handler"
 require handler_path
-report_handlers << ZZ::ReportHandler.new
-#exception_handlers << ZZ::ReportHandler.new
+handler = ZZ::ReportHandler.new
+report_handlers << handler
+exception_handlers << handler
 
 
