@@ -1,3 +1,4 @@
+
 module ZZ
   class ReportHandler < Chef::Handler
 
@@ -7,6 +8,9 @@ module ZZ
 
     def report
       puts "REPORT HANDLER RUN"
+      env = Chef::Recipe::ZZDeploy.env
+      amazon = env.amazon
+      puts amazon
       # The Node is available as +node+
       message = "Chef run completed on #{node.name}\n"
       if failed?
