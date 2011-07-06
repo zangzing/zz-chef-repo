@@ -14,3 +14,7 @@ gem "ruby-debug-ide"
 gem "ruby-debug-base"
 gem "resque"
 
+# these are here to preload for various deploy roles
+gem "mysql2"
+gem "nokogiri"
+
