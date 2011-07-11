@@ -232,6 +232,22 @@ class Chef::Recipe::ZZDeployEnvironment
     dir = relative_path('../../..')
   end
 
+  def current_dir
+    "/data/#{zz[:app_name]}/current"
+  end
+
+  def current_config_dir
+    "#{current_dir}/config"
+  end
+
+  def shared_dir
+    "/data/#{zz[:app_name]}/shared"
+  end
+
+  def shared_config_dir
+    "#{shared_dir}/config"
+  end
+
   # generate a fully qualified path with
   # relative paths removed since Chef doesn't
   # seem to like relative paths in some cases

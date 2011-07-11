@@ -6,11 +6,31 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
   for_hook = ZZDeploy.env.prep_hook_data(app_name, nil)
   chef_base = ZZDeploy.env.project_root_dir
 
+  # set up symlinks wanted based on app
+  # common ones first
+  symlinks = {
+      "config/database.yml" => "config/database.yml",
+      "system" => "public/system",
+      "config/zz_app_dna.json" => "config/zz_app_dna.json",
+      "log" => "log",
+      "pids" => "tmp/pids"
+  }
+  case app_name
+    when :photos
+      symlinks["config/database-cache.yml"] = "sub_migrates/cache_builder/config/database.yml"
+
+    when :rollup
+      symlinks["config/database-photos.yml"] = "config/database-photos.yml"
+      symlinks["config/database-zza.yml"] = "config/database-zza.yml"
+
+  end
+
   deploy base_dir do
     repo zz[:group_config][:app_git_url]
     revision zz[:app_deploy_tag]
     user deploy_user
     group deploy_group
+    symlink_before_migrate symlinks
     migrate false
     action :deploy
     before_migrate do
