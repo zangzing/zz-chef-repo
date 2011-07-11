@@ -11,7 +11,6 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
   symlinks = {
       "config/database.yml" => "config/database.yml",
       "system" => "public/system",
-      "config/zz_app_dna.json" => "config/zz_app_dna.json",
       "log" => "log",
   }
   case app_name

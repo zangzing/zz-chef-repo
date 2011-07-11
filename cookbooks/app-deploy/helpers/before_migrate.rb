@@ -6,12 +6,16 @@ puts zz_current_dir
 puts zz_release_dir
 puts "-----TEST_BEFORE_MIGRATE------"
 
-#cmd = "ls -al #{zz_release_dir}"
-#puts cmd
-#`#{cmd}`
-#cmd = "su -l #{zz_deploy_user} -c 'cd #{zz_release_dir} && bundle install'"
-#puts cmd
-#puts `#{cmd}`
+# copy zz_app_dna.json directly into app config directory
+# since it is specific to that deploy configuration and we
+# don't want to possibly change a running app by linking from
+# the shared config directory
+dna_src = "#{zz_shared_dir}/config/zz_app_dna.json"
+dna_dst = "#{zz_release_dir}/config/zz_app_dna.json"
+
+execute "copy_zza_app_dna" do
+  command "cp #{dna_src} #{dna_dst} && chown #{deploy_user}:#{deploy_group} #{dna_dst}"
+end
 
 
 # install the bundle - need to use su since just calling it directly
