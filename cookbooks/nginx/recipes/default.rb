@@ -151,7 +151,7 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
           ssl_crt = "star_zangzing_com.crt"
         when :photos_staging
           site_host_name = 'staging.site.zangzing.com'
-          asset_host_name = "*.assets.staging.photos.zangzing.com"
+          asset_host_name = "*.assets.#{host_name}"
           remap_error_pages = true
           ssl_key = "staging.key"
           ssl_crt = "staging.crt"
