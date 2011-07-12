@@ -17,7 +17,7 @@ def run(cmd)
   user = env.deploy_user
   dir = env.release_dir
   e = execute cmd do
-    cwd zz_release_dir
+    cwd dir
     command "su -l #{user} -c 'cd #{dir} && #{cmd}'"
     action :nothing
   end
