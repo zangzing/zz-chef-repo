@@ -1,10 +1,10 @@
-puts "-----TEST_BEFORE_MIGRATE------"
+puts "-----TEST_PREPARE_CONFIG------"
 puts zz[:app_name]
 puts zz_base_dir
 puts zz_shared_dir
 puts zz_current_dir
 puts zz_release_dir
-puts "-----TEST_BEFORE_MIGRATE------"
+puts "-----TEST_PREPARE_CONFIG------"
 
 # copy zz_app_dna.json directly into app config directory
 # since it is specific to that deploy configuration and we

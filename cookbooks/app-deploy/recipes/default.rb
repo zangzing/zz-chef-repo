@@ -1,4 +1,5 @@
-run_for_all do |app_name, role, rails_env|
+run_for_app(:photos => [:solo,:util,:app,:app_master],
+            :rollup => [:solo,:util,:app,:app_master]) do |app_name, role, rails_env|
 
   # set up any items we want to pass into the hooks via the for_hook hash
   base_dir = "/data/#{app_name}"
@@ -34,6 +35,10 @@ run_for_all do |app_name, role, rails_env|
     migrate false
     action :deploy
     before_migrate do
+    end
+    before_symlink do
+      # this code is here rather than before_migrate because we want the symlinks from the migrate
+      # hooked up - any failure here does not change current
       hv = for_hook
       hv[:release_dir] = release_path
 
@@ -42,26 +47,18 @@ run_for_all do |app_name, role, rails_env|
       instance_eval(ruby_code)
 
       # now our own hook code
-      ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/before_migrate.rb", 'r') {|f| f.read }
+      ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/prepare_config.rb", 'r') {|f| f.read }
+      instance_eval(ruby_code)
+
+      # now our own hook code
+      ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/do_migrate.rb", 'r') {|f| f.read }
       instance_eval(ruby_code)
 
       # and finally the app code if it has a hook in the deploy dir
-      ruby_code = File.open("#{release_path}/deploy/zz_before_migrate.rb", 'r') {|f| f.read } rescue ruby_code = nil
+      ruby_code = File.open("#{release_path}/deploy/prepare_config.rb", 'r') {|f| f.read } rescue ruby_code = nil
       instance_eval(ruby_code) if !ruby_code.nil?
     end
-    before_symlink do
-    end
     before_restart do
-      hv = for_hook
-      hv[:release_dir] = release_path
-
-      # prep vars we want to pass
-      ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/prep_hook_vars.rb", 'r') {|f| f.read }
-      instance_eval(ruby_code)
-
-      # now our own hook code
-      ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/before_restart.rb", 'r') {|f| f.read }
-      instance_eval(ruby_code)
     end
     after_restart do
     end
