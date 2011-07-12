@@ -61,8 +61,9 @@ run_for_app(:photos => [:solo,:util,:app,:app_master],
           Chef::Log.info("ZangZing=> Running application hook prepare_config.rb")
           instance_eval(ruby_code)
         rescue Exception => ex
-          Chef::Log.info("ZangZing=> Exception while running application hook prepare_config.rb")
-          Chef::Log.info(ex.message)
+          Chef::Log.error("ZangZing=> Exception while running application hook prepare_config.rb")
+          Chef::Log.error(ex.message)
+          puts ex.backtrace
           raise ex
         end
       end

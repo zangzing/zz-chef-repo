@@ -20,8 +20,8 @@ run_for_app(:photos => [:solo,:util,:app,:app_master],
       Chef::Log.info("ZangZing=> Running application hook custom_restart.rb")
       instance_eval(ruby_code)
     rescue Exception => ex
-      Chef::Log.info("ZangZing=> Exception while running application hook custom_restart.rb")
-      Chef::Log.info(ex.message)
+      Chef::Log.error("ZangZing=> Exception while running application hook custom_restart.rb")
+      Chef::Log.error(ex.message)
       raise ex
     end
   end
