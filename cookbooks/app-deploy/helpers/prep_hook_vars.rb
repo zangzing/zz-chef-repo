@@ -6,3 +6,15 @@ zz_current_dir = hv[:current_dir]
 zz_release_dir = hv[:release_dir]
 zz_deploy_user = hv[:deploy_user]
 zz_deploy_group = hv[:deploy_group]
+zz_app = zz[:app_name].to_sym
+zz_role = zz[:deploy_role].to_sym
+zz_rails_env = zz[:group_config][:rails_env].to_sym
+
+def run(cmd)
+  e = execute cmd do
+    cwd zz_release_dir
+    command "su -l #{zz_deploy_user} -c 'cd #{zz_release_dir} && #{cmd}'"
+    action :nothing
+  end
+  e.run_action(:run)  # execute right now
+end
