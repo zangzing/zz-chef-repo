@@ -7,7 +7,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
   host = zz[:group_config][:database_host]
   schema = zz[:group_config][:database_schema]
 
-  template "/data/#{app_name}/shared/config/database.yml" do
+  template "#{ZZDeploy.env.shared_config_dir}/database.yml" do
     source "database.yml.erb"
     owner deploy_user
     group deploy_group
@@ -28,7 +28,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
     password = zz[:custom_config][:cachedb_password]
     host = zz[:custom_config][:cachedb_host]
     schema = zz[:custom_config][:cachedb_schema]
-    template "/data/#{app_name}/shared/config/database-cache.yml" do
+    template "#{ZZDeploy.env.shared_config_dir}/database-cache.yml" do
       source "database.yml.erb"
       owner deploy_user
       group deploy_group
@@ -49,7 +49,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
     password = zz[:custom_config][:photosdb_password]
     host = zz[:custom_config][:photosdb_host]
     schema = zz[:custom_config][:photosdb_schema]
-    template "/data/#{app_name}/shared/config/database-photos.yml" do
+    template "#{ZZDeploy.env.shared_config_dir}/database-photos.yml" do
       source "database.yml.erb"
       owner deploy_user
       group deploy_group
@@ -68,7 +68,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
     password = zz[:custom_config][:zzadb_password]
     host = zz[:custom_config][:zzadb_host]
     schema = zz[:custom_config][:zzadb_schema]
-    template "/data/#{app_name}/shared/config/database-zza.yml" do
+    template "#{ZZDeploy.env.shared_config_dir}/database-zza.yml" do
       source "database.yml.erb"
       owner deploy_user
       group deploy_group

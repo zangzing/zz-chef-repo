@@ -10,7 +10,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
   # common ones first
   symlinks = {
       "config/database.yml" => "config/database.yml",
-      "config/memcached_custom.yml" => "config/memcached_custom.yml",
+      "config/memcached.yml" => "config/memcached.yml",
       "config/unicorn.rb" => "config/unicorn.rb",
       "system" => "public/system",
       "log" => "log",

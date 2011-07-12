@@ -5,7 +5,7 @@ run_for_app(:photos => [:solo,:app,:app_master],
     action :install
   end
 
-  template "/data/#{app_name}/shared/config/memcached_custom.yml" do
+  template "#{ZZDeploy.env.shared_config_dir}/memcached.yml" do
     source "memcached.yml.erb"
     owner deploy_user
     group deploy_group
