@@ -11,9 +11,11 @@ zz_role = zz[:deploy_role].to_sym
 zz_rails_env = zz[:group_config][:rails_env].to_sym
 
 def run(cmd)
+  user = zz_deploy_user
+  dir = zz_release_dir
   e = execute cmd do
     cwd zz_release_dir
-    command "su -l #{zz_deploy_user} -c 'cd #{zz_release_dir} && #{cmd}'"
+    command "su -l #{user} -c 'cd #{dir} && #{cmd}'"
     action :nothing
   end
   e.run_action(:run)  # execute right now
