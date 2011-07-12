@@ -189,6 +189,14 @@ class Chef::Recipe::ZZDeployEnvironment
     return zz[:deploy_role]
   end
 
+  def release_dir=(dir)
+    @release_dir = dir
+  end
+
+  def release_dir
+    @release_dir
+  end
+
   def current_user
     node[:current_user]
 #    return @current_user if @current_user != nil

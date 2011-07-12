@@ -9,10 +9,13 @@ zz_deploy_group = hv[:deploy_group]
 zz_app = zz[:app_name].to_sym
 zz_role = zz[:deploy_role].to_sym
 zz_rails_env = zz[:group_config][:rails_env].to_sym
+Chef::Recipe::ZZDeploy.env.release_dir = zz_release_dir
 
 def run(cmd)
-  user = zz_deploy_user
-  dir = zz_release_dir
+  env = Chef::Recipe::ZZDeploy.env
+  zz = env.zz
+  user = env.deploy_user
+  dir = env.release_dir
   e = execute cmd do
     cwd zz_release_dir
     command "su -l #{user} -c 'cd #{dir} && #{cmd}'"
