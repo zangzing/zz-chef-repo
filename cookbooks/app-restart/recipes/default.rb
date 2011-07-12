@@ -15,7 +15,16 @@ run_for_app(:photos => [:solo,:util,:app,:app_master],
 
   # and finally the app code if it has a hook in the deploy dir
   ruby_code = File.open("#{release_path}/deploy/custom_restart.rb", 'r') {|f| f.read } rescue ruby_code = nil
-  instance_eval(ruby_code) if !ruby_code.nil?
+  if !ruby_code.nil?
+    begin
+      Chef::Log.info("ZangZing=> Running application hook custom_restart.rb")
+      instance_eval(ruby_code)
+    rescue Exception => ex
+      Chef::Log.info("ZangZing=> Exception while running application hook custom_restart.rb")
+      Chef::Log.info(ex.message)
+      raise ex
+    end
+  end
 
   if [:solo,:app,:app_master].include?(role)
     log "Deploy complete" do
