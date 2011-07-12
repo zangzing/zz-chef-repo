@@ -13,17 +13,20 @@ puts "-----TEST_BEFORE_MIGRATE------"
 dna_src = "#{zz_shared_dir}/config/zz_app_dna.json"
 dna_dst = "#{zz_release_dir}/config/zz_app_dna.json"
 
-execute "copy_zza_app_dna" do
+e = execute "copy_zza_app_dna" do
   command "cp #{dna_src} #{dna_dst} && chown #{deploy_user}:#{deploy_group} #{dna_dst}"
+  action :nothing
 end
+e.run_action(:run)  # execute in the compile phase so happens right now
 
 
 # install the bundle - need to use su since just calling it directly
 # causes it to work out of our chef directory even though we cd to the
 # proper directory.  Must be something about how it looks at the environment
 #
-execute "bundle_install" do
+e = execute "bundle_install" do
   cwd zz_release_dir
   command "su -l #{zz_deploy_user} -c 'cd #{zz_release_dir} && bundle install'"
-  action :run
+  action :nothing
 end
+e.run_action(:run)  # execute in the compile phase so happens right now

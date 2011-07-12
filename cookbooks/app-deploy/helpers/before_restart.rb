@@ -22,7 +22,6 @@ end
 if [:app_master, :solo].include?(role) && do_migrate
   execute "migrate" do
     command "su -l #{zz_deploy_user} -c 'cd #{zz_release_dir} && bundle exec #{migrate_command}'"
-#    command "bundle exec #{migrate_command}"
     cwd zz_release_dir
   end
 end

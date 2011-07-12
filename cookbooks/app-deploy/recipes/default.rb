@@ -47,8 +47,8 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
       instance_eval(ruby_code)
 
       # and finally the app code if it has a hook in the deploy dir
-      ruby_code = File.open("#{release_path}/deploy/before_migrate.rb", 'r') {|f| f.read } rescue nil
-      #instance_eval(ruby_code) if !ruby_code.nil?
+      ruby_code = File.open("#{release_path}/deploy/zz_before_migrate.rb", 'r') {|f| f.read } rescue ruby_code = nil
+      instance_eval(ruby_code) if !ruby_code.nil?
     end
     before_symlink do
     end
