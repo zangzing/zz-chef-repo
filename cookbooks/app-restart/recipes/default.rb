@@ -6,7 +6,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master],
   hv = ZZDeploy.env.prep_hook_data(app_name, release_dir)
   chef_base = ZZDeploy.env.project_root_dir
 
-  ruby_code = File.open("#{chef_base}/cookbooks/app-restart/helpers/prep_hook_vars.rb", 'r') {|f| f.read }
+  ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/prep_hook_vars.rb", 'r') {|f| f.read }
   instance_eval(ruby_code)
 
   # now our own restart code (check to see if user has custom code)
