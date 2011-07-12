@@ -19,6 +19,8 @@ class Chef::Recipe::PhotosConfig
     node[:zz][:app_config][:resque_cpus] = calc_resque_cpus
     node[:zz][:app_config][:we_host_resque_cpu] = calc_we_host_resque_cpu
 
+    node[:zz][:app_config][:all_servers] = calc_all_servers
+
     node[:zz][:app_config][:app_servers] = calc_app_servers
     node[:zz][:app_config][:we_host_app_server] = calc_we_host_app_server
 
@@ -77,6 +79,15 @@ class Chef::Recipe::PhotosConfig
 
   def self.calc_we_host_resque_cpu
     config[:resque_cpus].include?(zz[:local_hostname])
+  end
+
+  def self.calc_all_servers
+    hosts = []
+    instances.each_value do |instance|
+      host = instance[:local_hostname]
+      hosts << host
+    end
+    hosts
   end
 
   def self.calc_app_servers

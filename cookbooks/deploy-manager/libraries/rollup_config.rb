@@ -11,7 +11,6 @@ class Chef::Recipe::RollupConfig
   # want to set up on the node
   def self.init(node)
     @@node = node
-    # see if we should host redis
     config = {}
 
     node[:zz][:app_config] = config
@@ -23,10 +22,6 @@ class Chef::Recipe::RollupConfig
 
   def self.config
     node[:zz][:app_config]
-  end
-
-  def self.host_redis?
-    config[:host_redis]
   end
 
 end
