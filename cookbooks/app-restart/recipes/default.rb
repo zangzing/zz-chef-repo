@@ -6,8 +6,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master],
   Chef::Recipe::ZZDeploy.env.release_dir = release_dir
   chef_base = ZZDeploy.env.project_root_dir
 
-  ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/prep_hook_vars.rb", 'r') {|f| f.read }
-  instance_eval(ruby_code)
+  run_external_code("#{chef_base}/cookbooks/app-deploy/helpers", "prep_hook_vars.rb", true)
 
   # run any app before restart custom code
   run_external_code("#{release_dir}/deploy", "zz_before_restart.rb")
