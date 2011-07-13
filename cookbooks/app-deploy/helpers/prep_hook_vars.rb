@@ -1,8 +1,13 @@
 # this is helper code just to expose some handy zz_ vars to the custom deploy hooks
 
-def zz
-  Chef::Recipe::ZZDeploy.env.zz
+def zz_env
+  Chef::Recipe::ZZDeploy.env
 end
+
+def zz
+  zz_env.zz
+end
+
 
 def zz_base_dir
   Chef::Recipe::ZZDeploy.env.base_dir

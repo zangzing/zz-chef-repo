@@ -10,8 +10,8 @@ puts "-----TEST_PREPARE_CONFIG------"
 # since it is specific to that deploy configuration and we
 # don't want to possibly change a running app by linking from
 # the shared config directory
-dna_src = "#{zz_shared_dir}/config/zz_app_dna.json"
-dna_dst = "#{zz_release_dir}/config/zz_app_dna.json"
+dna_src = "#{zz_env.shared_dir}/config/zz_app_dna.json"
+dna_dst = "#{zz_env.release_dir}/config/zz_app_dna.json"
 
 e = execute "copy_zza_app_dna" do
   command "cp #{dna_src} #{dna_dst} && chown #{deploy_user}:#{deploy_group} #{dna_dst}"
@@ -25,8 +25,8 @@ e.run_action(:run)  # execute in the compile phase so happens right now
 # proper directory.  Must be something about how it looks at the environment
 #
 e = execute "bundle_install" do
-  cwd zz_release_dir
-  command "su -l #{zz_deploy_user} -c 'cd #{zz_release_dir} && bundle install'"
+  cwd zz_env.release_dir
+  command "su -l #{zz_env.deploy_user} -c 'cd #{zz_env.release_dir} && bundle install'"
   action :nothing
 end
 e.run_action(:run)  # execute in the compile phase so happens right now

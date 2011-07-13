@@ -1,6 +1,6 @@
 
 class Chef::Recipe::ZZDeployEnvironment
-  attr_accessor :base_dir, :release_dir, :current_dir, :shared_dir
+  attr_accessor :release_dir
 
   def initialize(node, amazon)
     @node = node
@@ -91,17 +91,6 @@ class Chef::Recipe::ZZDeployEnvironment
 
   def amazon
     @amazon
-  end
-
-  def prep_hook_data(app_name, release_dir)
-    base_dir = "/data/#{app_name}"
-    # pick up the current release dir
-    shared_dir = "#{base_dir}/shared"
-    current_dir = "#{base_dir}/current"
-    self.base_dir = base_dir
-    self.shared_dir = shared_dir
-    self.current_dir = current_dir
-    self.release_dir = release_dir
   end
 
   def set_local_accounts
@@ -229,6 +218,10 @@ class Chef::Recipe::ZZDeployEnvironment
     dir = relative_path('../../..')
   end
 
+  def base_dir
+    "/data/#{zz[:app_name]}"
+  end
+
   def current_dir
     "/data/#{zz[:app_name]}/current"
   end
@@ -282,6 +275,10 @@ end
 
 class Chef
   class Recipe
+    def zz_env
+      Chef::Recipe::ZZDeploy.env
+    end
+
     # take the current directory of this file and return a fully
     # qualified path based on the relative path passed in
     def relative_path rel_path
@@ -357,6 +354,10 @@ end
 
 class Chef
   class Resource
+    def zz_env
+      Chef::Recipe::ZZDeploy.env
+    end
+
     def zz
       Chef::Recipe::ZZDeploy.env.zz
     end
