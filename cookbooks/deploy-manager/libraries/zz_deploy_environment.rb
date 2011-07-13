@@ -1,3 +1,12 @@
+require 'mixin_utils.rb'
+
+class Chef::Provider
+  include Chef::Mixin::ZZUtils
+end
+
+class Chef::Recipe
+  include Chef::Mixin::ZZUtils
+end
 
 class Chef::Recipe::ZZDeployEnvironment
   attr_accessor :release_dir
