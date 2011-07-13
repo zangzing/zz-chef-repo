@@ -33,8 +33,8 @@ run_for_app(:photos => [:solo,:util,:app,:app_master],
     symlink_before_migrate symlinks
     migrate false
     action :deploy
-#    before_migrate do
-#    end
+    before_migrate do
+    end
     before_symlink do
       # this code is here rather than before_migrate because we want the symlinks from the migrate
       # hooked up - any failure here does not change current
@@ -55,12 +55,12 @@ run_for_app(:photos => [:solo,:util,:app,:app_master],
       ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/do_migrate.rb", 'r') {|f| f.read }
       instance_eval(ruby_code)
     end
-#    before_restart do
-#    end
-#    after_restart do
-#    end
-#    restart_command do
-#    end
+    before_restart do
+    end
+    after_restart do
+    end
+    restart_command do
+    end
   end
 
 end
