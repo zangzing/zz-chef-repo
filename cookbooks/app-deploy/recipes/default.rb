@@ -41,16 +41,16 @@ run_for_app(:photos => [:solo,:util,:app,:app_master],
       Chef::Recipe::ZZDeploy.env.release_dir = release_path  # now that we know the release path set it
 
       # prep vars we want to pass
-      ZZChefUtils.run_external_code("#{chef_base}/cookbooks/app-deploy/helpers", "prep_hook_vars.rb", true)
+      run_external_code("#{chef_base}/cookbooks/app-deploy/helpers", "prep_hook_vars.rb", true)
 
       # now our own hook code
-      ZZChefUtils.run_external_code("#{chef_base}/cookbooks/app-deploy/helpers", "prepare_config.rb", true)
+      run_external_code("#{chef_base}/cookbooks/app-deploy/helpers", "prepare_config.rb", true)
 
       # call app specific hook if it exists
-      ZZChefUtils.run_external_code("#{release_path}/deploy", "zz_before_migrate.rb", false)
+      run_external_code("#{release_path}/deploy", "zz_before_migrate.rb", false)
 
       # now our own hook code
-      ZZChefUtils.run_external_code("#{chef_base}/cookbooks/app-deploy/helpers", "do_migrate.rb", true)
+      run_external_code("#{chef_base}/cookbooks/app-deploy/helpers", "do_migrate.rb", true)
     end
     before_restart do
     end
