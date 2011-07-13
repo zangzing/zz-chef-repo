@@ -3,7 +3,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master],
 
   # set up any items we want to pass into the hooks via the for_hook hash
   base_dir = "/data/#{app_name}"
-  for_hook = ZZDeploy.env.prep_hook_data(app_name, nil)
+  ZZDeploy.env.prep_hook_data(app_name, nil)
   chef_base = ZZDeploy.env.project_root_dir
 
   # set up symlinks wanted based on app
@@ -39,8 +39,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master],
     before_symlink do
       # this code is here rather than before_migrate because we want the symlinks from the migrate
       # hooked up - any failure here does not change current
-      hv = for_hook
-      hv[:release_dir] = release_path
+      Chef::Recipe::ZZDeploy.env.release_dir = release_path  # now that we know the release path set it
 
       # prep vars we want to pass
       ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/prep_hook_vars.rb", 'r') {|f| f.read }

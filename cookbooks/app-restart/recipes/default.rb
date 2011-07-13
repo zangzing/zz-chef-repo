@@ -3,7 +3,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master],
 
 
   release_dir = File.readlink(ZZDeploy.env.current_dir)
-  hv = ZZDeploy.env.prep_hook_data(app_name, release_dir)
+  ZZDeploy.env.prep_hook_data(app_name, release_dir)
   chef_base = ZZDeploy.env.project_root_dir
 
   ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/prep_hook_vars.rb", 'r') {|f| f.read }

@@ -1,5 +1,7 @@
 
 class Chef::Recipe::ZZDeployEnvironment
+  attr_accessor :base_dir, :release_dir, :current_dir, :shared_dir
+
   def initialize(node, amazon)
     @node = node
     @amazon = amazon
@@ -96,15 +98,10 @@ class Chef::Recipe::ZZDeployEnvironment
     # pick up the current release dir
     shared_dir = "#{base_dir}/shared"
     current_dir = "#{base_dir}/current"
-    hv = {
-        :base_dir => base_dir,
-        :shared_dir => shared_dir,
-        :current_dir => current_dir,
-        :deploy_user => deploy_user,
-        :deploy_group => deploy_group,
-        :release_dir => release_dir,
-        :zz => node[:zz]
-    }
+    self.base_dir = base_dir
+    self.shared_dir = shared_dir
+    self.current_dir = current_dir
+    self.release_dir = release_dir
   end
 
   def set_local_accounts
@@ -187,14 +184,6 @@ class Chef::Recipe::ZZDeployEnvironment
 
   def deploy_role
     return zz[:deploy_role]
-  end
-
-  def release_dir=(dir)
-    @release_dir = dir
-  end
-
-  def release_dir
-    @release_dir
   end
 
   def current_user
