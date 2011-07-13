@@ -41,6 +41,24 @@ class Chef
       block.call(the_app.to_sym, the_role.to_sym, rails_env.to_sym)
     end
 
+    # load and run external ruby code within our current context
+    # returns true if was able to load false otherwise
+    def run_external_code(dir, file)
+      ruby_code = File.open("#{dir}/deploy/#{file}", 'r') {|f| f.read } rescue ruby_code = nil
+      if !ruby_code.nil?
+        begin
+          Chef::Log.info("ZangZing=> Running application hook #{file}")
+          instance_eval(ruby_code)
+        rescue Exception => ex
+          Chef::Log.error("ZangZing=> Exception while running application hook #{file}")
+          Chef::Log.error(ex.message)
+          raise ex
+        end
+        return true
+      else
+        return false
+      end
+    end
   end
 end
 

@@ -74,3 +74,8 @@ end
 if deploy_maint?
   require_recipe "app-maint"
 end
+
+if deploy_shutdown?
+  require_recipe "app-shutdown"
+  require_recipe "rsyslog"
+end

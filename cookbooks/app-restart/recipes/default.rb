@@ -9,22 +9,21 @@ run_for_app(:photos => [:solo,:util,:app,:app_master],
   ruby_code = File.open("#{chef_base}/cookbooks/app-deploy/helpers/prep_hook_vars.rb", 'r') {|f| f.read }
   instance_eval(ruby_code)
 
-  # now our own restart code (check to see if user has custom code)
-  ruby_code = File.open("#{chef_base}/cookbooks/app-restart/helpers/restart_command.rb", 'r') {|f| f.read }
-  instance_eval(ruby_code)
+  # run any app before restart custom code
+  run_external_code("#{release_dir}/deploy", "zz_before_restart.rb")
 
-  # and finally the app code if it has a hook in the deploy dir
-  ruby_code = File.open("#{release_dir}/deploy/custom_restart.rb", 'r') {|f| f.read } rescue ruby_code = nil
-  if !ruby_code.nil?
-    begin
-      Chef::Log.info("ZangZing=> Running application hook custom_restart.rb")
-      instance_eval(ruby_code)
-    rescue Exception => ex
-      Chef::Log.error("ZangZing=> Exception while running application hook custom_restart.rb")
-      Chef::Log.error(ex.message)
-      raise ex
-    end
+  # see if we have a custom restart override - if this file exists
+  # we do not run our normal restart code, instead we leave it up to the
+  # app override_restart code to properly restart
+  loaded = run_external_code("#{release_dir}/deploy", "zz_override_restart.rb")
+
+  if loaded == false
+    # no override code so do the standard restart
+    Chef::Log.info("Code deployed, now restarting application.")
+    ruby_code = File.open("#{chef_base}/cookbooks/app-restart/helpers/restart_command.rb", 'r') {|f| f.read }
+    instance_eval(ruby_code)
   end
+
 
   if [:solo,:app,:app_master].include?(role)
     log "Deploy complete" do

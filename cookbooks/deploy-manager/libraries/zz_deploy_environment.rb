@@ -171,6 +171,10 @@ class Chef::Recipe::ZZDeployEnvironment
     return zz[:deploy_what] == 'config'
   end
 
+  def deploy_shutdown?
+    return zz[:deploy_what] == 'shutdown'
+  end
+
   def deploy_role
     return zz[:deploy_role]
   end
@@ -323,6 +327,10 @@ class Chef
 
     def deploy_config?
       Chef::Recipe::ZZDeploy.env.deploy_config?
+    end
+
+    def deploy_shutdown?
+      Chef::Recipe::ZZDeploy.env.deploy_shutdown?
     end
 
     def deploy_role
