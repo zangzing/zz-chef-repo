@@ -96,7 +96,7 @@ class Chef::Recipe::ZZDeployEnvironment
     node[:zz][:instances] = instances
 
     instance = zz[:instances][instance_id]
-    raise "Could not find our instance in config - our instance id is #{instance_id}" if instance.nil?
+    raise "Could not find our instance in config, our instance id is #{instance_id}" if instance.nil?
     node[:zz][:deploy_role] = instance[:role]
 
     # now see if we have any custom json data to associate with the node
