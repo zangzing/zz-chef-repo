@@ -47,11 +47,11 @@ end
 
 
 
-def run(cmd)
+def run(cmd, run_dir = nil)
   env = Chef::Recipe::ZZDeploy.env
   zz = env.zz
   user = env.deploy_user
-  dir = env.release_dir
+  dir = run_dir || env.release_dir
   e = execute "hook-run" do
     cwd dir
     command "su -l #{user} -c 'cd #{dir} && #{cmd}'"
