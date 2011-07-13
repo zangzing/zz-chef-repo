@@ -52,7 +52,7 @@ def run(cmd)
   zz = env.zz
   user = env.deploy_user
   dir = env.release_dir
-  e = execute cmd do
+  e = execute "hook-run" do
     cwd dir
     command "su -l #{user} -c 'cd #{dir} && #{cmd}'"
     action :nothing
