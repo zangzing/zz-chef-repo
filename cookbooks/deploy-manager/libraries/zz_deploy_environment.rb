@@ -51,12 +51,14 @@ class Chef::Recipe::ZZDeployEnvironment
       zz[:ec2] = ec2
     end
 
+    instances = self.amazon_instances
+
     act_as = zz[:act_as]  # for testing, pretend to be this id
     if act_as.nil? == false
       instance_id = act_as
       # look up info about this instance
-      instances = amazon.find_named_instances(nil,nil)
       instance = instances[instance_id.to_sym]
+      self.this_amazon_instance = instance
       local_hostname = instance[:local_hostname]
       public_hostname = instance[:public_hostname]
       set_local_accounts  # since we are only acting as remote, use local account names
@@ -77,6 +79,8 @@ class Chef::Recipe::ZZDeployEnvironment
         set_remote_accounts
         ec2 = zz[:ec2]
         instance_id = ec2[:instance_id]
+        instance = instances[instance_id.to_sym]
+        self.this_amazon_instance = instance
         local_hostname = ec2[:local_hostname]
         public_hostname = ec2[:public_hostname]
       end
@@ -128,6 +132,18 @@ class Chef::Recipe::ZZDeployEnvironment
 
   def amazon
     @amazon
+  end
+
+  def amazon_instances
+    @amazon_instances ||= amazon.find_named_instances(nil,nil)
+  end
+
+  def this_amazon_instance
+    @this_amazon_instance
+  end
+
+  def this_amazon_instance=(instance)
+    @this_amazon_instance = instance
   end
 
   def set_local_accounts
