@@ -58,7 +58,7 @@
         }
         # finally see if we are in maint mode and health_check
         if ($maint_state = MC) {
-            # return the main page but without the 503 code
+            # return the maint page but with 200 instead of the 503 code
             # this will be interpreted by ELB as healthy
             # so we don't lose our maint page by ELB thinking we
             # are down
