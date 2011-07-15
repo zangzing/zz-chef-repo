@@ -204,6 +204,23 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
       :dev_upstream_port => dev_upstream_port
   }
 
+  # copy ssl related files
+  template nginx_conf_dir + "/" + ssl_key do
+    Chef::Log.info("ZangZing=> Installing Nginx ssl key")
+    source ssl_key + ".erb"
+    owner root_user
+    group root_group
+    mode 0640
+  end
+
+  template nginx_conf_dir + "/" + ssl_crt do
+    Chef::Log.info("ZangZing=> Installing Nginx ssl key")
+    source ssl_crt + ".erb"
+    owner root_user
+    group root_group
+    mode 0640
+  end
+
   # the notify helper limits us to only notifying once
   notify = NotifyHelper.new()
 
@@ -225,24 +242,7 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
     group root_group
     mode 0644
     variables(config_vars)
-    notifies :restart, "service[nginx]" if notify.should_notify?
-  end
-
-  # copy ssl related files
-  template nginx_conf_dir + "/" + ssl_key do
-    Chef::Log.info("ZangZing=> Installing Nginx ssl key")
-    source ssl_key + ".erb"
-    owner root_user
-    group root_group
-    mode 0640
-  end
-
-  template nginx_conf_dir + "/" + ssl_crt do
-    Chef::Log.info("ZangZing=> Installing Nginx ssl key")
-    source ssl_crt + ".erb"
-    owner root_user
-    group root_group
-    mode 0640
+    notifies :reload, "service[nginx]" if notify.should_notify?
   end
 
   if is_local_dev == false
