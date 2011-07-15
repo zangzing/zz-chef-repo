@@ -248,8 +248,9 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
       supports :status => true, :stop => true, :restart => true
       action :nothing
       only_if do
-        puts "Nginx Notified: #{notify_nginx_service.current_count}"
-        notify_nginx_service.should_run?
+        should_run = notify_nginx_service.should_run?
+        puts "Nginx Notified: #{notify_nginx_service.current_count}, should_run: #{should_run}"
+        return should_run
       end
     end
   end
