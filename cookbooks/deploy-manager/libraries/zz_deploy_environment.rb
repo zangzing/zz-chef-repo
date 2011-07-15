@@ -458,12 +458,22 @@ class Chef::Recipe::NotifyHelper
     @remote_only = remote_only
   end
 
+  def current_count
+    @notify_count
+  end
+
   # indicates if you should do action
   # will return false if we've already done it
   # once or the local filter is set
+  # because we always get called the first time
+  # with action nothing, we treat the second
+  # call as the one that should do the action
+  # the resource being notified must always
+  # sets its action to nothing for this to work
   def should_run?
     @notify_count += 1
-    return ((@remote_only && Chef::Recipe::ZZDeploy.env.is_local_dev?) || @notify_count > 1) == false
+    return false if (@remote_only && Chef::Recipe::ZZDeploy.env.is_local_dev?)
+    return @notify_count == 2
   end
 end
 
