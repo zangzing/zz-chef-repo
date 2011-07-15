@@ -222,34 +222,35 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
   end
 
   # the notify helper limits us to only notifying once
-  notify = NotifyHelper.new()
+  notify_nginx_service = NotifyHelper.new()
 
   #install custom locations for application
   template nginx_conf_dir + "/nginx.conf" do
-    Chef::Log.info("ZangZing=> Installing Nginx nginx.conf")
     source "nginx.conf.erb"
     owner deploy_user
     group root_group
     mode 0644
     variables(config_vars)
-    notifies :restart, "service[nginx]" if notify.should_notify?
+    notifies :restart, "service[nginx]"
   end
 
   template nginx_conf_dir + "/nginx-shared-server.conf" do
-    Chef::Log.info("ZangZing=> Installing Nginx nginx-shared-server.conf")
     source nginx_erb
     owner deploy_user
     group root_group
     mode 0644
     variables(config_vars)
-    notifies :reload, "service[nginx]" if notify.should_notify?
+    notifies :restart, "service[nginx]"
   end
 
   if is_local_dev == false
     service "nginx" do
-      Chef::Log.info("ZangZing=> Nginx restarting...")
       supports :status => true, :stop => true, :restart => true
       action :nothing
+      only_if do
+        puts "Nginx Notified."
+        notify_nginx_service.should_run?
+      end
     end
   end
 
