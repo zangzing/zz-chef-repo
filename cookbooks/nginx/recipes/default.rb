@@ -221,8 +221,11 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
     mode 0640
   end
 
-  # the notify helper limits us to only notifying once
-  notify_nginx_service = NotifyHelper.new()
+
+  # if you send delayed actions to another resource
+  # multiple times they will only execute once
+  # this only holds for delayed actions but is
+  # the behavior we want
 
   #install custom locations for application
   template nginx_conf_dir + "/nginx.conf" do
@@ -231,7 +234,7 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
     group root_group
     mode 0644
     variables(config_vars)
-    notifies :restart, "service[nginx]"
+    notifies :restart, "service[nginx]" if is_local_dev == false
   end
 
   template nginx_conf_dir + "/nginx-shared-server.conf" do
@@ -240,19 +243,12 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
     group root_group
     mode 0644
     variables(config_vars)
-    notifies :restart, "service[nginx]"
+    notifies :restart, "service[nginx]" if is_local_dev == false
   end
 
-  if is_local_dev == false
-    service "nginx" do
-      supports :status => true, :stop => true, :restart => true
-      action :nothing
-      only_if do
-        should_run = notify_nginx_service.should_run?
-        puts "Nginx Notified: #{notify_nginx_service.current_count}, should_run: #{should_run}"
-        should_run
-      end
-    end
+  service "nginx" do
+    supports :status => true, :stop => true, :restart => true
+    action :nothing
   end
 
 end
