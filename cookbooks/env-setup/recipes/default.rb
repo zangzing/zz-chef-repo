@@ -17,6 +17,13 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:local],
     action :create
   end
 
+  directory "/var/run/zz" do
+    owner deploy_user
+    group deploy_group
+    mode "0755"
+    action :create
+  end
+
   # we do each part to get the right permissions at each node
   directory "/data" do
     owner deploy_user
