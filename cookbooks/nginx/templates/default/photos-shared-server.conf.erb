@@ -40,9 +40,9 @@
         #
         # We use a single variable called maint_state.  If maint mode
         # is on we set it to M, if we also discover that we are
-        # being asked for the health_check page we append an H
-        # so, we are in the special mode of returning no error
-        # we the maint_state = MC.  If it just equals M we do
+        # being asked for the health_check page we append a C.
+        # So, if we are in the special mode of returning no error
+        # we check that the maint_state = MC.  If it just equals M we do
         # the normal 503 maint page.
         #
         if (-f $document_root/system/maintenance.html) {
