@@ -278,6 +278,13 @@
             proxy_cache zz_cache;
 
             <% if @is_local_dev == false %>
+            # amazon elb does not set a host so do this
+            # before the host check
+            if ($uri ~* ^/service/health_check$) {
+                proxy_pass http://zangzing_upstream;
+                break;
+            }
+
             # make sure the host always is the full host name so we remap
             # cases where we've got other dns addresses linked to the same
             # place
