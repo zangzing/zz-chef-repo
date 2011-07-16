@@ -17,9 +17,8 @@ system_dir = "#{zz_shared_dir}/system"
 
 if downtime
   # put maint link in system to tell nginx we are in maint mode
-  execute "downtime_maint_mode_on" do
-    command "cp #{public_dir}/maintenance.html #{system_dir}/maintenance.html && chown #{zz_deploy_user}:#{zz_deploy_group} #{system_dir}/maintenance.html"
-  end
+  puts "Maintenance mode on until restart."
+  run "cp #{public_dir}/maintenance.html #{system_dir}/maintenance.html && chown #{zz_deploy_user}:#{zz_deploy_group} #{system_dir}/maintenance.html"
 end
 
 if [:app_master, :solo].include?(zz_role) && do_migrate
