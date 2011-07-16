@@ -37,8 +37,6 @@ run_for_app(:photos => [:solo,:util,:app,:app_master],
     before_migrate do
     end
     before_symlink do
-      require_recipe "util-recipes"
-
       # this code is here rather than before_migrate because we want the symlinks from the migrate
       # hooked up - any failure here does not change current
       Chef::Recipe::ZZDeploy.env.release_dir = release_path  # now that we know the release path set it

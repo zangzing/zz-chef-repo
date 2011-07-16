@@ -12,10 +12,14 @@
 downtime = zz[:deploy_downtime]
 migrate_command = zz[:deploy_migrate_command]
 do_migrate = migrate_command.empty? == false
+public_dir = "#{zz_current_dir}/public"
+system_dir = "#{zz_shared_dir}/system"
 
 if downtime
-  log "Downtime deploy" do
-    notifies :run, "execute[maint_mode_on]", :immediately
+  # put maint link in system to tell nginx we are in maint mode
+  execute "downtime_maint_mode_on" do
+    command "cp #{public_dir}/maintenance.html #{system_dir}/maintenance.html && chown #{zz_deploy_user}:#{zz_deploy_group} #{system_dir}/maintenance.html"
+    action :nothing
   end
 end
 
