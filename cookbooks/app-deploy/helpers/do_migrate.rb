@@ -19,7 +19,6 @@ if downtime
   # put maint link in system to tell nginx we are in maint mode
   execute "downtime_maint_mode_on" do
     command "cp #{public_dir}/maintenance.html #{system_dir}/maintenance.html && chown #{zz_deploy_user}:#{zz_deploy_group} #{system_dir}/maintenance.html"
-    action :nothing
   end
 end
 
