@@ -9,8 +9,6 @@
 # before migrating.  Therefore, we do not use the deploy resource
 # migration command directly.
 #
-require_recipe "util-recipes"
-
 downtime = zz[:deploy_downtime]
 migrate_command = zz[:deploy_migrate_command]
 do_migrate = migrate_command.empty? == false
