@@ -137,9 +137,9 @@
             # make sure the host always is the full host name so we remap
             # cases where we've got other dns addresses linked to the same
             # place
-            if ($host !~ ^<%=@host_name%>$) {
-              rewrite ^(.*)$ http://<%=@host_name%><%=@host_port%>$1 permanent;
-            }
+#            if ($host !~ ^<%=@host_name%>$) {
+#              rewrite ^(.*)$ http://<%=@host_name%><%=@host_port%>$1 permanent;
+#            }
             <% end %>
 
             # this is used to deal with /?s= and /?p= from the wordpress site
@@ -288,9 +288,9 @@
             # make sure the host always is the full host name so we remap
             # cases where we've got other dns addresses linked to the same
             # place
-            if ($host !~ ^<%=@host_name%>$) {
-              rewrite ^(.*)$ http://<%=@host_name%><%=@host_port%>$1 permanent;
-            }
+#            if ($host !~ ^<%=@host_name%>$) {
+#              rewrite ^(.*)$ http://<%=@host_name%><%=@host_port%>$1 permanent;
+#            }
             <% end %>
 
             # serve any existing file
