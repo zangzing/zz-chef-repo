@@ -7,7 +7,8 @@
         "group_config" : {
             "vhost" : "localhost",
             "rails_env" : "development",
-            "app_name" : "photos"
+            "app_name" : "photos",
+            "amazon_elb" : ""
         }
     },
 

@@ -127,14 +127,16 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
   # to support ssl for development so we keep support in the
   # configuration.
   #
-  ssl_supported = true
+  group_config = zz[:group_config]
+  amazon_elb = group_config[:amazon_elb]
+  ssl_supported = amazon_elb.empty?   # when we have an elb we don't need to turn on our own ssl
   host_port = ""
   listen_port = 80 # default port
   ssl_listen_port = 443
   ssl_key = "localhost.key"
   ssl_crt = "localhost.crt"
 
-  host_name = zz[:group_config][:vhost]
+  host_name = group_config[:vhost]
   asset_host_name = nil # default, no asset host
   remap_error_pages = false
   dev_upstream_port = 3001
@@ -201,24 +203,25 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
       :nginx_photos => photos_tmp + "/nginx",
       :nginx_conf_dir => nginx_conf_dir,
       :v3_homepage_dir => v3_homepage_dir,
-      :dev_upstream_port => dev_upstream_port
+      :dev_upstream_port => dev_upstream_port,
+      :amazon_elb => amazon_elb
   }
 
   # copy ssl related files
   template nginx_conf_dir + "/" + ssl_key do
-    Chef::Log.info("ZangZing=> Installing Nginx ssl key")
     source ssl_key + ".erb"
     owner root_user
     group root_group
     mode 0640
+    only_if { ssl_supported }
   end
 
   template nginx_conf_dir + "/" + ssl_crt do
-    Chef::Log.info("ZangZing=> Installing Nginx ssl key")
     source ssl_crt + ".erb"
     owner root_user
     group root_group
     mode 0640
+    only_if { ssl_supported }
   end
 
 
@@ -246,9 +249,11 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
     notifies :restart, "service[nginx]" if is_local_dev == false
   end
 
-  service "nginx" do
-    supports :status => true, :stop => true, :restart => true
-    action :nothing
+  if is_local_dev == false
+    service "nginx" do
+      supports :status => true, :stop => true, :restart => true
+      action :nothing
+    end
   end
 
 end
