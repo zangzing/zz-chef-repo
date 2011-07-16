@@ -7,7 +7,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master],
 
   # set up symlinks wanted based on app
   # common ones first
-  symlinks = {
+  cust_symlinks = {
       "config/database.yml" => "config/database.yml",
       "config/memcached.yml" => "config/memcached.yml",
       "config/unicorn.rb" => "config/unicorn.rb",
@@ -16,13 +16,13 @@ run_for_app(:photos => [:solo,:util,:app,:app_master],
   }
   case app_name
     when :photos
-      symlinks["config/database-cache.yml"] = "sub_migrates/cache_builder/config/database.yml"
-      symlinks["config/redis.yml"] = "config/redis.yml"
-      symlinks["config/resque.yml"] = "config/resque.yml"
+      cust_symlinks["config/database-cache.yml"] = "sub_migrates/cache_builder/config/database.yml"
+      cust_symlinks["config/redis.yml"] = "config/redis.yml"
+      cust_symlinks["config/resque.yml"] = "config/resque.yml"
 
     when :rollup
-      symlinks["config/database-photos.yml"] = "config/database-photos.yml"
-      symlinks["config/database-zza.yml"] = "config/database-zza.yml"
+      cust_symlinks["config/database-photos.yml"] = "config/database-photos.yml"
+      cust_symlinks["config/database-zza.yml"] = "config/database-zza.yml"
   end
 
   deploy base_dir do
@@ -30,7 +30,8 @@ run_for_app(:photos => [:solo,:util,:app,:app_master],
     revision zz[:app_deploy_tag]
     user deploy_user
     group deploy_group
-    symlink_before_migrate symlinks
+    symlinks({})    # empty map, not a code block
+    symlink_before_migrate cust_symlinks
     migrate false
     action :deploy
     before_migrate do
