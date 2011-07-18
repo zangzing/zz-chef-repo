@@ -237,7 +237,8 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
     group root_group
     mode 0644
     variables(config_vars)
-    notifies [:enable, :restart], "service[nginx]" if is_local_dev == false
+    notifies :restart, "service[nginx]" if is_local_dev == false
+    notifies :enable, "service[nginx]" if is_local_dev == false
   end
 
   template nginx_conf_dir + "/nginx-shared-server.conf" do
@@ -246,7 +247,8 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
     group root_group
     mode 0644
     variables(config_vars)
-    notifies [:enable, :restart], "service[nginx]" if is_local_dev == false
+    notifies :restart, "service[nginx]" if is_local_dev == false
+    notifies :enable, "service[nginx]" if is_local_dev == false
   end
 
   if is_local_dev == false

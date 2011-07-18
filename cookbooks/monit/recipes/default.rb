@@ -10,7 +10,8 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
     owner root_user
     group root_group
     mode "0600"
-    notifies [:enable, :restart], "service[monit]", :immediately
+    notifies :restart, "service[monit]", :immediately
+    notifies :enable, "service[monit]", :immediately
   end
 
   service "monit" do
