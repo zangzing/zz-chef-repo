@@ -120,6 +120,7 @@
         # v3homepage served directly
         location ~* "^/(v3index.html|index.html)($|/.*?$)"{
             root <%=@v3_homepage_dir%>;
+            expires -1y;
         }
 
         # v3homepage assets served directly
