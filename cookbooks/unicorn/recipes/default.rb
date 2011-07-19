@@ -5,7 +5,7 @@ run_for_app(:photos => [:solo,:app,:app_master],
   # we depend on a symlink in the before_restart
   # deploy hook to symlink to this file
   template "/data/#{app_name}/shared/config/unicorn.rb" do
-    source "unicorn.rb.erb"
+    source "unicorn.rb"
     owner deploy_user
     group deploy_group
     mode 0644

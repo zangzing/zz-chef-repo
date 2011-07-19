@@ -27,7 +27,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master]) do |app_name, role, rails
   # see what kind of queues each type should listen to
   if zz[:app_config][:we_host_resque_cpu]
     #CPU bound jobs only
-    queues = "image_processing"
+    queues = "image_edit,image_processing"
   else
     # all other jobs including special named job tied to machine it originated from
     # this host named job lets us work with things like temp files that only exist
