@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
-# we either restart unicorn if it is running with USR2 or if not running
-# we start it
+# shut down unicorn master and workers
 
 def do_cmd(cmd)
   puts cmd

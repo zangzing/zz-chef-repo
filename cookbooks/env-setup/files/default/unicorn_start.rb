@@ -68,7 +68,7 @@ begin
     end
   else
     # start from scratch
-    do_cmd "cd #{app_dir} && bundle exec unicorn -D -E #{rails_env} -c #{app_dir}/config/unicorn.rb -D #{app_dir}/config.ru"
+    do_cmd "cd #{app_dir} && bundle exec unicorn -D -E #{rails_env} -c #{app_dir}/config/unicorn.rb #{app_dir}/config.ru"
     raise "The app failed to start." if $?.exitstatus != 0
     puts "Your app has been successfully an cold restarted."
   end

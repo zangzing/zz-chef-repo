@@ -24,12 +24,44 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:local],
     action :create
   end
 
+  directory "/var/run/zz/resque" do
+    owner deploy_user
+    group deploy_group
+    mode "0755"
+    action :create
+  end
+
   # we do each part to get the right permissions at each node
   directory "/data" do
     owner deploy_user
     group deploy_group
     mode "0755"
     action :create
+  end
+
+  directory "/data/global" do
+    owner deploy_user
+    group deploy_group
+    mode "0755"
+    action :create
+  end
+
+  directory "/data/global/bin" do
+    owner deploy_user
+    group deploy_group
+    mode "0755"
+    action :create
+  end
+
+  # move scripts to /data/global/bin
+  scripts = ['unicorn_start.rb', 'unicorn_stop.rb', 'resque_start.rb', 'resque_stop.rb']
+  scripts.each do |script|
+    cookbook_file "/data/global/bin/#{script}" do
+      source "#{script}"
+      owner deploy_user
+      group deploy_group
+      mode "0755"
+    end
   end
 
   directory "/data/#{app_name}" do
@@ -50,7 +82,6 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:local],
     owner deploy_user
     group deploy_group
     mode "0755"
-    recursive true
     action :create
   end
 
@@ -58,7 +89,6 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:local],
     owner deploy_user
     group deploy_group
     mode "0755"
-    recursive true
     action :create
   end
 
@@ -66,7 +96,6 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:local],
     owner deploy_user
     group deploy_group
     mode "0755"
-    recursive true
     action :create
   end
 
@@ -81,5 +110,6 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:local],
       })
     end
   end
+
 
 end

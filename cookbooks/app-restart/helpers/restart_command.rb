@@ -1,12 +1,4 @@
-puts "Restart Now........."
+puts "Restart Unicorn Now........."
 
-cmd = "echo `date` > #{zz_env.release_dir}/tmp/restart-2.txt"
-puts cmd
-`#{cmd}`
-
-# look recipe code within a hook
-execute "restart_fake" do
-    cwd zz_env.release_dir
-    command "echo `date` > tmp/restart.txt"
-    action :run
-end
+# call the re/start script
+run "/bin/su - #{zz[:deploy_user]} -c '/data/global/bin/unicorn_start.rb #{zz_rails_env} #{zz_current_dir} /var/run/zz/unicorn_#{zz_app}.pid 60'"
