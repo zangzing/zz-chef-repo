@@ -1,19 +1,5 @@
 run_for_app(:photos => [:solo,:util,:app,:app_master]) do |app_name, role, rails_env|
 
-  template "/usr/bin/zz/resque_scheduler" do
-      source "resque_scheduler_runner.erb"
-      owner root_user
-      group root_group
-      mode 0755
-  end
-
-  template "/usr/bin/zz/resque" do
-      source "resque_worker_runner.erb"
-      owner root_user
-      group root_group
-      mode 0755
-  end
-
   # set up standard number of workers for generic and i/o bound based
   # on machine capacity
   case node[:ec2][:instance_type]
@@ -59,6 +45,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master]) do |app_name, role, rails
   end
 
   include_scheduler = zz[:app_config][:we_host_resque_scheduler]
+  current_dir = zz_env.current_dir
 
   template "/etc/monit.d/resque_#{app_name}.monitrc" do
     owner root_user
@@ -68,6 +55,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master]) do |app_name, role, rails
     variables({
       :num_workers => worker_count,
       :app_name => app_name,
+      :current_dir =>  current_dir,
       :rails_env => rails_env,
       :include_scheduler => include_scheduler
       })
