@@ -6,7 +6,7 @@ run_for_all() do |app_name, role, rails_env|
     e = template "/var/chef/zz_config_dna.json" do
       source "pretty.json.erb"
       owner deploy_user
-      group deploy_user
+      group deploy_group
       mode "0644"
       variables({
         :pretty_json => j
@@ -20,7 +20,7 @@ run_for_all() do |app_name, role, rails_env|
     e = template "#{ZZDeploy.env.shared_config_dir}/zz_app_dna.json" do
       source "pretty.json.erb"
       owner deploy_user
-      group deploy_user
+      group deploy_group
       mode "0644"
       variables({
         :pretty_json => j

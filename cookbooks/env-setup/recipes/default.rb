@@ -96,7 +96,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:local],
     template "/etc/profile.d/rubyenv.sh" do
       source "rubyenv.sh.erb"
       owner deploy_user
-      group deploy_user
+      group deploy_group
       mode "0644"
       variables({
         :rails_env => rails_env
