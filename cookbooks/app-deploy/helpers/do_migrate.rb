@@ -19,6 +19,11 @@ if downtime
   # put maint link in system to tell nginx we are in maint mode
   puts "Maintenance mode on until restart."
   run "cp #{public_dir}/maintenance.html #{system_dir}/maintenance.html && chown #{zz_deploy_user}:#{zz_deploy_group} #{system_dir}/maintenance.html"
+
+  # now stop unicorn
+  if [:app_master, :app, :solo].include?(zz_role)
+    run "/data/global/bin/unicorn_stop.rb /var/run/zz/unicorn_#{zz_app}.pid"
+  end
 end
 
 if [:app_master, :solo].include?(zz_role) && do_migrate

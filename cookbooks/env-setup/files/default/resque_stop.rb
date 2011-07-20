@@ -20,8 +20,7 @@ end
 pid_file = ARGV[0]
 timeout = ARGV[1].to_i
 
-# make sure nothing running under existing pid, if so forcibly kill since should have
-# previously been gracefully killed
+# make sure nothing running under existing pid, if so try gracefully first then forcefully
 pid = File.read(pid_file).to_i rescue 0
 running = false
 if pid != 0
@@ -41,7 +40,7 @@ if running
   end
 
   # ok, we tried gracefully if it's still running finish the job
-  do_cmd "kill -s SIGKILL #{pid}"
+  do_cmd "kill -s SIGKILL #{pid}" if running
 end
 
 # always clean up the pid file
