@@ -21,6 +21,8 @@ class Chef::Recipe::PhotosConfig
 
     node[:zz][:app_config][:all_servers] = calc_all_servers
 
+    node[:zz][:app_config][:util_servers] = calc_util_servers
+
     node[:zz][:app_config][:app_servers] = calc_app_servers
     node[:zz][:app_config][:we_host_app_server] = calc_we_host_app_server
 
@@ -86,6 +88,17 @@ class Chef::Recipe::PhotosConfig
     instances.each_value do |instance|
       host = instance[:local_hostname]
       hosts << host
+    end
+    hosts
+  end
+
+  def self.calc_util_servers
+    hosts = []
+    instances.each_value do |instance|
+      if ['util'].include?(instance[:role])
+        host = instance[:local_hostname]
+        hosts << host
+      end
     end
     hosts
   end

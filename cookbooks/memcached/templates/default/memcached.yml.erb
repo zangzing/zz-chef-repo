@@ -10,11 +10,7 @@ defaults:
   fragments: true
   memory: 128
   servers:
-  <% if @server_names.nil? %>
-    - localhost:11211
-  <% else %>
-    - <%= @server_names.join(":11211\n    - ") %>:11211
-  <% end %>
+    - <%= @cache_servers.join("\n    - ") %>
   benchmarking: true
   raise_errors: true
   fast_hash: false
