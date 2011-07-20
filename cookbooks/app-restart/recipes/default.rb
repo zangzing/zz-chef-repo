@@ -16,14 +16,13 @@ run_for_app(:photos => [:solo,:util,:app,:app_master],
   # app override_restart code to properly restart
   loaded = run_external_code("#{release_dir}/deploy", "zz_override_restart.rb", false)
 
-  if loaded == false
-    # no override code so do the standard restart
-    Chef::Log.info("Code deployed, now restarting application.")
-    run_external_code("#{chef_base}/cookbooks/app-restart/helpers", "restart_command.rb", true)
-  end
-
-
   if [:solo,:app,:app_master].include?(role)
+    if loaded == false
+      # no override code so do the standard restart
+      Chef::Log.info("Code deployed, now restarting application.")
+      run_external_code("#{chef_base}/cookbooks/app-restart/helpers", "restart_command.rb", true)
+    end
+
     log "Deploy complete" do
       notifies :run, "execute[maint_mode_off]", :immediately
     end
