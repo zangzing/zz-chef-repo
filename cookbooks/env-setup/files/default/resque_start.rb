@@ -29,27 +29,22 @@ queue_file = ARGV[5]
 valid_types = ['work', 'scheduler']
 abort("Must be type work or scheduler, was #{type}") unless valid_types.include?(type)
 
-# make sure nothing running under existing pid, if so forcibly kill since should have
-# previously been gracefully killed
+# if already running do nothing, use resque_stop to stop
 pid = File.read(pid_file).strip.to_i rescue 0
 running = false
 if pid != 0
   do_cmd "ps -fp #{pid}"
   running = $?.exitstatus == 0
 end
-if running
-  # force it to quit
-  do_cmd "kill -s SIGKILL #{pid}"
+if running == false
+  begin
+    # start it
+    qs = type == 'scheduler' ? '' : File.read(queue_file).strip
+    base_cmd = "cd #{app_dir} && APP_ROOT=#{app_dir} RACK_ENV=#{rails_env} RAILS_ENV=#{rails_env} #{qs} PIDFILE=#{pid_file} bundle exec rake -f #{app_dir}/Rakefile resque:#{type}"
+    do_cmd "cd #{app_dir} && #{base_cmd} >> #{app_dir}/log/resque.log 2>&1 &"
+    raise "The resque job failed to start." if $?.exitstatus != 0
+  rescue Exception => ex
+    msg = ex.message
+    abort msg
+  end
 end
-
-begin
-  # start from scratch
-  qs = type == 'scheduler' ? '' : File.read(queue_file).strip
-  base_cmd = "cd #{app_dir} && APP_ROOT=#{app_dir} RACK_ENV=#{rails_env} RAILS_ENV=#{rails_env} #{qs} PIDFILE=#{pid_file} bundle exec rake -f #{app_dir}/Rakefile resque:#{type}"
-  do_cmd "cd #{app_dir} && #{base_cmd} >> #{app_dir}/log/resque.log 2>&1 &"
-  raise "The resque job failed to start." if $?.exitstatus != 0
-rescue Exception => ex
-  msg = ex.message
-  abort msg
-end
-
