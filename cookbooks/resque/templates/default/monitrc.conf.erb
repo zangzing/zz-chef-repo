@@ -13,7 +13,7 @@ check process resque_<%= @app_name %>_<%= num %>
 <% end %>
 <%if @include_scheduler%>
 <% pid_file = "/var/run/zz/resque/#{@app_name}_resque_scheduler.pid" %>
-<% start_cmd = "/usr/bin/zz/resque_start.rb #{@rails_env} #{@current_dir} #{pid_file} scheduler 60 ''" %>
+<% start_cmd = "/usr/bin/zz/resque_start.rb #{@rails_env} #{@current_dir} #{pid_file} scheduler 60 dummy_conf" %>
 <% stop_cmd = "/usr/bin/zz/resque_stop.rb #{pid_file} 60" %>
 check process resque_<%= @app_name %>_scheduler
   with pidfile <%=pid_file%>
