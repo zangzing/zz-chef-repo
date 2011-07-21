@@ -14,6 +14,14 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
   `/usr/sbin/nginx -v 2>&1 | grep 1\.0\.4`
   already_installed = $?.exitstatus == 0
 
+  directory "/var/log/nginx" do
+    owner deploy_user
+    group deploy_group
+    mode "1777"
+    action :create
+    recursive true
+  end
+
   if !is_local_dev
     # put the base level package on the machine, we will upgrade via the compile below
     package "nginx" do
