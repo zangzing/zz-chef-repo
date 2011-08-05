@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:zangzing/zzsharedlib.git
-  revision: 2c19deaadf2009f21e70f020de98c69a5c19bb39
+  revision: cd4aeeb1fff9608aaff373acd99f634e5be1de21
   specs:
     zzsharedlib (0.0.4)
       json (>= 1.4.4, <= 1.5.2)

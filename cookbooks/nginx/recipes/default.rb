@@ -48,13 +48,11 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
     code <<-EOH
       unzip #{files_at}.zip
       cd #{files_at}/#{name}-#{version}
-      ./configure --prefix=/usr --pid-path=/var/run/nginx.pid --conf-path=/etc/nginx/nginx.conf \
+      ./configure --with-cc-opt="-Wno-deprecated-declarations" --prefix=/usr --pid-path=/var/run/nginx.pid --conf-path=/etc/nginx/nginx.conf \
           --http-log-path=/var/log/nginx/access_log \
           --error-log-path=/var/log/nginx/error_log --with-http_ssl_module --add-module=../nginx_upload_module-2.2.0 \
           --add-module=../nginx-upload-progress-module --with-pcre=../pcre-8.12
-      make
-      sudo make install
-      sudo rm -rf /usr/local/nginx
+      make && sudo make install && sudo rm -rf /usr/local/nginx
     EOH
     not_if {already_installed}
   end

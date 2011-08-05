@@ -15,10 +15,8 @@ run_for_app(:photos => [:solo,:app,:app_master,:local]) do |app_name, role, rail
     Chef::Log.info( "ZangZing=> setting up git for v3homepage")
     cwd "#{repo_root}"
     creates "#{repo_root}/v3homepage"
-    user deploy_user
-    group deploy_group
     code <<-EOH
-      git clone git@github.com:zangzing/v3homepage.git
+      su -l #{deploy_user} -c 'cd #{repo_root} && git clone git@github.com:zangzing/v3homepage.git'
     EOH
   end
 

@@ -4,5 +4,7 @@
 .chefpaths/*
 .bundle/*
 .bundle
+.DS_Store
+
 
 
