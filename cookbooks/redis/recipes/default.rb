@@ -36,7 +36,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:db_slave,:local]) do |
 
     # now do the stuff that installs redis itself - there is no
     # nice neat package for the version we want so install from source
-    if [:local, :solo, :db].include?(role)
+    if [:local, :solo, :db, :db_slave].include?(role)
       # install redis itself
       version =  "2.2.11"
       # do a version check to avoid having to install if we already have proper version

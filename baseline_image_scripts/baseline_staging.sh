@@ -1,7 +1,7 @@
 # This file is the template from which we generate a new baseline image.
 #
 # use something like this to copy to remote machine we are going to make an image from (from your machine)
-# scp -i ~/.ssh/amazon_staging.pem /Users/gseitz/Develop/ZZ/zzdeploy/config/baseline_staging.sh ec2-user@ec2-50-17-16-133.compute-1.amazonaws.com:/home/ec2-user
+# scp -i ~/.ssh/amazon_staging.pem /Users/gseitz/Develop/ZZ/zz-chef-repo/baseline_image_scripts/baseline_staging.sh ec2-user@ec2-50-17-16-133.compute-1.amazonaws.com:/home/ec2-user
 # (on remote machine)
 # chmod a+x ~/baseline_staging.sh
 # ./baseline_staging.sh
