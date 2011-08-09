@@ -9,7 +9,7 @@ run_for_app(:photos => [:solo,:app,:app_master,:util,:db,:db_slave],
   # get triple the weight since they have more memory on them
   cache_servers = []  # build list into this
   base_weight = 100
-  util_multiplier = 3
+  db_multiplier = 4
   # base capacity on app servers
   zz[:app_config][:app_servers].each do |server|
     cache_servers << "#{server}:11211:#{base_weight}"
@@ -21,7 +21,7 @@ run_for_app(:photos => [:solo,:app,:app_master,:util,:db,:db_slave],
   # now triple the weight on db/redis servers since all
   # they do is host redis, no other work
   zz[:app_config][:redis_servers].each do |server|
-    cache_servers << "#{server}:11211:#{base_weight * util_multiplier}"
+    cache_servers << "#{server}:11211:#{base_weight * db_multiplier}"
   end
 
   template "#{ZZDeploy.env.shared_config_dir}/memcached.yml" do
@@ -38,7 +38,7 @@ run_for_app(:photos => [:solo,:app,:app_master,:util,:db,:db_slave],
 
   # db roles get a bigger cache
   base_mem = 64
-  cache_size = [:db,:db_slave].include?(role) ? base_mem * util_multiplier : base_mem
+  cache_size = [:db,:db_slave].include?(role) ? base_mem * db_multiplier : base_mem
   template "/etc/sysconfig/memcached" do
     source "memcached.erb"
     owner root_user
