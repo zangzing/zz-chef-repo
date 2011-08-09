@@ -1,5 +1,5 @@
-run_for_app(:photos => [:solo,:app,:app_master,:util],
-            :rollup => [:solo,:app,:app_master,:util]) do |app_name, role, rails_env|
+run_for_app(:photos => [:solo,:app,:app_master,:util,:db,:db_slave],
+            :rollup => [:solo,:app,:app_master,:util,:db,:db_slave]) do |app_name, role, rails_env|
 
   package "memcached" do
     action :install
@@ -10,11 +10,17 @@ run_for_app(:photos => [:solo,:app,:app_master,:util],
   cache_servers = []  # build list into this
   base_weight = 100
   util_multiplier = 3
+  # base capacity on app servers
   zz[:app_config][:app_servers].each do |server|
     cache_servers << "#{server}:11211:#{base_weight}"
   end
-  # now triple the weight on util servers
+  # base capacity on util servers
   zz[:app_config][:util_servers].each do |server|
+    cache_servers << "#{server}:11211:#{base_weight}"
+  end
+  # now triple the weight on db/redis servers since all
+  # they do is host redis, no other work
+  zz[:app_config][:redis_servers].each do |server|
     cache_servers << "#{server}:11211:#{base_weight * util_multiplier}"
   end
 
@@ -30,9 +36,9 @@ run_for_app(:photos => [:solo,:app,:app_master,:util],
       })
   end
 
-  # util roles get a bigger cache
+  # db roles get a bigger cache
   base_mem = 64
-  cache_size = role == :util ? base_mem * util_multiplier : base_mem
+  cache_size = [:db,:db_slave].include?(role) ? base_mem * util_multiplier : base_mem
   template "/etc/sysconfig/memcached" do
     source "memcached.erb"
     owner root_user

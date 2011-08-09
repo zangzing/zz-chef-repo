@@ -1,4 +1,4 @@
-run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:local]) do |app_name, role, rails_env|
+run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:db_slave,:local]) do |app_name, role, rails_env|
 
     # for local dev we config some things differently
     is_local_dev = role == :local
@@ -10,7 +10,10 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:local]) do |app_name, 
       redis_group = "redis"
     end
 
-    redis_server = zz[:app_config][:redis_host] + ":6379"
+    redis_port = "6379"
+    redis_server = zz[:app_config][:redis_host]
+    redis_address = "#{redis_server}:#{redis_port}"
+    we_are_redis_slave = zz[:app_config][:we_host_redis_slave]
 
     # first the application related support
     # we don't install redis for these, we just need the rails
@@ -26,7 +29,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:local]) do |app_name, 
       mode 0644
       variables({
         :rails_env => rails_env,
-        :redis_server => redis_server
+        :redis_address => redis_address
         })
     end
 
@@ -117,6 +120,11 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:local]) do |app_name, 
         owner root_user
         group root_group
         mode 0644
+        variables({
+          :redis_server => redis_server,
+          :redis_port => redis_port,
+          :we_are_redis_slave => we_are_redis_slave
+          })
         notifies :restart, "service[redis]" unless is_local_dev
         notifies :run, "bash[redis_local_restart]" if is_local_dev
       end

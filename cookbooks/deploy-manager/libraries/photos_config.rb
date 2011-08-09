@@ -14,7 +14,10 @@ class Chef::Recipe::PhotosConfig
     # see if we should host redis
     node[:zz][:app_config] = {}
     node[:zz][:app_config][:redis_host] = calc_redis_host
+    node[:zz][:app_config][:redis_servers] = calc_redis_all
+    node[:zz][:app_config][:redis_slaves] = calc_redis_slaves
     node[:zz][:app_config][:we_host_redis] = calc_we_host_redis
+    node[:zz][:app_config][:we_host_redis_slave] = calc_we_host_redis_slave
 
     node[:zz][:app_config][:resque_cpus] = calc_resque_cpus
     node[:zz][:app_config][:we_host_resque_cpu] = calc_we_host_resque_cpu
@@ -32,8 +35,6 @@ class Chef::Recipe::PhotosConfig
     node[:zz][:app_config][:resque_scheduler] = calc_resque_scheduler
     node[:zz][:app_config][:we_host_resque_scheduler] = calc_we_host_resque_scheduler
 
-    node[:zz][:app_config][:db] = calc_db
-    node[:zz][:app_config][:we_host_db] = calc_we_host_db
   end
 
   def self.node
@@ -52,31 +53,49 @@ class Chef::Recipe::PhotosConfig
     zz[:instances]
   end
 
-  # determine which host runs redis
-  def self.calc_redis_host
-    host = ""
+  # match all roles given in the roles array of strings
+  def self.find_matching(roles)
+    hosts = []
     instances.each_value do |instance|
-      if ['db','solo', 'local'].include?(instance[:role])
+      if roles.include?(instance[:role])
         host = instance[:local_hostname]
-        break
+        hosts << host
       end
     end
-    host
+    hosts
+  end
+
+  # returns the first match as a single string
+  def self.find_one_match(roles)
+    hosts = find_matching(roles)
+    hosts.length == 0 ? "" : hosts[0]
+  end
+
+  # determine which host runs redis
+  def self.calc_redis_host
+    find_one_match(['db','solo', 'local'])
+  end
+
+  # master and slaves
+  def self.calc_redis_all
+    find_matching(['db','db_slave','solo','local'])
+  end
+
+  def self.calc_redis_slaves
+    find_matching(['db_slave'])
   end
 
   def self.calc_we_host_redis
     config[:redis_host] == zz[:local_hostname]
   end
 
+  def self.calc_we_host_redis_slave
+    config[:redis_slaves].include?(zz[:local_hostname])
+  end
+
+
   def self.calc_resque_cpus
-    hosts = []
-    instances.each_value do |instance|
-      if ['util','solo', 'local'].include?(instance[:role])
-        host = instance[:local_hostname]
-        hosts << host
-      end
-    end
-    hosts
+    find_matching(['util','solo', 'local'])
   end
 
   def self.calc_we_host_resque_cpu
@@ -93,25 +112,11 @@ class Chef::Recipe::PhotosConfig
   end
 
   def self.calc_util_servers
-    hosts = []
-    instances.each_value do |instance|
-      if ['util'].include?(instance[:role])
-        host = instance[:local_hostname]
-        hosts << host
-      end
-    end
-    hosts
+    find_matching(['util'])
   end
 
   def self.calc_app_servers
-    hosts = []
-    instances.each_value do |instance|
-      if ['app','app_master','solo', 'local'].include?(instance[:role])
-        host = instance[:local_hostname]
-        hosts << host
-      end
-    end
-    hosts
+    find_matching(['app','app_master','solo', 'local'])
   end
 
   def self.calc_we_host_app_server
@@ -119,14 +124,7 @@ class Chef::Recipe::PhotosConfig
   end
 
   def self.calc_resque_workers
-    hosts = []
-    instances.each_value do |instance|
-      if ['app','app_master','solo', 'local'].include?(instance[:role])
-        host = instance[:local_hostname]
-        hosts << host
-      end
-    end
-    hosts
+    find_matching(['app','app_master','solo', 'local'])
   end
 
   def self.calc_we_host_resque_worker
@@ -134,34 +132,11 @@ class Chef::Recipe::PhotosConfig
   end
 
   def self.calc_resque_scheduler
-    host = ""
-    instances.each_value do |instance|
-      if ['app_master','solo', 'local'].include?(instance[:role])
-        host = instance[:local_hostname]
-        break
-      end
-    end
-    host
+    find_one_match(['app_master','solo', 'local'])
   end
 
   def self.calc_we_host_resque_scheduler
     config[:resque_scheduler] == zz[:local_hostname]
   end
-
-  def self.calc_db
-    host = ""
-    instances.each_value do |instance|
-      if ['db','solo', 'local'].include?(instance[:role])
-        host = instance[:local_hostname]
-        break
-      end
-    end
-    host
-  end
-
-  def self.calc_we_host_db
-    config[:db] == zz[:local_hostname]
-  end
-
 
 end

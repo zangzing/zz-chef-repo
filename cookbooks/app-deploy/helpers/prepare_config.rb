@@ -26,7 +26,7 @@ e.run_action(:run)  # execute in the compile phase so happens right now
 #
 e = execute "bundle_install" do
   cwd zz_env.release_dir
-  command "su -l #{zz_env.deploy_user} -c 'cd #{zz_env.release_dir} && bundle install'"
+  command "su -l #{zz_env.deploy_user} -c 'cd #{zz_env.release_dir} && bundle install --path /var/chef/cookbooks/zz-chef-repo_bundle --deployment'"
   action :nothing
 end
 e.run_action(:run)  # execute in the compile phase so happens right now

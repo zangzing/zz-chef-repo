@@ -1,5 +1,5 @@
-run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
-            :rollup => [:solo,:util,:app,:app_master,:db]) do |app_name, role, rails_env|
+run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:db_slave],
+            :rollup => [:solo,:util,:app,:app_master,:db,:db_slave]) do |app_name, role, rails_env|
   # set up loggly info based on app and env
 
   loggly_port = 0

@@ -261,7 +261,7 @@ mkdir -p /var/chef/cookbooks
 cd /var/chef/cookbooks
 git clone git@github.com:zangzing/zz-chef-repo.git
 cd /var/chef/cookbooks/zz-chef-repo
-bundle install
+bundle install --path /var/chef/cookbooks/zz-chef-repo_bundle --deployment
 cd ~
 
 

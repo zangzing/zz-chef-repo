@@ -6,8 +6,8 @@
 #  group deploy_group
 #end
 
-run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:local],
-            :rollup => [:solo,:util,:app,:app_master,:db,:local]) do |app_name, role, rails_env|
+run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:db_slave,:local],
+            :rollup => [:solo,:util,:app,:app_master,:db,:db_slave,:local]) do |app_name, role, rails_env|
 
   # utility commands go here
   directory "/usr/bin/zz" do

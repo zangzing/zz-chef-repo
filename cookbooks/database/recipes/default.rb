@@ -1,6 +1,6 @@
-run_for_app(:photos => [:solo,:util,:app,:app_master,:db],
-            :rollup => [:solo,:util,:app,:app_master,:db]) do |app_name, role, rails_env|
-  # set up loggly info based on app and env
+run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:db_slave],
+            :rollup => [:solo,:util,:app,:app_master,:db,:db_slave]) do |app_name, role, rails_env|
+  # set up database info based on app and env
 
   username = zz[:group_config][:database_username]
   password = zz[:group_config][:database_password]
