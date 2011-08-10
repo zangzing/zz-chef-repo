@@ -1,0 +1,29 @@
+These are the install directions to get your system set up for supporting Amazon based deploys.
+
+First make sure you have the latest version of chef.  NOTE: in the following instructions I show gem install ... you may
+need to use sudo gem install ... instead if your system is set up to install gems in a system directory which is the default
+if you are using the standard mac ruby configuration.
+
+gem install chef
+
+# Install the zzdeploy gem which gives you your zz commands
+gem install zzdeploy
+
+# install your amazon api keys with
+zz config_amazon --akey AKIAJZR7WODGPXONMRVA --skey lUEwegAXc0NSSrB16klFtBWKDuFO/LLZfyZi82DR
+
+# In order to gain access to the Amazon deployed machines via ssh you need to set up various private keys
+# I am not showing the keys here but you can get them from the keychain 'ZZ Admin Accounts'.  Scroll
+# about half way down until you see the text: Deploy group private keys.  Below this you will see
+#amazon_staging:
+
+Copy everything from the #amazon_staging: to the end of the file onto your clipboard.  Open up a terminal session
+and paste the text you copied.  This should create all the private key files in the proper locations on your system.
+
+At this point you should be all set up.  You can do a quick verification by running:
+
+zz ssh -g photos_staging
+
+If all is working you should get a list of servers, pick one and you should be logged into that machine via ssh.
+
+

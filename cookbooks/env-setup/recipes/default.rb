@@ -10,7 +10,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:db_slave,:local],
             :rollup => [:solo,:util,:app,:app_master,:db,:db_slave,:local]) do |app_name, role, rails_env|
 
   # utility commands go here
-  directory "/usr/bin/zz" do
+  directory "/usr/bin/zzscripts" do
     owner deploy_user
     group deploy_group
     mode "0755"
@@ -49,7 +49,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:db_slave,:local],
   # move scripts to /data/global/bin
   scripts = ['unicorn_start.rb', 'unicorn_stop.rb', 'resque_start.rb', 'resque_stop.rb']
   scripts.each do |script|
-    cookbook_file "/usr/bin/zz/#{script}" do
+    cookbook_file "/usr/bin/zzscripts/#{script}" do
       source "#{script}"
       owner deploy_user
       group deploy_group

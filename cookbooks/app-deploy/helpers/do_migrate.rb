@@ -22,7 +22,7 @@ if downtime
 
   # now stop unicorn
   if [:app_master, :app, :solo].include?(zz_role)
-    run "/usr/bin/zz/unicorn_stop.rb /var/run/zz/unicorn_#{zz_app}.pid 60"
+    run "/usr/bin/zzscripts/unicorn_stop.rb /var/run/zz/unicorn_#{zz_app}.pid 60"
   end
 end
 

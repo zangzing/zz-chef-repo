@@ -76,7 +76,7 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
     v3_homepage_dir = "/data/v3homepage"
   else
     nginx_conf_dir = "/etc/nginx"
-    nginx_tmp = "/data/tmp/nginx"
+    nginx_tmp = "/media/ephemeral0/nginx"
     photos_tmp = "/data/tmp"
     v3_homepage_dir = "/data/v3homepage"
   end

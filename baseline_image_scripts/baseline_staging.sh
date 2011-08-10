@@ -1,10 +1,31 @@
 # This file is the template from which we generate a new baseline image.
 #
 # use something like this to copy to remote machine we are going to make an image from (from your machine)
-# scp -i ~/.ssh/amazon_staging.pem /Users/gseitz/Develop/ZZ/zz-chef-repo/baseline_image_scripts/baseline_staging.sh ec2-user@ec2-50-17-16-133.compute-1.amazonaws.com:/home/ec2-user
+#
+# step 1 - launch image from amazon linux 32 bit ami, pass the size of the ebs volume wanted, and expose the ephemeral block device (use the Amazon Command Util instance to do this since it has been set up with the command line utils):
+# ec2-run-instances --key amazon_staging --group security_staging -b /dev/sda1=:16 -b '/dev/sda2=ephemeral0' -t c1.medium ami-8c1fece5
+#
+# use the console to get the public ip info for the instance you started in step 1 and ssh into that instance (substitute the actual ip into the sample command lines below)
+#
+# step 2 - copy the baseline script onto that instance you just created (use the appropriate baseline_staging or baseline_production)
+# scp -i ~/.ssh/amazon_staging.pem /Users/gseitz/Develop/ZZ/zz-chef-repo/baseline_image_scripts/baseline_staging.sh ec2-user@ec2-67-202-26-165.compute-1.amazonaws.com:/home/ec2-user
 # (on remote machine)
+#
+# step 3 - ssh into the instance you created
+# ssh -i ~/.ssh/amazon_staging.pem ec2-user@ec2-67-202-26-165.compute-1.amazonaws.com
+#
+# step 4 - resize the ebs volume to use the size you passed in
+# sudo resize2fs /dev/sda1
+#
+# step 5 - run the baseline creation script
 # chmod a+x ~/baseline_staging.sh
 # ./baseline_staging.sh
+#
+# step 6 start the amazon aws console from a web browser
+#
+# step 7 create the new baseline image from the instance you prepped
+#
+# step 8 manually tag the name of the image to be baseline_staging or baseline_production from the AWS console
 #
 
 # install extra package manager repositories for items not found in amazon repos
