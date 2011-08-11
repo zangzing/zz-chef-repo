@@ -27,3 +27,80 @@ zz ssh -g photos_staging
 If all is working you should get a list of servers, pick one and you should be logged into that machine via ssh.
 
 
+
+####
+####
+####
+# CHECKLIST FOR PRODUCTION DEPLOY
+####
+####
+####
+
+Pre-deploy steps
+
+- Set up vhost to be hacktest.photos.zangzing.com initially to test with production data
+- Set email host to be hacktest.zangzing.com
+- Point database at production photos db: zz-prod-rds.ckikxby0s3p8.us-east-1.rds.amazonaws.com
+- Create a production load balancer (photos-production-balancer)
+- map hacktest.photos.zangzing.com to production load balancer (will change on deploy day)
+-
+- Create production deploy group (in us-east-1c except db_slave)
+-- 1 App master
+-- 2 App servers
+-- 1 db master (redis master)
+-- 1 db_slave  (redis slave) (create in zone us-east-1d, all others are in 1c)
+-- 3 util (photo cpu workers)
+-
+- Install private key file to allow tunnel to EY
+- Create live SSH tunnel on local port 9999 to Redis Server running at EY
+- Change role of Amazon Redis master to be a slave of EY until synced
+- Change role of redis back to master (for testing)
+- Verify functionality for basic operations (minimize writing to production db)
+-
+
+Deploy steps
+-
+- Amazon machines
+- stop local redis db slave
+- remove local redis db, start redis master, convert to slave of EY, verify in sync
+- remove hacktest.photos.zangzing.com from Route53 load balancer alias mapping
+- change group configuration to use vhost of www.zangzing.com
+- Set email host to be zangzing.com
+- delete old group with
+-- zz deploy_group_delete -g photos_production
+- assign new password to zzadmin account on production db of lwoksdp87iqz
+-- log into production photo db and run the following
+--
+- create the new group with changes
+-- zz deploy_group_create --group photos_production --app_name photos --rails_env photos_production --vhost www.zangzing.com --email_host zangzing.com --app_git_url git@github.com:zangzing/server.git --amazon_security_key amazon_production --amazon_security_group security_production --amazon_image baseline_production --amazon_elb photos-production-balancer --database_host zz-prod-rds.ckikxby0s3p8.us-east-1.rds.amazonaws.com --database_username zzadmin --database_password lwoksdp87iqz --database_schema photos_prod
+-
+- chef_upload and chef_bake to pick up new vhost changes
+- deploy 2011-08-17-feature to pick up vhost changes
+- use zz maint --maint -g photos_produciton to turn on MAINT mode
+- hand verify nginx conf files to make sure host related changes look correct
+-
+- EY machines
+- On EY environment, shut down nginx on 2 of 3 app servers to limit new incoming traffic
+- Put up maint page on remaining App server
+- Let system bleed work until no further work in resque queues or 5 minutes whichever is longer
+-
+- On Ylastic for Route53 DNS
+- Remove A entries for photos.zangzing.com, www.zangzing.com, zangzing.com
+- Create Alias entry for zanging.com. that points to photos-production-balancer
+- Create CNAME entries for www.zangzing.com and photos.zangzing.com pointing to zangzing.com (initially use 60 sec TTL, change at later date to higher value)
+-
+- Amazon
+- stop and restart master redis (will turn off slave of EY)
+- stop and restart slave redis (will sync with new master)
+- use zz maint --no-maint -g photos_produciton to turn on MAINT mode
+- server should be back up
+- verify server is working and account data is intact
+- congratulate ourselves for a job well done!
+
+Post deploy (a couple of days later)
+- Shut down all EY servers
+- send EY a Dear John letter to terminate "support agreement"
+
+
+
+

@@ -1,6 +1,6 @@
 {
   "cachedb_username": "zzadmin",
-  "cachedb_password": "share1001photos",
+  "cachedb_password": "pwy4ksp3psd0",
   "cachedb_host": "zz-staging-rds.ckikxby0s3p8.us-east-1.rds.amazonaws.com",
   "cachedb_schema": "photos_cache_stag"
 }
