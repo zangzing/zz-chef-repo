@@ -59,30 +59,44 @@ Pre-deploy steps
 -
 
 Deploy steps
--
+- EY machines
+- On EY production environment, put up main page:
+-- ey web disable -e photos_production -a photos
+- Let system bleed work until no further work in resque queues
+
 - Amazon machines
 - stop local redis db slave
-- remove local redis db, start redis master, convert to slave of EY, verify in sync
+-- sudo /sbin/service redis stop (on db_slave)
+- convert redis master to slave of EY, verify in sync
+-- redis-cli slaveof localhost 9999
+- after in sync (do info on EY and AZ redis), restart redis master to switch back to local and start redis slave
+-- sudo /sbin/service redis restart (on db master)
+-- sudo /sbin/service redis start (on db_slave)
 - remove hacktest.photos.zangzing.com from Route53 load balancer alias mapping
-- change group configuration to use vhost of www.zangzing.com
-- Set email host to be zangzing.com
 - delete old group with
 -- zz deploy_group_delete -g photos_production
 - assign new password to zzadmin account on production db of lwoksdp87iqz
--- log into production photo db and run the following
+-- log into production photo db in Sequel Pro and modify the password with User Accounts menu item
+-- existing connections will continue to operate with old password until they need to reconnect
 --
+- change group configuration to use vhost of www.zangzing.com
+- Set email host to be zangzing.com
 - create the new group with changes
 -- zz deploy_group_create --group photos_production --app_name photos --rails_env photos_production --vhost www.zangzing.com --email_host zangzing.com --app_git_url git@github.com:zangzing/server.git --amazon_security_key amazon_production --amazon_security_group security_production --amazon_image baseline_production --amazon_elb photos-production-balancer --database_host zz-prod-rds.ckikxby0s3p8.us-east-1.rds.amazonaws.com --database_username zzadmin --database_password lwoksdp87iqz --database_schema photos_prod
 -
-- chef_upload and chef_bake to pick up new vhost changes
-- deploy 2011-08-17-feature to pick up vhost changes
-- use zz maint --maint -g photos_produciton to turn on MAINT mode
-- hand verify nginx conf files to make sure host related changes look correct
+- chef_upload and chef_bake to pick up new group vhost, email, db changes
+-- zz chef_upload -g photos_production -t 2011-08-11-1  (verify the proper tag on deploy day)
+-- zz chef_bake -g photos_production
+
+- deploy 2011-08-17-feature to pick up changes
+-- zz deploy -g photos_production -t 2011-08-17-feature
 -
-- EY machines
-- On EY environment, shut down nginx on 2 of 3 app servers to limit new incoming traffic
-- Put up maint page on remaining App server
-- Let system bleed work until no further work in resque queues or 5 minutes whichever is longer
+- turn on MAINT mode on Amazon machines
+-- zz maint --maint -g photos_production
+- hand verify nginx conf files to make sure host related changes look correct
+- NOTE: this is an area we can't really test before hand since production nginx conf acts slightly differently
+- from staging
+-
 -
 - On Ylastic for Route53 DNS
 - Remove A entries for photos.zangzing.com, www.zangzing.com, zangzing.com
@@ -90,9 +104,8 @@ Deploy steps
 - Create CNAME entries for www.zangzing.com and photos.zangzing.com pointing to zangzing.com (initially use 60 sec TTL, change at later date to higher value)
 -
 - Amazon
-- stop and restart master redis (will turn off slave of EY)
-- stop and restart slave redis (will sync with new master)
-- use zz maint --no-maint -g photos_produciton to turn on MAINT mode
+- turn off maint mode
+-- zz maint --no-maint -g photos_production
 - server should be back up
 - verify server is working and account data is intact
 - congratulate ourselves for a job well done!
