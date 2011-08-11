@@ -16,6 +16,6 @@ gem "chef", '>= 0.10.2'
 gem "resque"
 
 # these are here to preload for various deploy roles
-gem "mysql2"
+gem "mysql2", "~> 0.2.7"
 gem "nokogiri"
 
