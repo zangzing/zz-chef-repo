@@ -60,7 +60,7 @@ Pre-deploy steps
 
 Deploy steps
 - EY machines
-- On EY production environment, put up main page:
+- On EY production environment, put up maint page:
 -- ey web disable -e photos_production -a photos
 - Let system bleed work until no further work in resque queues
 
