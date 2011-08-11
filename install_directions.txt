@@ -75,13 +75,14 @@ Deploy steps
 - remove hacktest.photos.zangzing.com from Route53 load balancer alias mapping
 - delete old group with
 -- zz deploy_group_delete -g photos_production
-- assign new password to zzadmin account on production db of lwoksdp87iqz
+- assign new password to zzadmin account on production db of lwoksdp87iqz -- NOTE GET THE ACTUAL PW from KeyChain
 -- log into production photo db in Sequel Pro and modify the password with User Accounts menu item
 -- existing connections will continue to operate with old password until they need to reconnect
 --
 - change group configuration to use vhost of www.zangzing.com
 - Set email host to be zangzing.com
 - create the new group with changes
+- NOTE NOTE NOTE change password to proper password in following command line (Amazon WS ZangZing Key And...)
 -- zz deploy_group_create --group photos_production --app_name photos --rails_env photos_production --vhost www.zangzing.com --email_host zangzing.com --app_git_url git@github.com:zangzing/server.git --amazon_security_key amazon_production --amazon_security_group security_production --amazon_image baseline_production --amazon_elb photos-production-balancer --database_host zz-prod-rds.ckikxby0s3p8.us-east-1.rds.amazonaws.com --database_username zzadmin --database_password lwoksdp87iqz --database_schema photos_prod
 -
 - chef_upload and chef_bake to pick up new group vhost, email, db changes
