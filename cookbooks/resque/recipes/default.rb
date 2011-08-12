@@ -1,6 +1,6 @@
 run_for_app(:photos => [:solo,:util,:app,:app_master]) do |app_name, role, rails_env|
 
-  num_workers = zz_env.num_workers
+  num_workers = zz_env.worker_count
 
   # see what kind of queues each type should listen to
   if zz[:app_config][:we_host_resque_cpu]

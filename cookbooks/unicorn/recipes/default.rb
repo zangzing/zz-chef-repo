@@ -2,7 +2,7 @@ run_for_app(:photos => [:solo,:app,:app_master],
             :rollup => [:solo,:app,:app_master]) do |app_name, role, rails_env|
 
   current_dir = zz_env.current_dir
-  num_workers = zz_env.num_workers
+  num_workers = zz_env.worker_count
 
   # only override default yml on app servers
   # we depend on a symlink in the before_restart
