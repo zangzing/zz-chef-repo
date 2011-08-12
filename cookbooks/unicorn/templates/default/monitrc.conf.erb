@@ -2,11 +2,11 @@
 <% pid_file = "/var/run/zz/unicorn_#{@app_name}.pid" %>
 <% start_cmd = "/usr/bin/zzscripts/unicorn_start.rb #{@rails_env} #{@current_dir} #{pid_file} 60" %>
 <% stop_cmd = "/usr/bin/zzscripts/unicorn_stop.rb #{pid_file} 60" %>
-check process unicorn_master_<%= @app_name %>
+check process unicorn_<%= @app_name %>_master
   with pidfile <%=pid_file%>
   start program = "/bin/su - ec2-user -c '<%=start_cmd%>'"
   stop program = "/bin/su - ec2-user -c '<%=stop_cmd%>'"
-  if totalmem is greater than 250.0 MB for 6 cycles then restart # eating up memory?
+  if mem > 250.0 MB for 6 cycles then restart # eating up memory?
   if cpu > 99% for 6 cycles then restart
   group unicorn_<%= @app_name %>
 
