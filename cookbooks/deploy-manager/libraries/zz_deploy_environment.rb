@@ -317,6 +317,20 @@ class Chef::Recipe::ZZDeployEnvironment
   def deploy_started app_base_dir
 
   end
+
+  # based on machine type determine proper worker count
+  def worker_count
+    case node[:ec2][:instance_type]
+    when 'm1.small': worker_count = 2
+    when 'c1.medium': worker_count = 4
+    when 'c1.xlarge': worker_count = 8
+    else
+      worker_count = 4
+    end
+    worker_count
+  end
+
+
 end
 
 class Chef::Recipe::ZZDeploy

@@ -3,7 +3,7 @@ shared_path = '/data/<%=@app_name%>/shared'
 #shared_bundler_gems_path = "/data/<%=@app_name%>/shared/bundler_gems"
 
 working_directory '/data/<%=@app_name%>/current/'
-worker_processes 4
+worker_processes <%=@num_workers%>
 listen '/var/run/zz/unicorn_<%=@app_name%>.sock', :backlog => 1024
 timeout 60
 pid "/var/run/zz/unicorn_<%=@app_name%>.pid"

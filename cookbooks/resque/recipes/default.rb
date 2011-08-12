@@ -1,14 +1,6 @@
 run_for_app(:photos => [:solo,:util,:app,:app_master]) do |app_name, role, rails_env|
 
-  # set up standard number of workers for generic and i/o bound based
-  # on machine capacity
-  case node[:ec2][:instance_type]
-  when 'm1.small': worker_count = 2
-  when 'c1.medium': worker_count = 4
-  when 'c1.xlarge': worker_count = 8
-  else
-    worker_count = 4
-  end
+  num_workers = zz_env.num_workers
 
   # see what kind of queues each type should listen to
   if zz[:app_config][:we_host_resque_cpu]
@@ -20,7 +12,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master]) do |app_name, role, rails
     # on that hos
     queues = "remote_job_#{ZZDeploy.env.this_host_name},mailer,io_local_#{ZZDeploy.env.this_host_name},io_bound,share,facebook,twitter,like,test_queue"
   end
-  worker_count.times do |count|
+  num_workers.times do |count|
       template "/data/#{app_name}/shared/config/resque_#{count}.conf" do
         owner deploy_user
         group deploy_group
@@ -53,7 +45,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master]) do |app_name, role, rails
     mode 0644
     source "monitrc.conf.erb"
     variables({
-      :num_workers => worker_count,
+      :num_workers => num_workers,
       :app_name => app_name,
       :current_dir =>  current_dir,
       :rails_env => rails_env,
