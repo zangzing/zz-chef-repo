@@ -7,13 +7,13 @@ check process unicorn_<%= @app_name %>_master
   start program = "/bin/su - ec2-user -c '<%=start_cmd%>'"
   stop program = "/bin/su - ec2-user -c '<%=stop_cmd%>'"
   if mem > 250.0 MB for 6 cycles then restart # eating up memory?
-  if cpu > 99% for 6 cycles then restart
+  if cpu > 95% for 6 cycles then restart
   group unicorn_<%= @app_name %>
 
 <% (@num_workers).times do |num| %>
 <% pid_file = "/var/run/zz/unicorn_worker_#{@app_name}_#{num}.pid" %>
 check process unicorn_<%= @app_name %>_worker_<%= num %>
   with pidfile <%=pid_file%>
-  if mem > 300.0 MB for 6 cycles then exec "/bin/bash -c '/bin/kill `cat <%=pid_file%>` && sleep 1'"
+  if mem > 350.0 MB for 6 cycles then exec "/bin/bash -c '/bin/kill `cat <%=pid_file%>` && sleep 1'"
   group unicorn_<%= @app_name %>
 <% end %>
