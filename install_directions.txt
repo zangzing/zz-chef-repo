@@ -110,6 +110,7 @@ Deploy steps
 - server should be back up
 - verify server is working and account data is intact
 - congratulate ourselves for a job well done!
+- On EY Kill all servers with (to stop them from reporting new relic): sudo monit stop unicorn_master_photos && sudo monit stop -g resque_photos
 
 Post deploy (a couple of days later)
 - Shut down all EY servers

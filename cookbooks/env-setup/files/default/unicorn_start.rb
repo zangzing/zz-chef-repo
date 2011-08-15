@@ -74,7 +74,7 @@ begin
   end
 rescue Exception => ex
   puts "The application did not start, tail from unicorn.stderr.log:"
-  do_cmd "tail -n 40 #{app_dir}/log/unicorn.stderr.log"
+  do_cmd "tail -n 55 #{app_dir}/log/unicorn.stderr.log"
   msg = ex.message
   puts
   puts

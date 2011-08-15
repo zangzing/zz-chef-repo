@@ -24,7 +24,7 @@ if downtime
   if [:app_master, :app, :solo].include?(zz_role)
     # since we are stopping the service, tell monit to stop monitoring since we don't want it starting it back up
     # until we put it back into monitored state
-    run "sudo monit unmonitor unicorn_#{zz_app}_master"
+    run "sudo monit unmonitor -g unicorn_#{zz_app}"
     run "/usr/bin/zzscripts/unicorn_stop.rb /var/run/zz/unicorn_#{zz_app}.pid 60"
   end
 end
