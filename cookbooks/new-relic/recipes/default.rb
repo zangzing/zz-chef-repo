@@ -22,7 +22,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master]) do |app_name, role, rails
 
   if use_license == false
     # they don't get to use the license so set them up with a newrelic.yml with monitoring turned off
-    release_dir = self.release_dir
+    release_dir = zz_env.release_dir
     puts "******** RELEASE DIR IS *********:  #{release_dir}"
     template "#{release_dir}/config/newrelic.yml" do
       source "newrelic.yml.erb"
