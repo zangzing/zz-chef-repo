@@ -7,6 +7,10 @@ run_for_app(:photos => [:solo,:util,:app,:app_master],
 
   # set up symlinks wanted based on app
   # common ones first
+  # the key is the location of the shared file
+  # and the value is the location relative to the current
+  # release directory that should symlink to back to the
+  # shared dir
   cust_symlinks = {
       "config/database.yml" => "config/database.yml",
       "config/memcached.yml" => "config/memcached.yml",
@@ -19,6 +23,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master],
       cust_symlinks["config/database-cache.yml"] = "sub_migrates/cache_builder/config/database.yml"
       cust_symlinks["config/redis.yml"] = "config/redis.yml"
       cust_symlinks["config/resque.yml"] = "config/resque.yml"
+      cust_symlinks["config/newrelic.yml"] = "config/newrelic.yml"
 
     when :rollup
       cust_symlinks["config/database-photos.yml"] = "config/database-photos.yml"

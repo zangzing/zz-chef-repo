@@ -1,7 +1,11 @@
 #
-# This config is used to turn off NewRelic monitoring.  It is used
-# when we do not have enough licenses to go around
+# This file configures the New Relic RPM Agent.  New Relic RPM monitors
+# Rails and Java applications with deep visibility and low overhead.  For more
+# information, visit www.newrelic.com.
 #
+# Generated October 23, 2010
+#
+# This configuration file is custom generated for ZangZing
 
 # Here are the settings that are common to all environments:
 common: &default_settings
@@ -40,7 +44,7 @@ common: &default_settings
   # application and reports this data to the NewRelic RPM service at
   # newrelic.com. This global switch is normally overridden for each
   # environment below. (formerly called 'enabled')
-  monitor_mode: false
+  monitor_mode: true
 
   # Developer mode should be off in every environment but
   # development as it has very high overhead in memory.
@@ -113,7 +117,7 @@ common: &default_settings
     # Transaction tracer is enabled by default. Set this to false to
     # turn it off. This feature is only available at the Silver and
     # above product levels.
-    enabled: false
+    enabled: true
 
     # Threshold in seconds for when to collect a transaction
     # trace. When the response time of a controller action exceeds
@@ -182,14 +186,23 @@ common: &default_settings
   # you are running multi-threaded.  Please let us know.
   # multi_threaded = false
 
-# configuration with monitoring turned off so should not incur a license fee
+# Application Environments
+# ------------------------------------------
+# Environment specific settings are in this section.
+# For Rails applications, RAILS_ENV is used to determine the environment
+# For Java applications, pass -Dnewrelic.environment <environment> to set
+# the environment
+
+
+# Set the monitoring status based on license allocation.
+
 photos_production:
   <<: *default_settings
-  monitor_mode: false
+  monitor_mode: <%=@monitor%>
   app_name: ZangZing (photos_production)
 
 photos_staging:
   <<: *default_settings
-  monitor_mode: false
+  monitor_mode: <%=@monitor%>
   app_name: ZangZing (photos_staging)
 

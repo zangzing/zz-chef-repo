@@ -58,13 +58,13 @@ if deploy_config?
   require_recipe "exiftool"
   require_recipe "imagemagick"
   require_recipe "unicorn"
+  require_recipe "new-relic"
 end
 
 # see if we should go ahead and deploy the app
 if deploy_app?
   require_recipe "show-node"
   require_recipe "app-deploy"
-  require_recipe "new-relic"
 end
 
 # see if we should go ahead and restart the app

@@ -18,17 +18,15 @@ run_for_app(:photos => [:solo,:util,:app,:app_master]) do |app_name, role, rails
   utils = app_config[:util_servers]
   la = LicenseAllocator.new(licenses, apps, utils)
   # see if we are amongst the chosen few...
-  use_license = la.use_license?(zz[:local_hostname])
+  monitor = la.use_license?(zz[:local_hostname])
 
-  if use_license == false
-    # they don't get to use the license so set them up with a newrelic.yml with monitoring turned off
-    release_dir = zz_env.release_dir
-    puts "******** RELEASE DIR IS *********:  #{release_dir}"
-    template "#{release_dir}/config/newrelic.yml" do
-      source "newrelic.yml.erb"
-      owner deploy_user
-      group deploy_group
-      mode 0644
-    end
+  template "#{zz_env.shared_config_dir}/newrelic.yml" do
+    source "newrelic.yml.erb"
+    owner deploy_user
+    group deploy_group
+    mode 0644
+    variables({
+      :monitor => monitor
+      })
   end
 end
