@@ -53,8 +53,10 @@ Pre-deploy steps
 -
 - Install private key file to allow tunnel to EY
 - Create live SSH tunnel on local port 9999 to Redis Server running at EY
+-- ssh -i ~/.ssh/ey_tunnel.pem -f -L 9999:localhost:6379 -N deploy@ec2-174-129-162-71.compute-1.amazonaws.com
 - Change role of Amazon Redis master to be a slave of EY until synced
 - Change role of redis back to master (for testing)
+-- slaveof NO ONE
 - Verify functionality for basic operations (minimize writing to production db)
 -
 
