@@ -8,7 +8,7 @@ source :gemcutter
 #  # local testing
 #  gem "zzsharedlib", :path => "../zzsharedlib"
 #end
-gem "zzsharedlib", "~> 0.0.4"
+gem "zzsharedlib", "~> 0.0.5"
 gem "right_aws"
 gem "chef", '>= 0.10.2'
 #gem "ruby-debug-ide"
