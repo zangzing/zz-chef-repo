@@ -46,3 +46,31 @@ end
 # always clean up the pid file
 do_cmd "rm -f #{pid_file}"
 
+#todo should really put the following into a shared util file since used by start code as well
+
+# ok, now one last check to see if it still hasn't gone away - this time hunt it down and kill it
+# first see if we have one or more instances that use the same PIDFILE as us running
+procs = `ps -eo pid,ppid,command --cols 500 | grep PIDFILE`.map
+kill_pids = []
+procs.each do |proc|
+  if proc.match(pid_file).nil? == false
+    # ok, this one matches our pidfile so add to list of parents
+    kill_pids << proc.split[0]
+  end
+end
+
+# now we have a list of parents so find the children, combined will give us the complete kill list
+if kill_pids.empty? == false
+  worker_parents = kill_pids.join(',')
+  workers = `ps --no-headers --ppid #{worker_parents} -o pid`.split
+  workers.each do |worker|
+    kill_pids << worker
+  end
+end
+
+# ok, once we get here see if we have any pids to kill and do so
+if kill_pids.empty? == false
+  `kill -s SIGKILL #{kill_pids.join(' ')}`
+end
+
+
