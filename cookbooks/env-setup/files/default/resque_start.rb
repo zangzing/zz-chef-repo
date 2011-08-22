@@ -57,6 +57,9 @@ if kill_pids.empty? == false
   `kill -s SIGKILL #{kill_pids.join(' ')}`
 end
 
+# git rid of old pid file since we are starting a new one
+do_cmd "rm -f #{pid_file}"
+
 # should be no other copy running now due to forced kill above it there was one running
 begin
   # start it
