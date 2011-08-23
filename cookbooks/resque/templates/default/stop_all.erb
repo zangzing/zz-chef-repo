@@ -3,10 +3,7 @@
 # since monit is very slow at starting/stopping a group
 # we have a simple stop script that stops them all quickly
 
-# first unmonitor monit so it doesn't try to start them up on its own
-<%= "sudo monit unmonitor -g #{@app_name}_resque" %>
-
-# now the shutdown script calls
+# shut down each worker
 <% (@num_workers).times do |num| %>
 # stop monitoring this
 <%= "sudo monit unmonitor resque_#{@app_name}_#{num}" %>
