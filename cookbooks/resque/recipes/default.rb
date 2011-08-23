@@ -49,9 +49,40 @@ run_for_app(:photos => [:solo,:util,:app,:app_master]) do |app_name, role, rails
       :app_name => app_name,
       :current_dir =>  current_dir,
       :rails_env => rails_env,
+      :deploy_user => deploy_user,
       :include_scheduler => include_scheduler
       })
     notifies :run, "execute[monit-reload-config]"
+  end
+
+  template "/usr/bin/zzscripts/#{app_name}_resque_start_all" do
+    owner deploy_user
+    group deploy_group
+    mode 0755
+    source "start_all.erb"
+    variables({
+      :num_workers => num_workers,
+      :app_name => app_name,
+      :current_dir =>  current_dir,
+      :rails_env => rails_env,
+      :deploy_user => deploy_user,
+      :include_scheduler => include_scheduler
+      })
+  end
+
+  template "/usr/bin/zzscripts/#{app_name}_resque_stop_all" do
+    owner deploy_user
+    group deploy_group
+    mode 0755
+    source "stop_all.erb"
+    variables({
+      :num_workers => num_workers,
+      :app_name => app_name,
+      :current_dir =>  current_dir,
+      :rails_env => rails_env,
+      :deploy_user => deploy_user,
+      :include_scheduler => include_scheduler
+      })
   end
 
 end

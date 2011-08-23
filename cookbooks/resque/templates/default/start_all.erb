@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# since monit is very slow at starting/stopping a group
+# we have a simple stop script that starts them all quickly
+<% (@num_workers).times do |num| %>
+<% pid_file = "/var/run/zz/resque/#{@app_name}_resque_#{num}.pid" %>
+<% conf_file = "/data/#{@app_name}/shared/config/resque_#{num}.conf" %>
+<% start_cmd = "/usr/bin/zzscripts/resque_start.rb #{@rails_env} #{@current_dir} #{pid_file} work 60 #{conf_file}" %>
+<%= "/bin/su - #{@deploy_user} -c '#{start_cmd}'" %>
+<% end %>
+
+<% if @include_scheduler %>
+<% pid_file = "/var/run/zz/resque/#{@app_name}_resque_scheduler.pid" %>
+<% start_cmd = "/usr/bin/zzscripts/resque_start.rb #{@rails_env} #{@current_dir} #{pid_file} scheduler 60 dummy_conf" %>
+<%= "/bin/su - #{@deploy_user} -c '#{start_cmd}'" %>
+<% end %>
+
+# now let monit begin monitoring them
+<%= "sudo monit -g #{@app_name}_resque monitor" %>
