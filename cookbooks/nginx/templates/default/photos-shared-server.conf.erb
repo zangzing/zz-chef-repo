@@ -87,6 +87,13 @@
         }
 #####
 
+#####
+        # redirects
+
+        # old homepage and photos redirect to root
+        location ~* "^/(potd|images/newhome|beta-email|\d{1,3}-.*)($|/.*?$)"{
+            rewrite (.*) http://<%=@host_name%>/ redirect;
+        }
 
 #####
         # remap the location for <%=@site_host_name%> - i.e. the wordpress site
