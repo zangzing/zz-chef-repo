@@ -7,7 +7,8 @@ run_for_app(:photos => [:solo,:util,:app,:app_master]) do |app_name, role, rails
     when :photos_production
       licenses = 6
     when :photos_staging
-      licenses = 2
+      # only gets the licenses if for the photos_staging group as well (i.e. don't use them on photos_hacktest)
+      licenses = 2 if zz[:deploy_group_name] == 'photos_staging'
   end
 
   # compute the proper license distribution and hold
