@@ -103,8 +103,14 @@ class Chef::Recipe::ZZDeployEnvironment
     raise "Could not find our instance in config, our instance id is #{instance_id}" if instance.nil?
     node[:zz][:deploy_role] = instance[:role]
 
+    # see if they want to specify the custom json file to include
+    custom_json_file = node[:zz][:group_config][:extra][:custom_file_path] rescue nil
+
+    # if nil, will use the rails env to form name
+    custom_json_file ||= "#{node[:zz][:app_name]}_#{node[:zz][:group_config][:rails_env]}.json"
+
     # now see if we have any custom json data to associate with the node
-    cust_file_path = "#{project_root_dir}/cookbooks/deploy-manager/custom/#{node[:zz][:app_name]}_#{node[:zz][:group_config][:rails_env]}.json"
+    cust_file_path = "#{project_root_dir}/cookbooks/deploy-manager/custom/#{custom_json_file}"
     json = nil
     begin
       json = File.open(cust_file_path, 'r') {|f| f.read }
