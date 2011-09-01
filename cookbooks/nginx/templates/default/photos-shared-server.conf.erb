@@ -94,22 +94,22 @@
             rewrite (.*) http://help.zangzing.com/forums permanent;
         }
         location ~* ^/blog/latest-photo-sharing-news/www.facebook.com/zangzing($|/.*?$) {
-            rewrite (.*) http://<%=@site_host_name%>/blog/latest-photo-sharing-news permanent;
+            rewrite (.*) http://<%=@host_name%>/blog/latest-photo-sharing-news permanent;
         }
         location ~* ^/blog/latest-photo-sharing-news/www.twitter.com/zangzing($|/.*?$) {
-            rewrite (.*) http://<%=@site_host_name%>/blog/latest-photo-sharing-news permanent;
+            rewrite (.*) http://<%=@host_name%>/blog/latest-photo-sharing-news permanent;
         }
         location ~* ^/team($|/.*?$) {
-            rewrite (.*) http://<%=@site_host_name%>/about/team permanent;
+            rewrite (.*) http://<%=@host_name%>/about/team permanent;
         }
         location ~* ^/blog/few-photo-sharing-updates/www.zangzing.com/join($|/.*?$) {
-            rewrite (.*) http://<%=@site_host_name%>/blog/few-photo-sharing-updates permanent;
+            rewrite (.*) http://<%=@host_name%>/blog/few-photo-sharing-updates permanent;
         }
         location ~* ^/blog/few-photo-sharing-updates/www.zangzing.com($|/.*?$) {
-            rewrite (.*) http://<%=@site_host_name%>/blog/few-photo-sharing-updates permanent;
+            rewrite (.*) http://<%=@host_name%>/blog/few-photo-sharing-updates permanent;
         }
         location ~* ^/about/share-photo-of-the-day($|/.*?$) {
-            rewrite (.*) http://<%=@site_host_name%>/about/photo-of-the-day permanent;
+            rewrite (.*) http://<%=@host_name%>/about/photo-of-the-day permanent;
         }
 #####
 
