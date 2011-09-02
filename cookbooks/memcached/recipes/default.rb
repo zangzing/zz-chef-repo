@@ -48,6 +48,7 @@ run_for_app(:photos => [:solo,:app,:app_master,:util,:db,:db_slave],
       :cache_size => cache_size
       })
     notifies :restart, "service[memcached]", :immediately
+    notifies :enable, "service[memcached]", :immediately
   end
 
   service "memcached" do

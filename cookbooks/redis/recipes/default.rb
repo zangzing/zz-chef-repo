@@ -126,6 +126,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:db_slave,:local]) do |
           :we_are_redis_slave => we_are_redis_slave
           })
         notifies :restart, "service[redis]" unless is_local_dev
+        notifies :enable, "service[redis]" unless is_local_dev
         notifies :run, "bash[redis_local_restart]" if is_local_dev
       end
 
