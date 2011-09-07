@@ -205,10 +205,16 @@
 
         # needed to forward user's IP address to rails
         proxy_set_header  X-Real-IP         $remote_addr;
-        proxy_set_header  X-Forwarded-For   $proxy_add_x_forwarded_for;
         proxy_set_header  Host              $http_host;
 <% if @amazon_elb.empty? # only set scheme if no elb in front of us %>
+        # only add real ip onto forwarded for if not on Amazon because in
+        # that case we use the real_ip module to determine the real ip
+        proxy_set_header  X-Forwarded-For   $proxy_add_x_forwarded_for;
         proxy_set_header  X-Forwarded-Proto $scheme;
+<% else %>
+        # amazon elb case, since we use real_ip, just replace forward_for with
+        # real_ip
+        proxy_set_header  X-Forwarded-For   $remote_addr;
 <% end %>
         proxy_redirect off;
 
