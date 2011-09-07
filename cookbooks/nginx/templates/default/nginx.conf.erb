@@ -135,15 +135,11 @@ real_ip_header X-Forwarded-For;
 
 ##### Blocked addresses #####
     geo $remote_addr $blocked_ip {
-
         222.186.26.208/32   1;
         222.186.24.27/32    1;
         222.186.24.25/32    1;
         117.41.184.8/32     1;
         219.133.62.73/32    1;
-
-
-        71.237.142.15/32    1;  # testing GWS address
     }
 #####
 
