@@ -207,12 +207,6 @@
         proxy_set_header  X-Real-IP         $remote_addr;
         proxy_set_header  Host              $http_host;
 <% if @amazon_elb.empty? # only set scheme if no elb in front of us %>
-        # we don't need X-Forwarded-For because we are using the real ip module which
-        # finds the last untrusted address in the chain - this means that if the user
-        # is behind their own proxy which then forwards to us, we will report the
-        # proxy as being the IP, we do this because beyond this point a user could spoof
-        # their address by faking a forwarded for header
-        proxy_set_header  X-Forwarded-For   $proxy_add_x_forwarded_for;
         proxy_set_header  X-Forwarded-Proto $scheme;
 <% end %>
         proxy_redirect off;
