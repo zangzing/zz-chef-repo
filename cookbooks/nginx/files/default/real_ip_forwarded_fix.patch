@@ -1,0 +1,75 @@
+--- src/http/modules/ngx_http_realip_module.c	2009-11-11 13:41:16.000000000 +0000
++++ src/http/modules/ngx_http_realip_module.c	2010-12-02 02:53:11.000000000 +0000
+@@ -107,8 +107,10 @@
+ static ngx_int_t
+ ngx_http_realip_handler(ngx_http_request_t *r)
+ {
+-    u_char                      *ip, *p;
++    u_char                      *ip, *ipend, *p, *xff;
+     size_t                       len;
++    ngx_int_t                    rc;
++    ngx_addr_t                   addr;
+     ngx_uint_t                   i, hash;
+     ngx_list_part_t             *part;
+     ngx_table_elt_t             *header;
+@@ -135,6 +137,8 @@
+         return NGX_DECLINED;
+     }
+ 
++    c = r->connection;
++
+     switch (rlcf->type) {
+ 
+     case NGX_HTTP_REALIP_XREALIP:
+@@ -156,16 +160,39 @@
+ 
+         len = r->headers_in.x_forwarded_for->value.len;
+         ip = r->headers_in.x_forwarded_for->value.data;
++        xff = ip;
++        ipend = ip + len;
+ 
+-        for (p = ip + len - 1; p > ip; p--) {
++        for (p = ipend - 1; p > ip; p--) {
+             if (*p == ' ' || *p == ',') {
+                 p++;
+-                len -= p - ip;
+                 ip = p;
+-                break;
++                len = ipend - ip;
++                rc = ngx_parse_addr(c->pool, &addr, ip, len);
++
++                switch (rc) {
++                case NGX_DECLINED:
++                    return NGX_DECLINED;
++                case NGX_ERROR:
++                    return NGX_HTTP_INTERNAL_SERVER_ERROR;
++                default: /* NGX_OK */
++                    break;
++                }
++
++                sin = (struct sockaddr_in *) addr.sockaddr;
++                from = rlcf->from->elts;
++                for (i = 0; i < rlcf->from->nelts; i++) {
++                    if ((sin->sin_addr.s_addr & from[i].mask) == from[i].addr) {
++                        ip = xff;
++                        while (--p > ip && (*p == ' ' || *p == ','));
++                        ipend = p + 1;
++                        break;
++                    }
++                }
+             }
+         }
+ 
++        len = ipend - ip;
+         break;
+ 
+     default: /* NGX_HTTP_REALIP_HEADER */
+@@ -205,8 +232,6 @@
+ 
+ found:
+ 
+-    c = r->connection;
+-
+     ngx_log_debug1(NGX_LOG_DEBUG_HTTP, c->log, 0, "realip: \"%s\"", ip);
+ 
+     /* AF_INET only */
