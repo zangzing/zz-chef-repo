@@ -103,6 +103,9 @@
         location ~* ^/blog/latest-photo-sharing-news/www.twitter.com/zangzing($|/.*?$) {
             rewrite (.*) http://<%=@host_name%>/blog/latest-photo-sharing-news permanent;
         }
+        location ~* ^/about/privacy($|/.*?$) {
+            rewrite (.*) http://<%=@host_name%>/privacy permanent;
+        }
         location ~* ^/team($|/.*?$) {
             rewrite (.*) http://<%=@host_name%>/about/team permanent;
         }
