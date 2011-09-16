@@ -11,7 +11,7 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
   # install nginx if needed
   version =  "1.0.6"
   # do a version check to avoid having to install if we already have proper version
-  `/usr/sbin/nginx -v 2>&1 | grep 1\.0\.6y`
+  `/usr/sbin/nginx -v 2>&1 | grep 1\.0\.6`
   already_installed = $?.exitstatus == 0
 
   directory "/var/log/nginx" do
