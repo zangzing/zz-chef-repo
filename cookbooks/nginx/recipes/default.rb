@@ -11,7 +11,7 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
   # install nginx if needed
   version =  "1.0.6"
   # do a version check to avoid having to install if we already have proper version
-  `/usr/sbin/nginx -v 2>&1 | grep 1\.0\.6`
+  `/usr/sbin/nginx -v 2>&1 | grep 1\.0\.6y`
   already_installed = $?.exitstatus == 0
 
   directory "/var/log/nginx" do
@@ -51,7 +51,7 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
       ./configure --with-cc-opt="-Wno-deprecated-declarations" --prefix=/usr --pid-path=/var/run/nginx.pid --conf-path=/etc/nginx/nginx.conf \
           --http-log-path=/var/log/nginx/access_log \
           --error-log-path=/var/log/nginx/error_log --with-http_ssl_module --add-module=../nginx_upload_module-2.2.0 \
-          --with-http_realip_module \
+          --with-http_realip_module --with-http_gzip_static_module \
           --add-module=../nginx-upload-progress-module --with-pcre=../pcre-8.12
       make && sudo make install && sudo rm -rf /usr/local/nginx
     EOH
