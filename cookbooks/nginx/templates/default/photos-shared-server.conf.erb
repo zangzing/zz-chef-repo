@@ -335,8 +335,9 @@
 
             # make sure the host always is the full host name so we remap
             # cases where we've got other dns addresses linked to the same
-            # place
-            if ($host !~ ^<%=@host_name%>$) {
+            # place - also accept the ezprints integration host so we can
+            # remap via DNS to the appropriate machine but still have it accepted
+            if ($host !~ ^(<%=@host_name%>|ezprints.integration.zangzing.com)$) {
               rewrite ^(.*)$ http://<%=@host_name%><%=@host_port%>$1 permanent;
             }
             <% end %>
