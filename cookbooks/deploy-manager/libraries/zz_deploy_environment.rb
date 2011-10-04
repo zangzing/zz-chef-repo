@@ -336,6 +336,19 @@ class Chef::Recipe::ZZDeployEnvironment
     worker_count
   end
 
+  # based on machine type determine proper worker count
+  # for image processing
+  def cpu_worker_count
+    case node[:ec2][:instance_type]
+    when 'm1.small': worker_count = 2
+    when 'c1.medium': worker_count = 3
+    when 'c1.xlarge': worker_count = 6
+    else
+      worker_count = 4
+    end
+    worker_count
+  end
+
 
 end
 
