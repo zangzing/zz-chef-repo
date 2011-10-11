@@ -326,6 +326,7 @@ class Chef::Recipe::ZZDeployEnvironment
 
   # based on machine type determine proper worker count
   def worker_count
+    return 1 if is_local_dev?
     case node[:ec2][:instance_type]
     when 'm1.small': worker_count = 2
     when 'c1.medium': worker_count = 4
@@ -339,6 +340,7 @@ class Chef::Recipe::ZZDeployEnvironment
   # based on machine type determine proper worker count
   # for image processing
   def cpu_worker_count
+    return 1 if is_local_dev?
     case node[:ec2][:instance_type]
     when 'm1.small': worker_count = 2
     when 'c1.medium': worker_count = 3

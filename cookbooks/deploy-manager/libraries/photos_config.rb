@@ -11,6 +11,9 @@ class Chef::Recipe::PhotosConfig
   # want to set up on the node
   def self.init(node)
     @@node = node
+
+    zz_env = Chef::Recipe::ZZDeploy.env
+    puts zz_env
     # see if we should host redis
     node[:zz][:app_config] = {}
     node[:zz][:app_config][:redis_host] = calc_redis_host
@@ -34,6 +37,9 @@ class Chef::Recipe::PhotosConfig
 
     node[:zz][:app_config][:resque_scheduler] = calc_resque_scheduler
     node[:zz][:app_config][:we_host_resque_scheduler] = calc_we_host_resque_scheduler
+
+    node[:zz][:app_config][:resque_worker_count] = zz_env.worker_count
+    node[:zz][:app_config][:resque_cpu_worker_count] = zz_env.cpu_worker_count
 
   end
 
