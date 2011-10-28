@@ -9,3 +9,9 @@ patch -p 0 -d . < real_ip_forwarded_fix.patch
 Now you can zip the entire contents along with the plugins into the nginx-all-1.x.x.zip
 
 
+Note: we also changed the following files in mod_zip-1.1.6 to turn off char set conversion which does not work on the mac (at least with standard libraries) and is not needed.
+
+config: changed ngx_feature_libs= to be blank in case of non unix.
+
+ngx_http_zip_file.c: added conditional around static ngx_str_t ngx_http_zip_header_charset_name = ngx_string("upstream_http_x_archive_charset");
+ so it is not declared when NGX_ZIP_HAVE_ICONV is not set.
