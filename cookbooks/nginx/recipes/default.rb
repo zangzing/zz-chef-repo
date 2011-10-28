@@ -50,7 +50,7 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
     code <<-EOH
       unzip #{files_at}.zip
       cd #{files_at}/#{name}-#{version}
-      ./configure --with-cc-opt="-Wno-deprecated-declarations" --prefix=/usr --pid-path=/var/run/nginx.pid --conf-path=/etc/nginx/nginx.conf \
+      ./configure --with-cc-opt="-Wno-deprecated-declarations -Wno-uninitialized" --prefix=/usr --pid-path=/var/run/nginx.pid --conf-path=/etc/nginx/nginx.conf \
           --http-log-path=/var/log/nginx/access_log \
           --error-log-path=/var/log/nginx/error_log --with-http_ssl_module --add-module=../nginx_upload_module-2.2.0 \
           --add-module=../mod_zip-1.1.6 \
