@@ -64,16 +64,21 @@ run_for_app(:photos => [:solo,:util,:app,:app_master],
     end
     after_restart do
       env = Chef::Recipe::ZZDeploy.env
-      # since we do the actual restart in a separate phase, create a staging link to the release
-      # dir and map current to the previous current
-      # map release dir to pre_staged dir
+      #
+      # Since we do the actual restart in a separate phase, create a pre_stage link to the release
+      # dir.
+      #
+      # In deploy-manager libraries we have monkey patched out the link_current_release_to_production method
+      # so that it does nothing - this way, the current directory stays unlinked until we explicitly link it
+      # in the restart phase.  This means that the switch over to the current directory will be more
+      # closely synced to the actual restart of the app.  This is especially important if we have
+      # a long running task such as a migration in the first phase to more closely sync all the app servers
+      # switch over point.  Note: there will still be a window of time where the app servers are restarting
+      # and we have already mapped current so new web resources can begin being served even though the app
+      # servers are not fully switched over. The solution to this problem is some sort of asset versioning
+      # so the old and new assets can coexist for some period of time.
+      #
       env.sym_link(release_path, env.pre_stage_dir, env.deploy_user, env.deploy_group)
-
-      # now revert the link from current to release dir to previous one since we do that in the next phase of the
-      # deploy and some machines may finish faster (i.e. if doing a migrate that machine will trail the others)
-      # so we don't want to have current mapped yet - better would be to monkey patch deploy code to
-      # not create the current link at all
-      #env.sym_link(old_release_path, env.current_dir)
 
     end
     restart_command do

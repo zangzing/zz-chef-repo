@@ -1,13 +1,13 @@
 run_for_app(:photos => [:solo,:util,:app,:app_master],
             :rollup => [:solo,:util,:app,:app_master]) do |app_name, role, rails_env|
 
-
-  release_dir = File.readlink(ZZDeploy.env.pre_stage_dir)
-  FileUtils.rm_f(ZZDeploy.env.pre_stage_dir)   # get rid of pre_stage link
-  Chef::Recipe::ZZDeploy.env.release_dir = release_dir
-  chef_base = ZZDeploy.env.project_root_dir
+  env = ZZDeploy.env
+  release_dir = File.readlink(env.pre_stage_dir)
+  FileUtils.rm_f(env.pre_stage_dir)   # get rid of pre_stage link
+  env.release_dir = release_dir
+  chef_base = env.project_root_dir
   # create symlink for current pointing at the release dir
-  ZZDeploy.env.sym_link(release_dir, ZZDeploy.env.current_dir)
+  env.sym_link(release_dir, ZZDeploy.env.current_dir, env.deploy_user, env.deploy_group)
 
   run_external_code("#{chef_base}/cookbooks/app-deploy/helpers", "prep_hook_vars.rb", true)
 
