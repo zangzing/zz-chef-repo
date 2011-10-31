@@ -1,15 +1,3 @@
-# patch deploy code to not create current link
-# since we control that ourselves in app restart phase
-class Chef
-  class Provider
-    class Deploy < Chef::Provider
-      def link_current_release_to_production
-        puts "***** LINKING NOTHING *****"
-      end
-    end
-  end
-end
-
 run_for_app(:photos => [:solo,:util,:app,:app_master],
             :rollup => [:solo,:util,:app,:app_master]) do |app_name, role, rails_env|
 
@@ -79,7 +67,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master],
       # since we do the actual restart in a separate phase, create a staging link to the release
       # dir and map current to the previous current
       # map release dir to pre_staged dir
-      env.sym_link(release_path, env.pre_stage_dir)
+      env.sym_link(release_path, env.pre_stage_dir, deploy_user, deploy_group)
 
       # now revert the link from current to release dir to previous one since we do that in the next phase of the
       # deploy and some machines may finish faster (i.e. if doing a migrate that machine will trail the others)
