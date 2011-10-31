@@ -1,9 +1,22 @@
+# patch deploy code to not create current link
+# since we control that ourselves in app restart phase
+class Chef
+  class Provider
+    class Deploy < Chef::Provider
+      def link_current_release_to_production
+        puts "***** LINKING NOTHING *****"
+      end
+    end
+  end
+end
+
 run_for_app(:photos => [:solo,:util,:app,:app_master],
             :rollup => [:solo,:util,:app,:app_master]) do |app_name, role, rails_env|
 
   # set up any items we want to pass into the hooks via the for_hook hash
   base_dir = "/data/#{app_name}"
   chef_base = ZZDeploy.env.project_root_dir
+  old_release_path = File.readlink(ZZDeploy.env.current_dir)
 
   # set up symlinks wanted based on app
   # common ones first
@@ -46,6 +59,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master],
       # hooked up - any failure here does not change current
       Chef::Recipe::ZZDeploy.env.release_dir = release_path  # now that we know the release path set it
 
+
       # prep vars we want to pass
       run_external_code("#{chef_base}/cookbooks/app-deploy/helpers", "prep_hook_vars.rb", true)
 
@@ -61,6 +75,18 @@ run_for_app(:photos => [:solo,:util,:app,:app_master],
     before_restart do
     end
     after_restart do
+      env = Chef::Recipe::ZZDeploy.env
+      # since we do the actual restart in a separate phase, create a staging link to the release
+      # dir and map current to the previous current
+      # map release dir to pre_staged dir
+      env.sym_link(release_path, env.pre_stage_dir)
+
+      # now revert the link from current to release dir to previous one since we do that in the next phase of the
+      # deploy and some machines may finish faster (i.e. if doing a migrate that machine will trail the others)
+      # so we don't want to have current mapped yet - better would be to monkey patch deploy code to
+      # not create the current link at all
+      #env.sym_link(old_release_path, env.current_dir)
+
     end
     restart_command do
     end

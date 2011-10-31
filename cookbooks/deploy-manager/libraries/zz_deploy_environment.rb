@@ -286,7 +286,11 @@ class Chef::Recipe::ZZDeployEnvironment
   end
 
   def current_dir
-    "/data/#{zz[:app_name]}/current"
+    base_dir + "/current"
+  end
+
+  def pre_stage_dir
+    base_dir + "/pre_stage"
   end
 
   def current_config_dir
@@ -349,6 +353,22 @@ class Chef::Recipe::ZZDeployEnvironment
       worker_count = 4
     end
     worker_count
+  end
+
+  def set_ownership(user, group, path)
+    FileUtils.chown_R(user, group, path)
+  end
+
+  # creates a link from the actual path
+  # to the link link_to
+  def sym_link(path, link_to, user, group)
+    begin
+      FileUtils.rm_f(link_to)   # get rid of any old one
+      FileUtils.ln_sf(path, link_to)  # make a new link_to that points to path
+      set_ownership(user, group, link_to)
+    rescue => e
+      raise Chef::Exceptions::FileNotFound.new("Cannot symlink #{path} to #{link_to} : #{e.message}")
+    end
   end
 
 
