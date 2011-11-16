@@ -285,6 +285,7 @@
             upload_set_form_field fast_local_image[][original_name] "$upload_file_name";
             upload_set_form_field fast_local_image[][content_type] "$upload_content_type";
             upload_set_form_field fast_local_image[][filepath] "$upload_tmp_path";
+            upload_set_form_field fast_local_image[][field_name] "$upload_field_name";
             upload_set_form_field fast_upload_secret "this-is-a-key-from-nginx";
             upload_set_form_field _method "put";
 
