@@ -3,6 +3,7 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
 
   # The path prefix for the photos service
   photos_path_prefix = '/service'
+  photos_api_path_prefix = '/zz_api'
 
   # local dev skips most of the config
   is_local_dev = role == :local
@@ -205,6 +206,7 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
       :remap_error_pages => remap_error_pages,
       :is_local_dev => is_local_dev,
       :photos_path_prefix => photos_path_prefix,
+      :photos_api_path_prefix => photos_api_path_prefix,
       :ssl_supported => ssl_supported,
       :ssl_listen_port => ssl_listen_port,
       :ssl_key => ssl_key,

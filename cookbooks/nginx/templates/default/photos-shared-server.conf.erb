@@ -266,7 +266,7 @@
         #
         # accepts photo uploads from agent and sendgrid
         #
-        location ~* ^<%=@photos_path_prefix%>/albums/(.+)/upload$|^<%=@photos_path_prefix%>/photos/(.+)/upload$|^<%=@photos_path_prefix%>/sendgrid/import$ {
+        location ~* ^<%=@photos_path_prefix%>/albums/(.+)/upload$|^(<%=@photos_path_prefix%>|<%=@photos_api_path_prefix%>)/photos/(.+)/upload$|^<%=@photos_path_prefix%>/sendgrid/import$ {
             # Once upload is received, send request to this location (see below)
             upload_pass @upload_location;
 
@@ -292,7 +292,7 @@
 			upload_pass_form_field "^.*$";
 
             # Delete the new tmp file if the request fails upstream with any of this return values
-            upload_cleanup 400 404 499 500-505;
+            upload_cleanup 400 404 499 500-505 509;
         }
 
         location @upload_location {
