@@ -8,7 +8,7 @@ check process resque_<%= @app_name %>_<%= num %>
   with pidfile <%=pid_file%>
   start program = "/bin/su - <%=@deploy_user%> -c '<%=start_cmd%>'"
   stop program = "/bin/su - <%=@deploy_user%> -c '<%=stop_cmd%>'"
-  if totalmem is greater than 300 MB for 6 cycles then restart # eating up memory?
+  if totalmem is greater than 210 MB for 6 cycles then restart # eating up memory?
   group resque_<%= @app_name %>
 <% end %>
 <%if @include_scheduler%>
@@ -19,6 +19,6 @@ check process resque_<%= @app_name %>_scheduler
   with pidfile <%=pid_file%>
   start program = "/bin/su - <%=@deploy_user%> -c '<%=start_cmd%>'"
   stop program = "/bin/su - <%=@deploy_user%> -c '<%=stop_cmd%>'"
-  if totalmem is greater than 300 MB for 6 cycles then restart # eating up memory?
+  if totalmem is greater than 120 MB for 6 cycles then restart # eating up memory?
   group resque_<%= @app_name %>
 <%end%>

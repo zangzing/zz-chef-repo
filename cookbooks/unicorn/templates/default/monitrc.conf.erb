@@ -14,6 +14,6 @@ check process unicorn_<%= @app_name %>_master
 <% pid_file = "/var/run/zz/unicorn_worker_#{@app_name}_#{num}.pid" %>
 check process unicorn_<%= @app_name %>_worker_<%= num %>
   with pidfile <%=pid_file%>
-  if mem > 300.0 MB for 6 cycles then exec "/bin/bash -c '/bin/kill `cat <%=pid_file%>` && sleep 1'"
+  if mem > 260.0 MB for 6 cycles then exec "/bin/bash -c '/bin/kill `cat <%=pid_file%>` && sleep 1'"
   group unicorn_<%= @app_name %>
 <% end %>
