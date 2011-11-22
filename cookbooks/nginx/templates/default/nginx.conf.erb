@@ -223,15 +223,6 @@ real_ip_header X-Forwarded-For;
     }
     <% end %>
 <% else %>
-# testing a theory
-    client_body_timeout 600s;
-    client_header_timeout 600s;
-    keepalive_timeout 180s;
-    send_timeout 600s;
-    proxy_connect_timeout 600s;
-    proxy_read_timeout 600s;
-    proxy_send_timeout 600s;
-
     upstream zangzing_upstream {
         server unix:/var/run/zz/unicorn_<%=@app_name%>.sock fail_timeout=0;
     }
