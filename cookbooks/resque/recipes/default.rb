@@ -89,7 +89,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master]) do |app_name, role, rails
   # turn off monitoring if first time in
   execute "unmonitor_resque" do
     command "sleep 10 && sudo /usr/bin/zzscripts/#{app_name}_resque_stop_all"
-    only_if "test -d /data/#{app_name}/current"
+    not_if "test -d /data/#{app_name}/current"
     action :nothing
   end
 
