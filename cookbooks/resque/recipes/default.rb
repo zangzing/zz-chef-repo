@@ -53,6 +53,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master]) do |app_name, role, rails
       :include_scheduler => include_scheduler
       })
     notifies :run, "execute[monit-reload-config]"
+    notifies :run, "execute[unmonitor_resque]"
   end
 
   template "/usr/bin/zzscripts/#{app_name}_resque_start_all" do
@@ -83,6 +84,13 @@ run_for_app(:photos => [:solo,:util,:app,:app_master]) do |app_name, role, rails
       :deploy_user => deploy_user,
       :include_scheduler => include_scheduler
       })
+  end
+
+  # turn off monitoring if first time in
+  execute "unmonitor_resque" do
+    command "sleep 10 && sudo /usr/bin/zzscripts/#{app_name}_resque_stop_all"
+    only_if "test -d /data/#{app_name}/current"
+    action :nothing
   end
 
 end

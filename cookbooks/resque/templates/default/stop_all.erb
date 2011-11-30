@@ -6,14 +6,14 @@
 # shut down each worker
 <% (@num_workers).times do |num| %>
 # stop monitoring this
-<%= "sudo monit unmonitor resque_#{@app_name}_#{num} || true" %>
+<%= "sudo monit unmonitor resque_#{@app_name}_#{num}" %>
 <% pid_file = "/var/run/zz/resque/#{@app_name}_resque_#{num}.pid" %>
 <%= "/bin/su - #{@deploy_user} -c '/usr/bin/zzscripts/resque_stop.rb #{pid_file} 60'" %>
 <% end %>
 
 <% if @include_scheduler %>
 # stop monitoring this
-<%= "sudo monit unmonitor resque_#{@app_name}_scheduler || true" %>
+<%= "sudo monit unmonitor resque_#{@app_name}_scheduler" %>
 <% pid_file = "/var/run/zz/resque/#{@app_name}_resque_scheduler.pid" %>
 <%= "/bin/su - #{@deploy_user} -c '/usr/bin/zzscripts/resque_stop.rb #{pid_file} 60'" %>
 <% end %>
