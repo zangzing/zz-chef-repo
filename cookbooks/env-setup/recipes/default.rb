@@ -46,6 +46,20 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:db_slave,:local],
     action :create
   end
 
+  directory "/data/global/profiles" do
+    owner deploy_user
+    group deploy_group
+    mode "0755"
+    action :create
+  end
+
+  cookbook_file "/data/global/profiles/sRGB.icm" do
+    source "sRGB.icm"
+    owner deploy_user
+    group deploy_group
+    mode "0755"
+  end
+
   # move scripts to /data/global/bin
   scripts = ['unicorn_start.rb', 'unicorn_stop.rb', 'resque_start.rb', 'resque_stop.rb']
   scripts.each do |script|
