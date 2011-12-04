@@ -39,6 +39,20 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:db_slave,:local],
     action :create
   end
 
+  directory "/data/tmp" do
+    owner deploy_user
+    group deploy_group
+    mode "0755"
+    action :create
+  end
+
+  directory "/data/tmp/json_ipc" do
+    owner deploy_user
+    group deploy_group
+    mode "0755"
+    action :create
+  end
+
   directory "/data/global" do
     owner deploy_user
     group deploy_group
