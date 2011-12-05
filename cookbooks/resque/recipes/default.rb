@@ -10,7 +10,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master]) do |app_name, role, rails
     # this host named job lets us work with things like temp files that only exist
     # on that hos
     num_workers = zz_env.worker_count
-    queues = "remote_job_#{ZZDeploy.env.this_host_name},io_bound_high,mailer,io_local_#{ZZDeploy.env.this_host_name},io_bound,share,facebook,twitter,like,io_bound_low,test_queue"
+    queues = "remote_job_#{ZZDeploy.env.this_host_name},mailer_high,io_bound_high,mailer,io_local_#{ZZDeploy.env.this_host_name},io_bound,share,facebook,twitter,like,io_bound_low,mailer_low,test_queue"
   end
   num_workers.times do |count|
       template "/data/#{app_name}/shared/config/resque_#{count}.conf" do
