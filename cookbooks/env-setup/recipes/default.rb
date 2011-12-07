@@ -75,7 +75,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:db_slave,:local],
   end
 
   # move scripts to /data/global/bin
-  scripts = ['unicorn_start.rb', 'unicorn_stop.rb', 'resque_start.rb', 'resque_stop.rb']
+  scripts = ['unicorn_start.rb', 'unicorn_stop.rb', 'resque_start.rb', 'resque_stop.rb', 'zz_cmds.rb']
   scripts.each do |script|
     cookbook_file "/usr/bin/zzscripts/#{script}" do
       source "#{script}"

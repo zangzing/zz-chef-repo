@@ -58,6 +58,7 @@ if deploy_config?
   require_recipe "exiftool"
   require_recipe "imagemagick"
   require_recipe "unicorn"
+  require_recipe "eventmachine"
   require_recipe "new-relic"
 end
 
