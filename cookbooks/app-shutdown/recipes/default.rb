@@ -13,5 +13,7 @@ run_for_app(:photos => [:solo,:app,:app_master],
     rescue Exception => ex
       # ignore
     end
+    # out of the front end pool, stop all work
+    run_external_code("#{chef_base}/cookbooks/app-shutdown/helpers", "shutdown_command.rb", true)
   end
 end
