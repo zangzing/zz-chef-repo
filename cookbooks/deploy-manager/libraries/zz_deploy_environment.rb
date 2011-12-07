@@ -355,6 +355,10 @@ class Chef::Recipe::ZZDeployEnvironment
     worker_count
   end
 
+  def eventmachine_worker_count
+    1
+  end
+
   def set_ownership(user, group, path)
     FileUtils.chown_R(user, group, path)
   end

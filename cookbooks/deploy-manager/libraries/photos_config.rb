@@ -41,6 +41,8 @@ class Chef::Recipe::PhotosConfig
     node[:zz][:app_config][:resque_worker_count] = zz_env.worker_count
     node[:zz][:app_config][:resque_cpu_worker_count] = zz_env.cpu_worker_count
 
+    node[:zz][:app_config][:eventmachine_worker_count] = zz_env.eventmachine_worker_count
+
   end
 
   def self.node

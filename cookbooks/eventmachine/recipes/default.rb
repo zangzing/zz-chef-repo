@@ -1,8 +1,7 @@
-run_for_app(:photos => [:solo,:app,:app_master],
-            :rollup => [:solo,:app,:app_master]) do |app_name, role, rails_env|
+run_for_app(:photos => [:solo,:app,:app_master]) do |app_name, role, rails_env|
 
   current_dir = zz_env.current_dir + "/eventmachine"
-  num_workers = 1
+  num_workers = zz_env.eventmachine_worker_count
 
   template "/etc/monit.d/eventmachine_#{app_name}.monitrc" do
     owner root_user
