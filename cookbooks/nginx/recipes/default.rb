@@ -148,6 +148,7 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
   ssl_crt = "localhost.crt"
 
   host_name = group_config[:vhost]
+  config_group_name = group_config[:group]
   asset_host_name = nil # default, no asset host
   remap_error_pages = false
   dev_upstream_port = 3001
@@ -164,7 +165,8 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
           ssl_crt = "star_zangzing_com.crt"
         when :photos_staging
           site_host_name = 'staging.site.zangzing.com'
-          asset_host_name = "*.assets.#{host_name}"
+          # only hacktest and staging get asset hosts
+          asset_host_name = "*.assets.#{host_name}" if ['photos_staging', 'photos_hacktest'].include?(config_group_name)
           remap_error_pages = true
           ssl_key = "staging.key"
           ssl_crt = "staging.crt"
