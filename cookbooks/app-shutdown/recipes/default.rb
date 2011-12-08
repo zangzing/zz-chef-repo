@@ -1,6 +1,8 @@
 run_for_app(:photos => [:solo,:app,:app_master],
             :rollup => [:solo,:app,:app_master]) do |app_name, role, rails_env|
 
+  env = ZZDeploy.env
+  chef_base = env.project_root_dir
 
   if deploy_shutdown?
     begin
