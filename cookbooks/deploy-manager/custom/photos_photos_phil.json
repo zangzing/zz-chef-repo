@@ -2,5 +2,5 @@
   "cachedb_username": "zzadmin",
   "cachedb_password": "pwy4ksp3psd0",
   "cachedb_host": "zz-developers-rds.ckikxby0s3p8.us-east-1.rds.amazonaws.com",
-  "cachedb_schema": "photos_cache_hacktest"
+  "cachedb_schema": "photos_cache_phil"
 }
