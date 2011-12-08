@@ -7,11 +7,11 @@
 <% (@num_workers).times do |num| %>
 # stop this
 <% pid_file = "/var/run/zz/resque/#{@app_name}_resque_#{num}.pid" %>
-<%= "/bin/su - #{@deploy_user} -c '/usr/bin/zzscripts/resque_stop.rb #{pid_file} 60'" %>
+<%= "sudo /bin/su - #{@deploy_user} -c '/usr/bin/zzscripts/resque_stop.rb #{pid_file} 60'" %>
 <% end %>
 
 <% if @include_scheduler %>
 # stop this
 <% pid_file = "/var/run/zz/resque/#{@app_name}_resque_scheduler.pid" %>
-<%= "/bin/su - #{@deploy_user} -c '/usr/bin/zzscripts/resque_stop.rb #{pid_file} 60'" %>
+<%= "sudo /bin/su - #{@deploy_user} -c '/usr/bin/zzscripts/resque_stop.rb #{pid_file} 60'" %>
 <% end %>
