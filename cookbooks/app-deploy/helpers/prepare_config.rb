@@ -30,3 +30,11 @@ e = execute "bundle_install" do
   action :nothing
 end
 e.run_action(:run)  # execute in the compile phase so happens right now
+
+# install the bundle - This time for the eventmachine dir
+#e = execute "bundle_install" do
+#  cwd zz_env.release_dir
+#  command "su -l #{zz_env.deploy_user} -c 'cd #{zz_env.release_dir}/eventmachine && bundle install --path /var/chef/cookbooks/zz-chef-repo_bundle --deployment'"
+#  action :nothing
+#end
+#e.run_action(:run)  # execute in the compile phase so happens right now
