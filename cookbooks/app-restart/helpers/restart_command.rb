@@ -10,7 +10,7 @@ emworkers = zz_env.eventmachine_worker_count
 #
 emworkers.times do |num|
   em_dir = "#{zz_release_dir}/eventmachine"
-  run("sudo RAILS_ENV=#{zz_rails_env} ./emstart.rb start -n #{num} -g #{zz_deploy_group} -u #{zz_deploy_user} &", "bad em_dir")
+  run("sudo RAILS_ENV=#{zz_rails_env} ./emstart.rb start -n #{num} -g #{zz_deploy_group} -u #{zz_deploy_user} &", em_dir)
 end
 
 
