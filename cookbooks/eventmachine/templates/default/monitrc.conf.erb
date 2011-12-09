@@ -2,7 +2,7 @@
 <% (@num_workers).times do |num| %>
 <% pid_file = "/var/run/zz/em_#{@app_name}_#{num}.pid" %>
 <% start_cmd = "cd #{@current_dir} && RAILS_ENV=#{@rails_env} sudo ./emstart.rb start -n #{num} -g #{@group} -u #{@user}" %>
-<% stop_cmd = "/usr/bin/zzscripts/zz_cmds_stop.rb -p #{pid_file} -t 5" %>
+<% stop_cmd = "/usr/bin/zzscripts/zz_cmds.rb stop -p #{pid_file} -t 5" %>
 check process eventmachine_<%= @app_name %>_<%= num %>
   with pidfile <%=pid_file%>
   start program = "/bin/su - <%=@user%> -c '<%=start_cmd%>'"

@@ -49,7 +49,7 @@ class ZZUtilsCommands
       opts.on("-s", "--signal SIGNAL", "signal to use for nice kill stage " +
                                       "(default: #{@options[:signal]})")                        { |val| @options[:signal] = val }
       opts.on("-t", "--timeout TIMEOUT", "time in seconds before forced kill " +
-                                      "(default: #{@options[:timeout]})")                       { |val| @options[:timeout] = val }
+                                      "(default: #{@options[:timeout]})")                       { |val| @options[:timeout] = val.to_i }
       opts.on_tail('-v', '--version', "Show version")                                           { puts VERSION; exit }
     end
   end

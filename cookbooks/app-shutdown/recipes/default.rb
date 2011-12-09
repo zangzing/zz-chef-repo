@@ -4,6 +4,8 @@ run_for_app(:photos => [:solo,:app,:app_master],
   env = ZZDeploy.env
   chef_base = env.project_root_dir
 
+  run_external_code("#{chef_base}/cookbooks/app-deploy/helpers", "prep_hook_vars.rb", true)
+
   if deploy_shutdown?
     begin
       # deregister ourselves from the elb if there is one
