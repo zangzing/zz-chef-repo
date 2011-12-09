@@ -1,16 +1,22 @@
 run_for_app(:photos => [:solo,:util,:app,:app_master]) do |app_name, role, rails_env|
 
   # see what kind of queues each type should listen to
-  if zz[:app_config][:we_host_resque_cpu]
+  cpu_queues = "image_edit,image_processing"
+  app_queues = "remote_job_#{ZZDeploy.env.this_host_name},mailer_high,io_bound_high,mailer,io_local_#{ZZDeploy.env.this_host_name},facebook,twitter,like,io_bound,share,io_bound_low,mailer_low,test_queue"
+  if role == :solo
+    num_workers = 4
+    # all the queues when solo
+    queues = [app_queues,cpu_queues].join(',')
+  elsif zz[:app_config][:we_host_resque_cpu]
     #CPU bound jobs only
     num_workers = zz_env.cpu_worker_count
-    queues = "image_edit,image_processing"
+    queues = cpu_queues
   else
     # all other jobs including special named job tied to machine it originated from
     # this host named job lets us work with things like temp files that only exist
     # on that hos
     num_workers = zz_env.worker_count
-    queues = "remote_job_#{ZZDeploy.env.this_host_name},mailer_high,io_bound_high,mailer,io_local_#{ZZDeploy.env.this_host_name},facebook,twitter,like,io_bound,share,io_bound_low,mailer_low,test_queue"
+    queues = app_queues
   end
   num_workers.times do |count|
       template "/data/#{app_name}/shared/config/resque_#{count}.conf" do
