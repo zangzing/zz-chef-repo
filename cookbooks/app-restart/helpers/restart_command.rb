@@ -1,10 +1,3 @@
-puts "Restarting Unicorn Now........."
-
-# call the re/start script
-run "/usr/bin/zzscripts/unicorn_start.rb #{zz_rails_env} #{zz_current_dir} /var/run/zz/unicorn_#{zz_app}.pid 120"
-# we are ready to have monit monitor the state again
-run "sudo monit monitor -g unicorn_#{zz_app}"
-
 puts "Restarting EventMachine Now....."
 emworkers = zz_env.eventmachine_worker_count
 #
@@ -17,5 +10,15 @@ emworkers = zz_env.eventmachine_worker_count
 #
 emworkers.times do |num|
   em_dir = "#{zz_release_dir}/eventmachine"
-  run(em_dir, "RAILS_ENV=#{zz_rails_env} sudo #{em_dir}/emstart.rb start -n #{num} -g #{zz_deploy_group} -u #{zz_deploy_user} &")
+  run(em_dir, "RAILS_ENV=#{zz_rails_env} sudo ./emstart.rb start -n #{num} -g #{zz_deploy_group} -u #{zz_deploy_user} &")
 end
+
+
+
+puts "Restarting Unicorn Now........."
+
+# call the re/start script
+run "/usr/bin/zzscripts/unicorn_start.rb #{zz_rails_env} #{zz_current_dir} /var/run/zz/unicorn_#{zz_app}.pid 120"
+# we are ready to have monit monitor the state again
+run "sudo monit monitor -g unicorn_#{zz_app}"
+
