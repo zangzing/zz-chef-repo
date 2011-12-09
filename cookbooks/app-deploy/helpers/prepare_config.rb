@@ -34,7 +34,7 @@ e.run_action(:run)  # execute in the compile phase so happens right now
 
 # install the bundle - This time for the eventmachine dir
 e = execute "bundle_install" do
-  cwd zz_env.release_dir
+  cwd "#{zz_env.release_dir}/eventmachine"
   command "su -l #{zz_env.deploy_user} -c 'cd #{zz_env.release_dir}/eventmachine && bundle install --path #{bundle_location} --deployment'"
   action :nothing
 end
