@@ -24,17 +24,18 @@ e.run_action(:run)  # execute in the compile phase so happens right now
 # causes it to work out of our chef directory even though we cd to the
 # proper directory.  Must be something about how it looks at the environment
 #
+bundle_location = "/var/chef/cookbooks/zz-chef-repo_bundle"
 e = execute "bundle_install" do
   cwd zz_env.release_dir
-  command "su -l #{zz_env.deploy_user} -c 'cd #{zz_env.release_dir} && bundle install --path /var/chef/cookbooks/zz-chef-repo_bundle --deployment'"
+  command "su -l #{zz_env.deploy_user} -c 'cd #{zz_env.release_dir} && bundle install --path #{bundle_location} --deployment'"
   action :nothing
 end
 e.run_action(:run)  # execute in the compile phase so happens right now
 
 # install the bundle - This time for the eventmachine dir
-#e = execute "bundle_install" do
-#  cwd zz_env.release_dir
-#  command "su -l #{zz_env.deploy_user} -c 'cd #{zz_env.release_dir}/eventmachine && bundle install --path /var/chef/cookbooks/zz-chef-repo_bundle --deployment'"
-#  action :nothing
-#end
-#e.run_action(:run)  # execute in the compile phase so happens right now
+e = execute "bundle_install" do
+  cwd zz_env.release_dir
+  command "su -l #{zz_env.deploy_user} -c 'cd #{zz_env.release_dir}/eventmachine && bundle install --path #{bundle_location} --deployment'"
+  action :nothing
+end
+e.run_action(:run)  # execute in the compile phase so happens right now

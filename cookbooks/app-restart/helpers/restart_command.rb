@@ -16,5 +16,5 @@ emworkers = zz_env.eventmachine_worker_count
 # its network address.  In this case it is assumed to be stuck and we terminate it.
 #
 emworkers.times do |num|
-  #run "cd #{zz_current_dir} && RAILS_ENV=#{zz_rails_env} sudo #{zz_current_dir}/emstart.rb start -n #{num} -g #{zz_deploy_group} -u #{zz_deploy_user} &"
+  run "cd #{zz_current_dir} && RAILS_ENV=#{zz_rails_env} sudo #{zz_current_dir}/emstart.rb start -n #{num} -g #{zz_deploy_group} -u #{zz_deploy_user} &"
 end
