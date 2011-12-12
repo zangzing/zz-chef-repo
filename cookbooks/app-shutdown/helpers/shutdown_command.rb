@@ -14,7 +14,7 @@ if [:app, :app_master, :solo].include?(zz_role)
   # stop eventmachines
   Chef::Log.info "Stopping eventmachine"
   em_workers = zz_env.eventmachine_worker_count
-  em_workers.each do |num|
+  em_workers.times do |num|
     run "sudo /usr/bin/zzscripts/zz_cmds.rb stop -p /var/run/zz/em_#{zz[:app_name]}_#{num}.pid -t 5" rescue nil
   end
 end
