@@ -14,13 +14,14 @@ if [:app, :app_master, :solo].include?(zz_role)
   em_workers.times do |num|
     run "sudo /usr/bin/zzscripts/zz_cmds.rb stop -p /var/run/zz/em_#{zz_app}_#{num}.pid -t 5" rescue nil
   end
+
+  sleep_count = 10
+  sleep_count.times do |i|
+    Chef::Log.info "Bleeding off remaining local work - waiting #{i+1} out of #{sleep_count}"
+    sleep 6
+  end
 end
 
-sleep_count = 10
-sleep_count.times do |i|
-  Chef::Log.info "Bleeding off remaining local work - waiting #{i+1} out of #{sleep_count}"
-  sleep 6
-end
 
 # stop all resque workers
 Chef::Log.info "Stopping resque workers"
