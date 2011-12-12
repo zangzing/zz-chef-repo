@@ -1,4 +1,4 @@
-puts "Restarting EventMachine Now....."
+Chef::Log.info "Restarting EventMachine Now....."
 emworkers = zz_env.eventmachine_worker_count
 #
 # We start them directly rather than via monit because the start mechanism
@@ -12,13 +12,15 @@ emworkers.times do |num|
   em_dir = "#{zz_release_dir}/eventmachine"
   run("sudo RAILS_ENV=#{zz_rails_env} ./emstart.rb start -n #{num} -g #{zz_deploy_group} -u #{zz_deploy_user} &", em_dir)
 end
+# we are ready to have monit monitor the state again
+run "sudo monit monitor -g em_#{zz_app}"
 
 
 
-puts "Restarting Unicorn Now........."
+Chef::Log.info "Restarting Unicorn Now........."
 
 # call the re/start script
-run "/usr/bin/zzscripts/unicorn_start.rb #{zz_rails_env} #{zz_current_dir} /var/run/zz/unicorn_#{zz_app}.pid 120"
+run "/usr/bin/zzscripts/unicorn_start.rb #{zz_rails_env} #{zz_current_dir} /var/run/zz/unicorn_#{zz_app}.pid 180"
 # we are ready to have monit monitor the state again
 run "sudo monit monitor -g unicorn_#{zz_app}"
 
