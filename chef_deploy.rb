@@ -31,6 +31,7 @@ class ChefDeploy
     @options = {
       :groups                  => nil,
       :tag                     => nil,
+      :create                  => false,
       :upload                  => false,
       :deploy                  => false,
     }
@@ -50,7 +51,8 @@ class ChefDeploy
       opts.separator ""
       opts.separator "Options:"
 
-      opts.on("-t", "--tag TAG", "required: Tag to create")                             { |val| @options[:tag] = val }
+      opts.on("-t", "--tag TAG", "required: Tag")                                       { |val| @options[:tag] = val }
+      opts.on("-c", "--create", "create this tag")                                      { |val| @options[:create] = true }
       opts.on("-u", "--upload", "upload this tag")                                      { |val| @options[:upload] = true }
       opts.on("-d", "--deploy", "deploy (chef_bake) this tag implies upload also")      { |val| @options[:upload] = true; @options[:deploy] = true }
       opts.on("-g", "--groups group1,group2,etc", Array, "required if upload or deploy: groups to deploy")           { |val| @options[:groups] = val }
@@ -88,8 +90,11 @@ class ChefDeploy
     groups = @options[:groups]
     upload = @options[:upload]
     deploy = @options[:deploy]
-    do_cmd("git tag #{tag}", true)
-    do_cmd("git push origin #{tag}", true)
+    create = @options[:create]
+    if create
+      do_cmd("git tag #{tag}", true)
+      do_cmd("git push origin #{tag}", true)
+    end
     if upload
       groups.each do |group|
         # upload to all first
