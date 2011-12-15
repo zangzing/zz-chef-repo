@@ -116,11 +116,6 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
     action :create
   end
 
-  directory "/var/run/zz" do
-    mode "0755"
-    action :create
-  end
-
   # create the fast uploads tmp dirs that nginx needs
   (0..9).each do |dir|
      directory "#{photos_tmp}/nginx/fast_uploads/#{dir}" do
@@ -152,6 +147,8 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
   asset_host_name = nil # default, no asset host
   remap_error_pages = false
   dev_upstream_port = 3001
+  dev_em_upstream_port = 3031
+  em_listeners = zz_env.eventmachine_worker_count
 
   case app_name
     when :photos
@@ -175,7 +172,6 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
           remap_error_pages = false
           listen_port = 80
           ssl_listen_port = 443
-          dev_upstream_port = 3001
           site_host_name = 'staging.site.zangzing.com'
       end
 
@@ -194,7 +190,6 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
           remap_error_pages = false
           listen_port = 80
           ssl_listen_port = 443
-          dev_upstream_port = 3001
       end
   end
 
@@ -204,6 +199,7 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
       :asset_host_name => asset_host_name,
       :host_port => host_port,
       :listen_port => listen_port,
+      :em_listeners => em_listeners,
       :site_host_name => site_host_name,
       :remap_error_pages => remap_error_pages,
       :is_local_dev => is_local_dev,
@@ -218,6 +214,7 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
       :nginx_conf_dir => nginx_conf_dir,
       :v3_homepage_dir => v3_homepage_dir,
       :dev_upstream_port => dev_upstream_port,
+      :dev_em_upstream_port => dev_em_upstream_port,
       :amazon_elb => amazon_elb
   }
 

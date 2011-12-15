@@ -171,6 +171,10 @@ real_ip_header X-Forwarded-For;
         server localhost:<%= @dev_upstream_port.to_i %>;
     }
 
+    upstream eventmachine_upstream {
+        server localhost:<%= @dev_em_upstream_port.to_i %>;
+    }
+
     # lets us pretend to serve assets from another server
     # rails port + 1
     server {
@@ -226,6 +230,12 @@ real_ip_header X-Forwarded-For;
 <% else %>
     upstream zangzing_upstream {
         server unix:/var/run/zz/unicorn_<%=@app_name%>.sock fail_timeout=0;
+    }
+
+    upstream eventmachine_upstream {
+    <% @em_listeners.times do |num| %>
+        server unix:/var/run/zz/em_<%=@app_name%>_listen_<%=num%>.sock fail_timeout=0;
+    <% end %>
     }
 
     root /data/<%=@app_name%>/current/public;
