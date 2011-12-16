@@ -8,6 +8,6 @@ check process em_<%= @app_name %>_<%= num %>
   start program = "/bin/su - <%=@user%> -c '<%=start_cmd%>'"
   stop program = "/bin/su - <%=@user%> -c '<%=stop_cmd%>'"
   # force new instance to start if too much memory
-  if totalmem > 150.0 MB for 10 cycles then restart
+  if totalmem > 200.0 MB for 10 cycles then restart
   group em_<%= @app_name %>
 <% end %>
