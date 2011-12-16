@@ -246,7 +246,7 @@
             internal;                   # Only allow internal requests to use this
             <% end %>
             gzip            off;
-            proxy_buffering off;        # pass directly through
+            #proxy_buffering off;        # pass directly through
             proxy_pass http://eventmachine_upstream;
         }
 
