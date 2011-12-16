@@ -245,7 +245,7 @@
             <% if @is_local_dev == false %>
             internal;                   # Only allow internal requests to use this
             <% end %>
-            proxy_max_temp_file_size    8G;
+            proxy_max_temp_file_size    8000M;
             gzip                        off;
             #proxy_buffering            off;        # pass directly through
             proxy_pass http://eventmachine_upstream;
