@@ -245,9 +245,9 @@
             <% if @is_local_dev == false %>
             internal;                   # Only allow internal requests to use this
             <% end %>
-            #proxy_max_temp_file_size    4000M;      # 4GB
+            proxy_max_temp_file_size    2048M;      # 2GB
             gzip                        off;
-            proxy_buffering             off;         # pass directly through, nginx will not buffer
+            proxy_buffering             on;         # let nginx help with buffering to disk
             proxy_pass http://eventmachine_upstream;
         }
 
