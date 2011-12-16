@@ -242,7 +242,9 @@
         #
         location ~* ^/proxy_eventmachine {
 
+            <% if @is_local_dev == false %>
             internal;                   # Only allow internal requests to use this
+            <% end %>
             gzip            off;
             proxy_buffering off;        # pass directly through
             proxy_pass http://eventmachine_upstream;
@@ -367,7 +369,9 @@
             # cases where we've got other dns addresses linked to the same
             # place - also accept the ezprints integration host so we can
             # remap via DNS to the appropriate machine but still have it accepted
-            if ($host !~ ^(<%=@host_name%>|ezprints.integration.zangzing.com)$) {
+            # and also allow direct access using our public ip so we can
+            # bypass ELB when needed
+            if ($host !~ ^(<%=@host_name%>|ezprints.integration.zangzing.com|<%=@public_host_name%>)$) {
               rewrite ^(.*)$ http://<%=@host_name%><%=@host_port%>$1 permanent;
             }
             <% end %>

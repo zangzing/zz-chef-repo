@@ -134,6 +134,7 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
   # configuration.
   #
   group_config = zz[:group_config]
+  public_host_name = zz[:public_hostname]
   amazon_elb = group_config[:amazon_elb]
   ssl_supported = amazon_elb.empty?   # when we have an elb we don't need to turn on our own ssl
   host_port = ""
@@ -196,6 +197,7 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
   config_vars = {
       :app_name => app_name.to_s,
       :host_name => host_name,
+      :public_host_name => public_host_name,
       :asset_host_name => asset_host_name,
       :host_port => host_port,
       :listen_port => listen_port,
