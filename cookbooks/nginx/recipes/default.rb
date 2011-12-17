@@ -10,9 +10,9 @@ run_for_app(:photos => [:solo,:app,:app_master,:local],
 
   # see if we should install nginx
   # install nginx if needed
-  version =  "1.0.6"
+  version =  "1.0.11"
   # do a version check to avoid having to install if we already have proper version
-  `/usr/sbin/nginx -v 2>&1 | grep 1\.0\.6`
+  `/usr/sbin/nginx -v 2>&1 | grep 1\.0\.11`
   already_installed = $?.exitstatus == 0
   `/usr/sbin/nginx -V 2>&1 | grep mod_zip`
   already_installed = already_installed && $?.exitstatus == 0
