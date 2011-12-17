@@ -234,7 +234,8 @@ real_ip_header X-Forwarded-For;
 
     upstream eventmachine_upstream {
     <% @em_listeners.times do |num| %>
-        server unix:/var/run/zz/em_<%=@app_name%>_listen_<%=num%>.sock fail_timeout=0;
+        server localhost:<%= @dev_em_upstream_port.to_i %>;
+#        server unix:/var/run/zz/em_<%=@app_name%>_listen_<%=num%>.sock fail_timeout=0;
     <% end %>
     }
 
