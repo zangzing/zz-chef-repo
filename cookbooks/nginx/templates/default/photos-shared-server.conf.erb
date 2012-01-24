@@ -105,6 +105,9 @@
         location ~* ^/about/privacy($|/.*?$) {
             rewrite (.*) http://<%=@host_name%>/privacy permanent;
         }
+        location ~* ^/about/pricing($|/.*?$) {
+            rewrite (.*) http://<%=@host_name%>/pricing permanent;
+        }
         location ~* ^/team($|/.*?$) {
             rewrite (.*) http://<%=@host_name%>/about/team permanent;
         }
