@@ -157,7 +157,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:db_slave,:local]) do |
         command "/bin/bash -l -c 'redis-cli BGREWRITEAOF >> /data/#{app_name}/shared/log/cron.log 2>&1'"
         hour "1"
         minute "0"
-#        user deploy_user
+        user deploy_user
       end
     end
 
