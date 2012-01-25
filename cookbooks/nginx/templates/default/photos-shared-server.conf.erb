@@ -123,30 +123,13 @@
 #####
 
 #####
-        # remap the about location for <%=@site_host_name%> - i.e. the wordpress site
-        # wordpress doesn't like it if you give urls without a trailing /
-        # and ends up issuing redirects so we need to make sure we
-        # deal with that here.  As an alternate to avoid the redirects
-        # see the commented out rules below
-        #
-        location ~* "^/(privacy)($|/.*?$)"{
-            # uncomment following if you want to allow caching
-            #proxy_cache zz_cache;
-            #proxy_cache_valid  200 302  10m;
-
-            proxy_intercept_errors off;
-            proxy_set_header    Host                            <%=@site_host_name%>;
-            proxy_pass          http://<%=@site_host_name%>/about/$1;
-            proxy_redirect      http://<%=@site_host_name%>/about/$1/    http://<%=@host_name%><%=@host_port%>/about/$1/;
-        }
-
         # remap the location for <%=@site_host_name%> - i.e. the wordpress site
         # wordpress doesn't like it if you give urls without a trailing /
         # and ends up issuing redirects so we need to make sure we
         # deal with that here.  As an alternate to avoid the redirects
         # see the commented out rules below
         #
-        location ~* "^/(.*sitemap\.xml|sitemap_index\.xml|blog|xmlrpc\.php|about|privacy|terms|jobs|contact|pricing|team|site|
+        location ~* "^/(.*sitemap\.xml|sitemap_index\.xml|blog|xmlrpc\.php|about|privacy|terms|jobs|contact|team|site|
                 |how-to-comment-on-photos|photos-to-facebook|upload-photos|wp-.*?)($|/.*?$)"{
             # uncomment following if you want to allow caching
             #proxy_cache zz_cache;
@@ -156,6 +139,20 @@
             proxy_set_header    Host                            <%=@site_host_name%>;
             proxy_pass          http://<%=@site_host_name%>;
             proxy_redirect      http://<%=@site_host_name%>/    http://<%=@host_name%><%=@host_port%>/;
+        }
+
+        # remap the specific about locations for <%=@site_host_name%> - i.e. the wordpress site
+        # for the items matching the expression below we fetch the actual content from the about/$1 page
+        # on site
+        location ~* "^/(pricing)($|/.*?$)"{
+            # uncomment following if you want to allow caching
+            #proxy_cache zz_cache;
+            #proxy_cache_valid  200 302  10m;
+
+            proxy_intercept_errors off;
+            proxy_set_header    Host                            <%=@site_host_name%>;
+            proxy_pass          http://<%=@site_host_name%>/about/$1;
+            proxy_redirect      http://<%=@site_host_name%>/about/$1/    http://<%=@host_name%><%=@host_port%>/about/$1/;
         }
 
         # handle the rewrite done to detect /?s=, /?p=, etc
