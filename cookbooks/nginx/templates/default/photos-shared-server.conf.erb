@@ -108,6 +108,9 @@
         location ~* ^/team($|/.*?$) {
             rewrite (.*) http://<%=@host_name%>/about/team permanent;
         }
+        location ~* ^/pricing($|/.*?$) {
+            rewrite (.*) http://<%=@host_name%>/about/pricing permanent;
+        }
         location ~* ^/blog/few-photo-sharing-updates/www.zangzing.com/join($|/.*?$) {
             rewrite (.*) http://<%=@host_name%>/blog/few-photo-sharing-updates permanent;
         }
