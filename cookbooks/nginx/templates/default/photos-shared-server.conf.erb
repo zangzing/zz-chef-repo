@@ -151,7 +151,7 @@
 
             proxy_intercept_errors off;
             proxy_set_header    Host                            <%=@site_host_name%>;
-            proxy_pass          http://<%=@site_host_name%>/about/$1;
+            proxy_pass          http://<%=@site_host_name%>/about/$1/;
             proxy_redirect      http://<%=@site_host_name%>/about/$1/    http://<%=@host_name%><%=@host_port%>/about/$1/;
         }
 
