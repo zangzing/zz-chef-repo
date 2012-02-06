@@ -31,6 +31,15 @@ run_for_app(:photos => [:solo,:util,:app,:app_master,:db,:db_slave,:local],
     action :create
   end
 
+  # a place to put temp backups
+  directory '/media/ephemeral0/backup' do
+    owner deploy_user
+    group deploy_group
+    mode "1777"
+    action :create
+    recursive true
+  end
+
   # we do each part to get the right permissions at each node
   directory "/data" do
     owner deploy_user
