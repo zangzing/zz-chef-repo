@@ -135,4 +135,4 @@ ChefDeploy.new(ARGV).run!
 
 # sample command:
 # creates tag, uploads and bakes to given group
-# ./chef_deploy.rb deploy -g photos_staging -d -c -t 2011-12-20-01
+# ./chef_deploy.rb deploy -g photos_staging -d -c -t 2012-02-14-01
