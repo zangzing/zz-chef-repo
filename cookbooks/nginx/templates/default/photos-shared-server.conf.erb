@@ -300,7 +300,7 @@
         #
         # accepts photo uploads from agent and sendgrid
         #
-        location ~* ^<%=@photos_path_prefix%>/albums/(.+)/upload$|^(<%=@photos_path_prefix%>|<%=@photos_api_path_prefix%>)/photos/(.+)/upload$|^<%=@photos_path_prefix%>/sendgrid/import$ {
+        location ~* ^(<%=@photos_path_prefix%>|<%=@photos_api_path_prefix%>)/albums/(.+)/upload$|^(<%=@photos_path_prefix%>|<%=@photos_api_path_prefix%>)/photos/(.+)/upload$|^<%=@photos_path_prefix%>/sendgrid/import$ {
             # Once upload is received, send request to this location (see below)
             upload_pass @upload_location;
 
