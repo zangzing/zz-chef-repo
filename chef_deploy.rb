@@ -136,3 +136,6 @@ ChefDeploy.new(ARGV).run!
 # sample command:
 # creates tag, uploads and bakes to given group
 # ./chef_deploy.rb deploy -g photos_staging -d -c -t 2012-02-14-01
+#
+# sample to handle multiple deploy groups
+# ./chef_deploy.rb deploy -g photos_greg,photos_kathryn,photos_jeremy,photos_bowen,photos_mauricio,photos_staging,photos_production -d -c -t 2012-02-22-01
