@@ -2,7 +2,11 @@ run_for_app(:photos => [:solo,:util,:app,:app_master]) do |app_name, role, rails
 
   # see what kind of queues each type should listen to
   cpu_queues = "image_edit,image_processing"
+  # todo after we let current work drain, switch over completely to new queues
+  cpu_queues += ",cpu_100,cpu_90,cpu_80,cpu_70,cpu_60,cpu_50,cpu_40,cpu_30,cpu_20,cpu_10"
+  # todo keep remote_job, all others can go after switch
   app_queues = "remote_job_#{ZZDeploy.env.this_host_name},mailer_high,io_bound_high,mailer,io_local_#{ZZDeploy.env.this_host_name},facebook,twitter,like,io_bound,share,io_bound_low,mailer_low,test_queue"
+  app_queues += ",io_local_#{ZZDeploy.env.this_host_name}_100,io_local_#{ZZDeploy.env.this_host_name}_50,io_local_#{ZZDeploy.env.this_host_name}_30,io_100,io_90,io_80,io_70,io_60,io_50,io_40,io_30,io_20,io_10"
   if role == :solo
     num_workers = 4
     # all the queues when solo
