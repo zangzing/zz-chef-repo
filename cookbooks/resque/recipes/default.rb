@@ -8,7 +8,7 @@ run_for_app(:photos => [:solo,:util,:app,:app_master]) do |app_name, role, rails
   app_queues = "remote_job_#{ZZDeploy.env.this_host_name},mailer_high,io_bound_high,mailer,io_local_#{ZZDeploy.env.this_host_name},facebook,twitter,like,io_bound,share,io_bound_low,mailer_low,test_queue"
   local_io = ['100', '070', '060', '050', '040', '030', '020']
   local_io.each do |q|
-    app_queues << ",io_local_#{ZZDeploy.env.this_host_name}_#{q}"
+    app_queues += ",io_local_#{ZZDeploy.env.this_host_name}_#{q}"
   end
   app_queues += ",io_100,io_090,io_080,io_070,io_060,io_050,io_040,io_030,io_020,io_010"
   if role == :solo
