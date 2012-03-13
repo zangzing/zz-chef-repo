@@ -6,7 +6,11 @@ run_for_app(:photos => [:solo,:util,:app,:app_master]) do |app_name, role, rails
   cpu_queues += ",cpu_100,cpu_090,cpu_080,cpu_070,cpu_060,cpu_050,cpu_040,cpu_030,cpu_020,cpu_010"
   # todo keep remote_job, all others can go after switch
   app_queues = "remote_job_#{ZZDeploy.env.this_host_name},mailer_high,io_bound_high,mailer,io_local_#{ZZDeploy.env.this_host_name},facebook,twitter,like,io_bound,share,io_bound_low,mailer_low,test_queue"
-  app_queues += ",io_local_#{ZZDeploy.env.this_host_name}_100,io_local_#{ZZDeploy.env.this_host_name}_050,io_local_#{ZZDeploy.env.this_host_name}_030,io_100,io_090,io_080,io_070,io_060,io_050,io_040,io_030,io_020,io_010"
+  local_io = ['100', '070', '060', '050', '040', '030', '020']
+  local_io.each do |q|
+    app_queues << ",io_local_#{ZZDeploy.env.this_host_name}_#{q}"
+  end
+  app_queues += ",io_100,io_090,io_080,io_070,io_060,io_050,io_040,io_030,io_020,io_010"
   if role == :solo
     num_workers = 4
     # all the queues when solo
