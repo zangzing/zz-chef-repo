@@ -34,7 +34,7 @@ abort("Must be type work or scheduler, was #{type}") unless valid_types.include?
 # it is a rogue from a previous run
 
 # first see if we have one or more instances that use the same PIDFILE as us running
-procs = `ps -eo pid,ppid,command --cols 500 | grep PIDFILE`.map
+procs = `ps -eo pid,ppid,command --cols 5000 | grep PIDFILE`.map
 kill_pids = []
 procs.each do |proc|
   if proc.match(pid_file).nil? == false

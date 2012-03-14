@@ -50,7 +50,7 @@ do_cmd "rm -f #{pid_file}"
 
 # ok, now one last check to see if it still hasn't gone away - this time hunt it down and kill it
 # first see if we have one or more instances that use the same PIDFILE as us running
-procs = `ps -eo pid,ppid,command --cols 500 | grep PIDFILE`.map
+procs = `ps -eo pid,ppid,command --cols 5000 | grep PIDFILE`.map
 kill_pids = []
 procs.each do |proc|
   if proc.match(pid_file).nil? == false
