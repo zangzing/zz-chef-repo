@@ -108,6 +108,9 @@
         location ~* ^/team($|/.*?$) {
             rewrite (.*) http://<%=@host_name%>/about/team permanent;
         }
+		location ~* ^/sunset($|/.*?$) {
+            rewrite (.*) http://<%=@host_name%>/static/sunset permanent;
+        }
         location ~* ^/pricing($|/.*?$) {
             rewrite (.*) http://<%=@host_name%>/about/pricing permanent;
         }
