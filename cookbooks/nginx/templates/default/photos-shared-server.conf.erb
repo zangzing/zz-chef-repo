@@ -127,11 +127,6 @@
             #rewrite (.*) http://<%=@host_name%>/about/photo-of-the-day permanent;
 			rewrite (.*) http://<%=@host_name%>/sunset permanent;
         }
-		#SUNSET
-		location ~* "^/(.*sitemap\.xml|sitemap_index\.xml|blog|xmlrpc\.php|about|jobs|contact|team|site|
-		                |how-to-comment-on-photos|photos-to-facebook|upload-photos)($|/.*?$)"{
-									rewrite (.*) http://<%=@host_name%>/sunset permanent;
-		 }
 #####
 
 #####
@@ -151,6 +146,13 @@
             proxy_pass          http://<%=@site_host_name%>;
             proxy_redirect      http://<%=@site_host_name%>/    http://<%=@host_name%><%=@host_port%>/;
         }
+
+		#SUNSET
+		location ~* "^/(.*sitemap\.xml|sitemap_index\.xml|blog|xmlrpc\.php|about|jobs|contact|team|site|
+		                |how-to-comment-on-photos|photos-to-facebook|upload-photos)($|/.*?$)"{
+									rewrite (.*) http://<%=@host_name%>/sunset permanent;
+		 }
+
 
         # handle the rewrite done to detect /?s=, /?p=, etc
         # this is done so we have something to trigger off of and get this proxied
