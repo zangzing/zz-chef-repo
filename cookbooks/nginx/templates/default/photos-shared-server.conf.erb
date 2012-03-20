@@ -129,7 +129,7 @@
         }
 		#SUNSET
 		location ~* "^/(.*sitemap\.xml|sitemap_index\.xml|blog|xmlrpc\.php|about|jobs|contact|team|site|
-		                |how-to-comment-on-photos|photos-to-facebook|upload-photos|wp-.*?)($|/.*?$)"{
+		                |how-to-comment-on-photos|photos-to-facebook|upload-photos)($|/.*?$)"{
 									rewrite (.*) http://<%=@host_name%>/sunset permanent;
 		 }
 #####
