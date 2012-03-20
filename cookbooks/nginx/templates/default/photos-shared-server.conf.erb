@@ -97,29 +97,41 @@
             rewrite (.*) http://help.zangzing.com/forums permanent;
         }
         location ~* ^/blog/latest-photo-sharing-news/www.facebook.com/zangzing($|/.*?$) {
-            rewrite (.*) http://<%=@host_name%>/blog/latest-photo-sharing-news permanent;
+            #rewrite (.*) http://<%=@host_name%>/blog/latest-photo-sharing-news permanent;
+            rewrite (.*) http://<%=@host_name%>/sunset permanent;
         }
         location ~* ^/blog/latest-photo-sharing-news/www.twitter.com/zangzing($|/.*?$) {
-            rewrite (.*) http://<%=@host_name%>/blog/latest-photo-sharing-news permanent;
+            #rewrite (.*) http://<%=@host_name%>/blog/latest-photo-sharing-news permanent;
+			rewrite (.*) http://<%=@host_name%>/sunset permanent;
         }
-        location ~* ^/about/privacy($|/.*?$) {
+        location ~* ^/about/privacy($|/.*?$) {	
             rewrite (.*) http://<%=@host_name%>/privacy permanent;
         }
         location ~* ^/team($|/.*?$) {
-            rewrite (.*) http://<%=@host_name%>/about/team permanent;
+            #rewrite (.*) http://<%=@host_name%>/about/team permanent;
+			rewrite (.*) http://<%=@host_name%>/sunset permanent;
         }
         location ~* ^/pricing($|/.*?$) {
-            rewrite (.*) http://<%=@host_name%>/about/pricing permanent;
+            #rewrite (.*) http://<%=@host_name%>/about/pricing permanent;
+			rewrite (.*) http://<%=@host_name%>/sunset permanent;
         }
         location ~* ^/blog/few-photo-sharing-updates/www.zangzing.com/join($|/.*?$) {
-            rewrite (.*) http://<%=@host_name%>/blog/few-photo-sharing-updates permanent;
+            #rewrite (.*) http://<%=@host_name%>/blog/few-photo-sharing-updates permanent;
+			rewrite (.*) http://<%=@host_name%>/sunset permanent;
         }
         location ~* ^/blog/few-photo-sharing-updates/www.zangzing.com($|/.*?$) {
-            rewrite (.*) http://<%=@host_name%>/blog/few-photo-sharing-updates permanent;
+            #rewrite (.*) http://<%=@host_name%>/blog/few-photo-sharing-updates permanent;
+			rewrite (.*) http://<%=@host_name%>/sunset permanent;
         }
         location ~* ^/about/share-photo-of-the-day($|/.*?$) {
-            rewrite (.*) http://<%=@host_name%>/about/photo-of-the-day permanent;
+            #rewrite (.*) http://<%=@host_name%>/about/photo-of-the-day permanent;
+			rewrite (.*) http://<%=@host_name%>/sunset permanent;
         }
+		#SUNSET
+		location ~* "^/(.*sitemap\.xml|sitemap_index\.xml|blog|xmlrpc\.php|about|jobs|contact|team|site|
+		                |how-to-comment-on-photos|photos-to-facebook|upload-photos|wp-.*?)($|/.*?$)"{
+									rewrite (.*) http://<%=@host_name%>/sunset permanent;
+		 }
 #####
 
 #####
@@ -129,8 +141,7 @@
         # deal with that here.  As an alternate to avoid the redirects
         # see the commented out rules below
         #
-        location ~* "^/(.*sitemap\.xml|sitemap_index\.xml|blog|xmlrpc\.php|about|privacy|terms|jobs|contact|team|site|
-                |how-to-comment-on-photos|photos-to-facebook|upload-photos|wp-.*?)($|/.*?$)"{
+        location ~* "^/(privacy|terms)($|/.*?$)"{
             # uncomment following if you want to allow caching
             #proxy_cache zz_cache;
             #proxy_cache_valid  200 302  10m;
