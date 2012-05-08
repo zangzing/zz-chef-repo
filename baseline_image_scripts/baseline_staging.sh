@@ -47,6 +47,8 @@ sudo yum -y install libxml2-devel
 
 sudo yum -y install libxslt-devel
 
+sudo yum -y remove mysql*
+
 sudo yum -y install mysql
 
 sudo yum -y install mysql-devel
