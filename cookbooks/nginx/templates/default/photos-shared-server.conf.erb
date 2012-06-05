@@ -98,39 +98,38 @@
         }
         location ~* ^/blog/latest-photo-sharing-news/www.facebook.com/zangzing($|/.*?$) {
             #rewrite (.*) http://<%=@host_name%>/blog/latest-photo-sharing-news permanent;
-            rewrite (.*) http://<%=@host_name%>/sunset permanent;
+            rewrite (.*) http://<%=@host_name%> permanent;
         }
         location ~* ^/blog/latest-photo-sharing-news/www.twitter.com/zangzing($|/.*?$) {
             #rewrite (.*) http://<%=@host_name%>/blog/latest-photo-sharing-news permanent;
-			rewrite (.*) http://<%=@host_name%>/sunset permanent;
+			rewrite (.*) http://<%=@host_name%> permanent;
         }
         location ~* ^/about/privacy($|/.*?$) {	
             rewrite (.*) http://<%=@host_name%>/privacy permanent;
         }
         location ~* ^/team($|/.*?$) {
             #rewrite (.*) http://<%=@host_name%>/about/team permanent;
-			rewrite (.*) http://<%=@host_name%>/sunset permanent;
+			rewrite (.*) http://<%=@host_name%> permanent;
         }
         location ~* ^/pricing($|/.*?$) {
             #rewrite (.*) http://<%=@host_name%>/about/pricing permanent;
-			rewrite (.*) http://<%=@host_name%>/sunset permanent;
+			rewrite (.*) http://<%=@host_name%> permanent;
         }
         location ~* ^/blog/few-photo-sharing-updates/www.zangzing.com/join($|/.*?$) {
             #rewrite (.*) http://<%=@host_name%>/blog/few-photo-sharing-updates permanent;
-			rewrite (.*) http://<%=@host_name%>/sunset permanent;
+			rewrite (.*) http://<%=@host_name%> permanent;
         }
         location ~* ^/blog/few-photo-sharing-updates/www.zangzing.com($|/.*?$) {
             #rewrite (.*) http://<%=@host_name%>/blog/few-photo-sharing-updates permanent;
-			rewrite (.*) http://<%=@host_name%>/sunset permanent;
+			rewrite (.*) http://<%=@host_name%> permanent;
         }
         location ~* ^/about/share-photo-of-the-day($|/.*?$) {
             #rewrite (.*) http://<%=@host_name%>/about/photo-of-the-day permanent;
-			rewrite (.*) http://<%=@host_name%>/sunset permanent;
+			rewrite (.*) http://<%=@host_name%> permanent;
         }
 		#SUNSET
-		location ~* "^/(.*sitemap\.xml|sitemap_index\.xml|blog|xmlrpc\.php|about|jobs|contact|team|site|
-		                |how-to-comment-on-photos|photos-to-facebook|upload-photos)($|/.*?$)"{
-									rewrite (.*) http://<%=@host_name%>/sunset permanent;
+		location ~* "^/(.*sitemap\.xml|sitemap_index\.xml|blog|xmlrpc\.php|about|jobs|contact|team|site|pricing|forums|how-to-comment-on-photos|photos-to-facebook|upload-photos)($|/.*?$)"{
+									rewrite (.*) http://<%=@host_name%> permanent;
 		 }
 #####
 
