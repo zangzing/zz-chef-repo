@@ -1,0 +1,25 @@
+zz deploy_group_create\
+ --group                   moment_staging\
+ --app_name                photos\
+ --rails_env               photos_staging\
+ --vhost                   staging.moment.com\
+ --email_host              staging.moment.com\
+ --app_git_url             git@github.com:zangzing/server.git\
+ --amazon_security_key     amazon_staging\
+ --amazon_security_group   security_staging\
+ --amazon_image            baseline_staging\
+ --amazon_elb              moment-staging-balancer\
+ --database_host           zz-staging-rds.ckikxby0s3p8.us-east-1.rds.amazonaws.com\
+ --database_username       zzadmin\
+ --database_password       pwy4ksp3psd0\
+ --database_schema         moment_staging
+
+
+zz add\
+ --size c1.medium\
+ --zone us-east-1c\
+ --role solo\
+ --start_app\
+ --group moment_staging\
+ --config_akey AKIAJ3GYDV4IVU7XP3BA\
+ --config_skey NrYx8GLQsvC9kEHbRx/lLx0t/jFOMWtIYEOOcNqP
