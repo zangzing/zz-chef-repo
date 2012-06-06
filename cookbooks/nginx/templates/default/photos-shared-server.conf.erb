@@ -141,16 +141,16 @@
         # deal with that here.  As an alternate to avoid the redirects
         # see the commented out rules below
         #
-        location ~* "^/(privacy|terms|wp-.*?)($|/.*?$)"{
+        #location ~* "^/(privacy|terms|wp-.*?)($|/.*?$)"{
             # uncomment following if you want to allow caching
             #proxy_cache zz_cache;
             #proxy_cache_valid  200 302  10m;
 
-            proxy_intercept_errors off;
-            proxy_set_header    Host                            <%=@site_host_name%>;
-            proxy_pass          http://<%=@site_host_name%>;
-            proxy_redirect      http://<%=@site_host_name%>/    http://<%=@host_name%><%=@host_port%>/;
-        }
+            #proxy_intercept_errors off;
+            #proxy_set_header    Host                            <%=@site_host_name%>;
+            #proxy_pass          http://<%=@site_host_name%>;
+            #proxy_redirect      http://<%=@site_host_name%>/    		          #http://<%=@host_name%><%=@host_port%>/;
+#        }
 
         # handle the rewrite done to detect /?s=, /?p=, etc
         # this is done so we have something to trigger off of and get this proxied
